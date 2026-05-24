@@ -5,7 +5,7 @@ pages_build_output_dir = "./dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "b2b-inquiries"
-database_id = ""
+database_id = "1cd039a4-cba8-42bf-aadd-590ec9fb768f"
 
 [[r2_buckets]]
 binding = "FILES"
