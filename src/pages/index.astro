@@ -1,17 +1,123 @@
 ---
+import BaseLayout from '../components/ui/BaseLayout.astro';
+import QuantifiedStrip from '../components/trust/QuantifiedStrip.astro';
+import CertLogoWall from '../components/trust/CertLogoWall.astro';
+import ClientLogoWall from '../components/trust/ClientLogoWall.astro';
+import TestimonialCards from '../components/trust/TestimonialCards.astro';
+import ProdFlowDiagram from '../components/trust/ProdFlowDiagram.astro';
+import TeamPhotoCards from '../components/trust/TeamPhotoCards.astro';
 
+const title = 'IndustryPro — Industrial Machinery Manufacturer';
+const description = 'Professional industrial machinery manufacturer. ISO 9001 certified factory. OEM/ODM supported. Global shipping to 60+ countries.';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title={title} description={description}>
+  <!-- 1. Hook: Hero Banner -->
+  <section class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4">
+      <div class="text-center max-w-3xl mx-auto">
+        <h1 class="text-display font-bold leading-tight text-gray-900">
+          Your Trusted Industrial Machinery Manufacturer
+        </h1>
+        <p class="mt-6 text-subhead text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          ISO 9001 certified factory. OEM/ODM supported. Global shipping to 60+ countries.
+        </p>
+        <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/contact/" class="btn-primary !text-lg !px-8 !py-4">Request a Quote</a>
+          <a href="/products/" class="btn-outline !text-lg !px-8 !py-4">View Products</a>
+        </div>
+        <div class="mt-6 flex justify-center gap-6 text-caption text-gray-600">
+          <span>🛡 Reply within 12 hours</span>
+          <span>🔒 NDA available</span>
+          <span>🚚 Global shipping</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Proof: Quantified Strip -->
+  <QuantifiedStrip
+    items={[
+      { label: 'Years Established', value: '15+' },
+      { label: 'Export Countries', value: '60+' },
+      { label: 'Factory Area (m²)', value: '20,000' },
+      { label: 'Happy Clients', value: '2,000+' },
+      { label: 'Monthly Capacity', value: '50,000u' },
+    ]}
+  />
+
+  <!-- 3. Fit: Category Navigation Cards -->
+  <section style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4">
+      <h2 class="text-heading font-bold text-center mb-10 text-gray-900">Our Product Categories</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        {[
+          { title: 'Gearboxes', desc: 'Planetary, helical, worm gearboxes for industrial applications.', href: '/products/?category=gearboxes' },
+          { title: 'Electric Motors', desc: 'AC induction, servo, and stepper motors with custom options.', href: '/products/?category=motors' },
+          { title: 'Pumps & Valves', desc: 'Centrifugal pumps, control valves, and hydraulic components.', href: '/products/?category=pumps' },
+        ].map((cat) => (
+          <a href={cat.href} class="card hover:shadow-elevated transition-shadow group">
+            <div class="w-full h-48 bg-primary-50 rounded-card mb-4 flex items-center justify-center text-4xl">
+              ⚙
+            </div>
+            <h3 class="text-subhead font-semibold mb-2 group-hover:text-primary transition-colors">{cat.title}</h3>
+            <p class="text-caption text-gray-600">{cat.desc}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Proof: Certifications -->
+  <CertLogoWall
+    certs={[
+      { name: 'ISO 9001:2015', number: 'CN-2021-ISO9001-XXXX', issuer: 'SGS', valid_until: '2027-06' },
+      { name: 'CE', number: 'CE-2022-XXXX', issuer: 'TÜV Rheinland', valid_until: '2027-12' },
+      { name: 'RoHS', number: 'ROHS-2023-XXXX', issuer: 'Intertek', valid_until: '2027-03' },
+    ]}
+  />
+
+  <!-- 5. Trust: Client Logo Wall -->
+  <ClientLogoWall
+    clients={[
+      { name: 'Siemens', logo: '/static/placeholder-logo.svg' },
+      { name: 'ABB', logo: '/static/placeholder-logo.svg' },
+      { name: 'Bosch', logo: '/static/placeholder-logo.svg' },
+      { name: 'Rockwell', logo: '/static/placeholder-logo.svg' },
+      { name: 'Schneider', logo: '/static/placeholder-logo.svg' },
+    ]}
+  />
+
+  <!-- 6. Trust: Testimonials -->
+  <TestimonialCards
+    testimonials={[
+      { name: 'James Wilson', company: 'Wilson Automation Ltd.', country: 'UK', quote: 'IndustryPro has been our primary gearbox supplier for 5 years. Consistent quality and excellent communication.' },
+      { name: 'Luis Fernandez', company: 'TechnoMex SA', country: 'Mexico', quote: 'The team went above and beyond to customize a solution for our unique application.' },
+    ]}
+  />
+
+  <!-- Extra: Manufacturing QC -->
+  <ProdFlowDiagram />
+
+  <!-- Extra: Team -->
+  <TeamPhotoCards
+    team={[
+      { name: 'David Chen', role: 'CEO', linkedin: 'https://linkedin.com/in/example' },
+      { name: 'Maria Santos', role: 'Sales Director', linkedin: 'https://linkedin.com/in/example' },
+      { name: 'Thomas Mueller', role: 'QC Manager', linkedin: 'https://linkedin.com/in/example' },
+    ]}
+  />
+
+  <!-- 7. Convert: Final CTA -->
+  <section class="bg-primary-900 text-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4 text-center max-w-2xl">
+      <h2 class="text-heading font-bold mb-4">Ready to Source Quality Machinery?</h2>
+      <p class="text-subhead text-primary-100 mb-8">
+        Reply within 12 hours. NDA available. No spam, no reselling.
+      </p>
+      <a href="/contact/" class="btn inline-flex items-center justify-center bg-accent hover:bg-accent-hover text-white px-8 py-4 rounded-[var(--radius-button)] font-semibold text-lg">
+        Get Your Quote Now
+      </a>
+    </div>
+  </section>
+</BaseLayout>

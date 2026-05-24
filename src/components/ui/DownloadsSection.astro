@@ -1,0 +1,45 @@
+---
+import { isEmailGateOpen, emailGateFile } from '../../lib/store';
+
+export interface Props {
+  productSlug: string;
+}
+const { productSlug } = Astro.props;
+---
+
+<section style="padding-top: var(--space-block); padding-bottom: var(--space-block)">
+  <div class="container mx-auto px-4">
+    <h2 class="text-heading font-bold text-center mb-10 text-gray-900">Downloads</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
+      {[
+        { type: 'Datasheet PDF', icon: '📄', desc: 'Product datasheet', fileType: 'datasheet' },
+        { type: 'Full Catalog', icon: '📘', desc: 'Complete product catalog', fileType: 'catalog' },
+        { type: 'Installation Guide', icon: '📋', desc: 'Setup and maintenance', fileType: 'guide' },
+      ].map((dl) => (
+        <button
+          class="card text-center hover:shadow-elevated transition-shadow download-trigger"
+          data-file-type={dl.fileType}
+          data-product={productSlug}
+        >
+          <span class="text-3xl mb-2 block">{dl.icon}</span>
+          <h4 class="font-semibold text-caption">{dl.type}</h4>
+          <p class="text-small text-gray-400 mt-1">{dl.desc}</p>
+          <span class="inline-block mt-3 text-small text-primary font-medium">Download →</span>
+        </button>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  import { isEmailGateOpen, emailGateFile } from '../../lib/store';
+
+  document.querySelectorAll('.download-trigger').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const fileType = (btn as HTMLElement).dataset.fileType!;
+      const product = (btn as HTMLElement).dataset.product!;
+      emailGateFile.set({ productSlug: product, fileType });
+      isEmailGateOpen.set(true);
+    });
+  });
+</script>

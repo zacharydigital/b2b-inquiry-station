@@ -1,0 +1,107 @@
+---
+import { addToCart } from '../../lib/store';
+
+export interface Props {
+  productSlug: string;
+  productModel: string;
+  productTitle: string;
+  moq?: string;
+  leadTime?: string;
+  payment?: string;
+  sample?: string;
+  industry?: string;
+  locale?: string;
+}
+
+const {
+  productSlug,
+  productModel,
+  productTitle,
+  moq = '100 pcs',
+  leadTime = '15–25 days',
+  payment = 'T/T, L/C',
+  sample = 'Available',
+  industry = 'machinery',
+  locale = 'en',
+} = Astro.props;
+---
+
+<div class="sticky-sidebar sticky top-20 space-y-4">
+  <!-- Price Placeholder -->
+  <a href="#inline-inquiry" class="block bg-accent text-white text-center py-3 px-6 rounded-button font-semibold text-lg hover:bg-accent-hover transition-colors">
+    Get Latest Price →
+  </a>
+
+  <!-- Key Info Mini Cards -->
+  <div class="grid grid-cols-2 gap-2">
+    <div class="card !p-3 text-center">
+      <span class="block text-small text-gray-600">MOQ</span>
+      <span class="block font-semibold text-caption">{moq}</span>
+    </div>
+    <div class="card !p-3 text-center">
+      <span class="block text-small text-gray-600">Lead Time</span>
+      <span class="block font-semibold text-caption">{leadTime}</span>
+    </div>
+    <div class="card !p-3 text-center">
+      <span class="block text-small text-gray-600">Payment</span>
+      <span class="block font-semibold text-caption">{payment}</span>
+    </div>
+    <div class="card !p-3 text-center">
+      <span class="block text-small text-gray-600">Sample</span>
+      <span class="block font-semibold text-caption">{sample}</span>
+    </div>
+  </div>
+
+  <!-- Trust Signals -->
+  <div class="card !p-4 space-y-2">
+    <div class="flex items-center gap-2 text-caption text-gray-600">
+      <span class="text-accent">🛡</span> Reply within 12 hours
+    </div>
+    <div class="flex items-center gap-2 text-caption text-gray-600">
+      <span class="text-accent">🔒</span> NDA available
+    </div>
+    <div class="flex items-center gap-2 text-caption text-gray-600">
+      <span class="text-accent">🚚</span> Global shipping
+    </div>
+  </div>
+
+  <!-- Add to Quote Cart -->
+  <button
+    class="btn-outline w-full text-center"
+    id="add-to-cart-btn"
+    data-slug={productSlug}
+    data-model={productModel}
+    data-title={productTitle}
+  >
+    Add to Quote Cart
+  </button>
+
+  <!-- WhatsApp -->
+  <a
+    href="https://wa.me/1234567890"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="flex items-center justify-center gap-2 w-full py-3 border border-green-500 text-green-600 rounded-button hover:bg-green-50 transition-colors font-medium text-caption"
+  >
+    <span>💬</span> WhatsApp Us
+  </a>
+</div>
+
+<script>
+  document.getElementById('add-to-cart-btn')?.addEventListener('click', function () {
+    const btn = this as HTMLElement;
+    import('../../lib/store').then(({ addToCart }) => {
+      addToCart({
+        slug: btn.dataset.slug!,
+        model: btn.dataset.model!,
+        title: btn.dataset.title!,
+      });
+      btn.textContent = 'Added ✓';
+      btn.classList.add('bg-green-50', 'text-green-600', 'border-green-500');
+      setTimeout(() => {
+        btn.textContent = 'Add to Quote Cart';
+        btn.classList.remove('bg-green-50', 'text-green-600', 'border-green-500');
+      }, 2000);
+    });
+  });
+</script>

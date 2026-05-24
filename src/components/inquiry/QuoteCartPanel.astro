@@ -1,0 +1,109 @@
+---
+export interface Props {
+  industry?: string;
+  locale?: string;
+}
+
+const { industry = 'machinery', locale = 'en' } = Astro.props;
+---
+
+<!-- Cart Panel Overlay -->
+<div id="cart-overlay" class="fixed inset-0 bg-black/30 z-40 hidden" aria-hidden="true"></div>
+
+<!-- Cart Panel -->
+<div
+  id="cart-panel"
+  class="fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-elevated z-50 transform translate-x-full transition-transform duration-300 flex flex-col"
+>
+  <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+    <h3 class="font-semibold text-subhead">Quote Cart</h3>
+    <button id="cart-close" class="p-1 hover:bg-gray-100 rounded" aria-label="Close cart">
+      <span class="text-xl">&times;</span>
+    </button>
+  </div>
+
+  <div id="cart-items" class="flex-1 overflow-y-auto px-6 py-4 space-y-3">
+    <p class="text-caption text-gray-400 text-center py-8">Your quote cart is empty.</p>
+  </div>
+
+  <div id="cart-footer" class="hidden border-t border-gray-100 px-6 py-4 space-y-3">
+    <button id="cart-submit" type="button" class="btn-primary w-full text-center">
+      Request Quote for All Items
+    </button>
+    <button id="cart-clear" class="text-caption text-gray-400 hover:text-error transition-colors w-full text-center">
+      Clear cart
+    </button>
+  </div>
+</div>
+
+<script>
+  import { isCartOpen, cartItems, removeFromCart, clearCart, getCartCount, getCartItems } from '../../lib/store';
+
+  const overlay = document.getElementById('cart-overlay')!;
+  const panel = document.getElementById('cart-panel')!;
+  const close = document.getElementById('cart-close')!;
+  const itemsEl = document.getElementById('cart-items')!;
+  const footerEl = document.getElementById('cart-footer')!;
+  const clearBtn = document.getElementById('cart-clear')!;
+  const submitBtn = document.getElementById('cart-submit');
+
+  submitBtn?.addEventListener('click', () => {
+    const items = getCartItems();
+    if (items.length === 0) return;
+    localStorage.setItem('quote_cart', JSON.stringify(items));
+    window.location.href = '/contact/';
+  });
+
+  function closePanel() {
+    panel.classList.add('translate-x-full');
+    overlay.classList.add('hidden');
+    isCartOpen.set(false);
+  }
+
+  isCartOpen.subscribe((open) => {
+    if (open) {
+      panel.classList.remove('translate-x-full');
+      overlay.classList.remove('hidden');
+      renderItems();
+    } else {
+      panel.classList.add('translate-x-full');
+      overlay.classList.add('hidden');
+    }
+  });
+
+  overlay.addEventListener('click', closePanel);
+  close.addEventListener('click', closePanel);
+  clearBtn.addEventListener('click', () => { clearCart(); renderItems(); });
+
+  cartItems.subscribe(() => renderItems());
+
+  function renderItems() {
+    const items = Object.values(cartItems.get());
+    if (items.length === 0) {
+      itemsEl.innerHTML = '<p class="text-caption text-gray-400 text-center py-8">Your quote cart is empty.</p>';
+      footerEl.classList.add('hidden');
+      return;
+    }
+    footerEl.classList.remove('hidden');
+    itemsEl.innerHTML = items
+      .map(
+        (item) => `
+      <div class="flex items-center justify-between bg-gray-50 rounded-card p-3">
+        <div class="min-w-0 flex-1">
+          <p class="text-caption font-medium truncate">${item.model}</p>
+          <p class="text-small text-gray-400 truncate">${item.title}</p>
+          <p class="text-small text-gray-400">Qty: ${item.quantity}</p>
+        </div>
+        <button class="shrink-0 ml-3 text-gray-400 hover:text-error text-lg remove-item" data-slug="${item.slug}">&times;</button>
+      </div>`,
+      )
+      .join('');
+
+    itemsEl.querySelectorAll('.remove-item').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        removeFromCart((btn as HTMLElement).dataset.slug!);
+        renderItems();
+      });
+    });
+  }
+</script>

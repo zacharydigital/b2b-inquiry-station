@@ -1,0 +1,61 @@
+{
+  "header": {
+    "home": "Home",
+    "products": "Products",
+    "about": "About",
+    "contact": "Contact",
+    "get_quote": "Get a Quote"
+  },
+  "home": {
+    "hero": {
+      "headline": "Your Trusted Industrial Machinery Manufacturer",
+      "subheadline": "ISO 9001 certified factory. OEM/ODM supported. Global shipping to 60+ countries.",
+      "cta": "Request a Quote",
+      "secondary_cta": "Download Catalog"
+    },
+    "quantified": {
+      "years": "Years Established",
+      "countries": "Export Countries",
+      "factory_area": "Factory Area (m²)",
+      "clients": "Happy Clients",
+      "capacity": "Monthly Capacity"
+    },
+    "inquiry_cta": {
+      "headline": "Ready to Source Quality Machinery?",
+      "subheadline": "Reply within 12 hours. NDA available. No spam, no reselling.",
+      "cta": "Get Your Quote Now"
+    }
+  },
+  "common": {
+    "inquire": "Inquire Now",
+    "get_quote": "Get a Quote",
+    "download": "Download",
+    "learn_more": "Learn More",
+    "view_all": "View All",
+    "moq": "MOQ",
+    "lead_time": "Lead Time",
+    "payment": "Payment",
+    "sample": "Sample",
+    "send": "Send Inquiry",
+    "reply_sla": "Reply within 12 hours",
+    "nda_available": "NDA available",
+    "global_shipping": "Global shipping"
+  },
+  "form": {
+    "title": "Get a Quote for This Product",
+    "subtitle": "Reply within 12 hours · No spam · NDA available",
+    "name": "Name",
+    "email": "Email",
+    "company": "Company",
+    "country": "Country",
+    "phone": "Phone / WhatsApp",
+    "quantity": "Quantity",
+    "message": "Tell us about your requirements...",
+    "upload": "Upload drawing / specs (PDF, max 10MB)",
+    "submit": "Get My Quote →",
+    "privacy": "Your info is safe. We never share or spam."
+  },
+  "footer": {
+    "tagline": "Professional industrial machinery manufacturer. ISO 9001 certified."
+  }
+}

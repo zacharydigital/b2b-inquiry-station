@@ -1,0 +1,70 @@
+<!-- Email Gate Modal -->
+<div id="email-gate-overlay" class="fixed inset-0 bg-black/30 z-50 hidden" aria-hidden="true"></div>
+<div id="email-gate-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+  <div class="bg-white rounded-card shadow-elevated max-w-md w-full p-6 relative">
+    <button id="email-gate-close" class="absolute top-3 right-3 text-gray-400 hover:text-gray-900 text-xl">&times;</button>
+    <h3 class="text-subhead font-bold mb-2">Get Your Free Download</h3>
+    <p class="text-caption text-gray-600 mb-4">
+      Enter your email and we'll send the file instantly. No spam, ever.
+    </p>
+    <form id="email-gate-form" class="space-y-3">
+      <input type="hidden" name="product_slug" id="eg-product-slug" value="" />
+      <input type="hidden" name="file_type" id="eg-file-type" value="" />
+      <input type="hidden" name="industry" id="eg-industry" value="machinery" />
+      <div>
+        <input type="email" name="email" required placeholder="Your work email"
+          class="w-full border border-gray-300 rounded-input px-4 py-2.5 focus:outline-none focus:border-primary" />
+      </div>
+      <button type="submit" class="btn-primary w-full text-center">Send Me the File →</button>
+    </form>
+    <p class="text-small text-gray-400 text-center mt-3">🔒 No spam · No reselling · GDPR compliant</p>
+  </div>
+</div>
+
+<script>
+  import { isEmailGateOpen, emailGateFile } from '../../lib/store';
+
+  const overlay = document.getElementById('email-gate-overlay')!;
+  const modal = document.getElementById('email-gate-modal')!;
+  const closeBtn = document.getElementById('email-gate-close')!;
+  const form = document.getElementById('email-gate-form')! as HTMLFormElement;
+
+  function close() {
+    overlay.classList.add('hidden');
+    modal.classList.add('hidden');
+    isEmailGateOpen.set(false);
+  }
+
+  isEmailGateOpen.subscribe((open) => {
+    if (open) {
+      const data = emailGateFile.get();
+      if (data) {
+        (document.getElementById('eg-product-slug') as HTMLInputElement).value = data.productSlug;
+        (document.getElementById('eg-file-type') as HTMLInputElement).value = data.fileType;
+      }
+      overlay.classList.remove('hidden');
+      modal.classList.remove('hidden');
+    } else {
+      close();
+    }
+  });
+
+  overlay.addEventListener('click', close);
+  closeBtn.addEventListener('click', close);
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
+    try {
+      await fetch('/api/download-gate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.fromEntries(fd)),
+      });
+      close();
+      alert('Check your inbox! We sent you the download link.');
+    } catch {
+      alert('Something went wrong. Please try again.');
+    }
+  });
+</script>

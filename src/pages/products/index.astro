@@ -1,0 +1,141 @@
+---
+import BaseLayout from '../../components/ui/BaseLayout.astro';
+import Breadcrumb from '../../components/ui/Breadcrumb.astro';
+import ProductCard from '../../components/ui/ProductCard.astro';
+import ParamFilter from '../../components/ui/ParamFilter.astro';
+import CertLogoWall from '../../components/trust/CertLogoWall.astro';
+import FAQAccordion from '../../components/ui/FAQAccordion.astro';
+import { breadcrumbSchema, faqSchema, graphSchema, itemListSchema } from '../../lib/seo';
+import { listFilterProducts, listProducts } from '../../lib/products';
+import { getSiteUrl, joinSiteUrl } from '../../lib/site';
+
+const title = 'Industrial Machinery Products Manufacturer | IndustryPro';
+const description = 'Source industrial gearboxes, motors, pumps, and OEM machinery from an ISO 9001 manufacturer. Compare MOQ, lead time, certifications, and request a category quote.';
+
+const products = listProducts();
+const productCards = listFilterProducts();
+
+const filterGroups = [
+  { name: 'Category', options: [
+    { label: 'Gearboxes', value: 'gearboxes', count: 2 },
+    { label: 'Electric Motors', value: 'motors', count: 1 },
+    { label: 'Pumps & Valves', value: 'pumps', count: 1 },
+  ]},
+  { name: 'Certification', options: [
+    { label: 'ISO 9001', value: 'iso9001', count: 4 },
+    { label: 'CE', value: 'ce', count: 4 },
+    { label: 'RoHS', value: 'rohs', count: 3 },
+  ]},
+];
+
+const categoryFaqs = [
+  { question: 'How do I choose the right industrial machinery supplier?', answer: 'Shortlist suppliers with verifiable certifications, export experience, clear MOQ and lead time, engineering support, and documented quality control checkpoints.' },
+  { question: 'Can IndustryPro support OEM or ODM projects?', answer: 'Yes. OEM/ODM support is available for ratios, mounting dimensions, materials, packaging, labels, and application-specific configuration.' },
+  { question: 'What information should I send for a fast quote?', answer: 'Send the product category, model or application, target quantity, destination country, drawings or specs, and any required certification standards.' },
+];
+
+const siteUrl = getSiteUrl(import.meta.env.PUBLIC_SITE_URL || Astro.site?.href);
+const productListSchema = JSON.parse(itemListSchema(products.map((product) => ({
+  name: product.title,
+  url: joinSiteUrl(siteUrl, `/products/${product.slug}/`),
+}))));
+const plpSchema = graphSchema([
+  JSON.parse(breadcrumbSchema([
+    { name: 'Home', url: siteUrl },
+    { name: 'Products', url: joinSiteUrl(siteUrl, '/products/') },
+  ])),
+  productListSchema,
+  JSON.parse(faqSchema(categoryFaqs)),
+]);
+---
+
+<BaseLayout title={title} description={description} canonical="/products/" schema={plpSchema}>
+  <div class="container mx-auto px-4 pb-16">
+    <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Products', href: '/products/' }]} includeSchema={false} />
+
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
+      <div class="lg:col-span-8">
+        <p class="text-caption font-semibold text-primary mb-3">ISO 9001 manufacturer · OEM/ODM · Global export</p>
+        <h1 class="text-display font-bold text-gray-900 leading-tight mb-5">Industrial Machinery Products Manufacturer</h1>
+        <p class="text-subhead text-gray-600 leading-relaxed max-w-3xl">
+          IndustryPro supplies industrial gearboxes, motors, pumps, and custom OEM machinery for buyers who need verifiable quality, predictable lead times, and export-ready documentation. Use this page to compare product families, shortlist models, and request a category-level quote.
+        </p>
+        <div class="mt-6 flex flex-col sm:flex-row gap-3">
+          <a href="/get-a-quote/" class="btn-primary">Request Category Quote</a>
+          <a href="#buying-guide" class="btn-outline">Read Buying Guide</a>
+        </div>
+      </div>
+      <aside class="lg:col-span-4 bg-white border border-gray-100 rounded-card p-6 shadow-card">
+        <h2 class="text-subhead font-semibold text-gray-900 mb-4">Sourcing Snapshot</h2>
+        <dl class="grid grid-cols-2 gap-4 text-caption">
+          <div><dt class="text-gray-600">Factory area</dt><dd class="font-semibold text-gray-900">20,000 m²</dd></div>
+          <div><dt class="text-gray-600">Export markets</dt><dd class="font-semibold text-gray-900">60+ countries</dd></div>
+          <div><dt class="text-gray-600">Reply time</dt><dd class="font-semibold text-gray-900">Within 12 hours</dd></div>
+          <div><dt class="text-gray-600">NDA</dt><dd class="font-semibold text-gray-900">Available</dd></div>
+        </dl>
+      </aside>
+    </section>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div class="lg:col-span-1">
+        <ParamFilter groups={filterGroups} />
+      </div>
+      <div class="lg:col-span-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+          {productCards.map((p) => <ProductCard {...p} />)}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="buying-guide" class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4">
+      <div class="max-w-3xl mb-10">
+        <h2 class="text-heading font-bold text-gray-900 mb-4">Industrial Machinery Buying Guide</h2>
+        <p class="text-body text-gray-600 leading-relaxed">
+          A reliable B2B machinery supplier should make technical fit, commercial terms, certifications, and quality controls easy to verify before you send drawings or issue a purchase order.
+        </p>
+      </div>
+      <div class="overflow-x-auto bg-gray-warm rounded-card border border-gray-100">
+        <table class="w-full text-left text-caption">
+          <thead class="bg-primary-50 text-gray-900">
+            <tr>
+              <th class="p-4">Product Family</th>
+              <th class="p-4">Best Fit</th>
+              <th class="p-4">MOQ</th>
+              <th class="p-4">Lead Time</th>
+              <th class="p-4">Evidence to Check</th>
+            </tr>
+          </thead>
+          <tbody>
+            {products.map((product) => (
+              <tr class="border-t border-gray-100">
+                <td class="p-4 font-semibold text-gray-900">{product.title}</td>
+                <td class="p-4 text-gray-600">{product.fit}</td>
+                <td class="p-4">{product.moq}</td>
+                <td class="p-4">{product.leadTime}</td>
+                <td class="p-4">{product.certifications.join(', ')}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <CertLogoWall
+    compact
+    certs={[
+      { name: 'ISO 9001:2015', number: 'CN-2021-ISO9001-XXXX', issuer: 'SGS', valid_until: '2027-06' },
+      { name: 'CE', number: 'CE-2022-XXXX', issuer: 'TÜV Rheinland', valid_until: '2027-12' },
+      { name: 'RoHS', number: 'ROHS-2023-XXXX', issuer: 'Intertek', valid_until: '2027-03' },
+    ]}
+  />
+
+  <section class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4 max-w-4xl">
+      <h2 class="text-heading font-bold text-gray-900 mb-6">Sourcing FAQ</h2>
+      <FAQAccordion faqs={categoryFaqs} includeSchema={false} />
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,28 @@
+---
+export interface AppCard {
+  name: string;
+  description: string;
+  image?: string;
+}
+
+export interface Props { applications: AppCard[]; }
+
+const { applications } = Astro.props;
+---
+
+<section style="padding-top: var(--space-block); padding-bottom: var(--space-block)">
+  <div class="container mx-auto px-4">
+    <h2 class="text-heading font-bold text-center mb-10 text-gray-900">Applications</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {applications.map((app) => (
+        <div class="card text-center">
+          <div class="w-16 h-16 bg-primary-50 rounded-full mx-auto mb-3 flex items-center justify-center text-2xl">
+            {app.image ? <img src={app.image} alt={app.name} class="w-10 h-10" /> : '🔧'}
+          </div>
+          <h4 class="font-semibold text-caption mb-1">{app.name}</h4>
+          <p class="text-small text-gray-600">{app.description}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

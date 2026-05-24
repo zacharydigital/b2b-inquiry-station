@@ -1,0 +1,21 @@
+---
+export interface Props {
+  clients: { name: string; logo: string }[];
+  compact?: boolean;
+}
+
+const { clients, compact = false } = Astro.props;
+---
+
+<section class={`${compact ? 'py-8' : ''}`} style={compact ? '' : 'padding-top: var(--space-block); padding-bottom: var(--space-block)'}>
+  <div class="container mx-auto px-4">
+    {!compact && (
+      <h2 class="text-heading font-bold text-center mb-8 text-gray-900">Trusted by Industry Leaders</h2>
+    )}
+    <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60">
+      {clients.map((client) => (
+        <img src={client.logo} alt={client.name} class="h-8 md:h-10 w-auto grayscale" loading="lazy" />
+      ))}
+    </div>
+  </div>
+</section>

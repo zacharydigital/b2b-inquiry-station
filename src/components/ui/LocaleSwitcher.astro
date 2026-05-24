@@ -1,0 +1,28 @@
+---
+export interface Props {
+  currentLocale: string;
+  locales: { code: string; label: string }[];
+}
+
+const { currentLocale, locales } = Astro.props;
+---
+
+<div class="relative group inline-block">
+  <button
+    class="flex items-center gap-1 text-caption text-gray-600 hover:text-primary transition-colors uppercase"
+    aria-label="Switch language"
+  >
+    <span>{currentLocale}</span>
+    <span class="i-carbon-chevron-down text-sm" />
+  </button>
+  <div class="absolute right-0 top-full mt-2 bg-white rounded-card shadow-elevated py-2 min-w-28 hidden group-hover:block z-20">
+    {locales.map((loc) => (
+      <a
+        href={`/?lang=${loc.code}`}
+        class={`block px-4 py-1.5 text-caption hover:bg-primary-50 transition-colors ${loc.code === currentLocale ? 'text-primary font-semibold' : 'text-gray-900'}`}
+      >
+        {loc.label}
+      </a>
+    ))}
+  </div>
+</div>

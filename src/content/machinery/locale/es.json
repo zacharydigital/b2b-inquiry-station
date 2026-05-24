@@ -1,0 +1,23 @@
+{
+  "header": {
+    "home": "Inicio",
+    "products": "Productos",
+    "about": "Nosotros",
+    "contact": "Contacto",
+    "get_quote": "Solicitar Cotización"
+  },
+  "form": {
+    "title": "Obtenga una Cotización para Este Producto",
+    "subtitle": "Respondemos en 12 horas · Sin spam · NDA disponible",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "company": "Empresa",
+    "country": "País",
+    "phone": "Teléfono / WhatsApp",
+    "quantity": "Cantidad",
+    "message": "Cuéntenos sobre sus requisitos...",
+    "upload": "Subir plano / especificaciones (PDF, máx 10MB)",
+    "submit": "Obtener Mi Cotización →",
+    "privacy": "Su información está segura. Nunca compartimos ni enviamos spam."
+  }
+}

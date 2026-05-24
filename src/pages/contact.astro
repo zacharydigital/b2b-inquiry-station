@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../components/ui/BaseLayout.astro';
+import Breadcrumb from '../components/ui/Breadcrumb.astro';
+import FullInquiryForm from '../components/inquiry/FullInquiryForm.astro';
+
+const title = 'Contact Us | IndustryPro';
+const desc = 'Get in touch with our sales team. Reply within 12 hours. NDA available. Global shipping.';
+---
+
+<BaseLayout title={title} description={desc}>
+  <div class="container mx-auto px-4">
+    <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Contact', href: '/contact/' }]} />
+  </div>
+  <FullInquiryForm />
+</BaseLayout>

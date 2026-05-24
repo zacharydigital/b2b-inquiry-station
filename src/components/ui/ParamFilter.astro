@@ -1,0 +1,28 @@
+---
+export interface FilterOption { label: string; value: string; count?: number }
+export interface FilterGroup { name: string; options: FilterOption[] }
+
+const { groups }: { groups: FilterGroup[] } = Astro.props;
+---
+
+<aside class="space-y-6">
+  {groups.map((group) => (
+    <div>
+      <h4 class="font-semibold text-caption mb-3 text-gray-900">{group.name}</h4>
+      <ul class="space-y-1">
+        {group.options.map((opt) => (
+          <li>
+            <label class="flex items-center gap-2 text-caption text-gray-600 hover:text-primary cursor-pointer">
+              <input type="checkbox" name={group.name.toLowerCase()} value={opt.value}
+                class="rounded text-primary focus:ring-primary" />
+              {opt.label}
+              {opt.count !== undefined && (
+                <span class="text-small text-gray-400 ml-auto">({opt.count})</span>
+              )}
+            </label>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))}
+</aside>

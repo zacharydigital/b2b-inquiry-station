@@ -1,0 +1,207 @@
+---
+import BaseLayout from '../../components/ui/BaseLayout.astro';
+import Breadcrumb from '../../components/ui/Breadcrumb.astro';
+import Gallery from '../../components/ui/Gallery.astro';
+import StickyInquirySidebar from '../../components/inquiry/StickyInquirySidebar.astro';
+import KeyCommercialTerms from '../../components/ui/KeyCommercialTerms.astro';
+import FABENarrative from '../../components/fab-e/FABENarrative.astro';
+import Specifications from '../../components/fab-e/Specifications.astro';
+import Applications from '../../components/fab-e/Applications.astro';
+import CertLogoWall from '../../components/trust/CertLogoWall.astro';
+import ManufacturingQC from '../../components/trust/ManufacturingQC.astro';
+import CaseStudy from '../../components/trust/CaseStudy.astro';
+import DownloadsSection from '../../components/ui/DownloadsSection.astro';
+import FAQAccordion from '../../components/ui/FAQAccordion.astro';
+import RelatedProducts from '../../components/ui/RelatedProducts.astro';
+import FinalCTA from '../../components/ui/FinalCTA.astro';
+import InlineInquiryForm from '../../components/inquiry/InlineInquiryForm.astro';
+import QuoteCartPanel from '../../components/inquiry/QuoteCartPanel.astro';
+import QuoteCartButton from '../../components/inquiry/QuoteCartButton.astro';
+import EmailGateModal from '../../components/inquiry/EmailGateModal.astro';
+import { breadcrumbSchema, faqSchema, graphSchema, productSchema } from '../../lib/seo';
+import { getProductBySlug, getProductStaticPaths, listProducts } from '../../lib/products';
+import { getSiteUrl, joinSiteUrl } from '../../lib/site';
+
+export function getStaticPaths() {
+  return getProductStaticPaths();
+}
+
+const { slug } = Astro.params;
+const product = getProductBySlug(slug || '') || listProducts()[0];
+
+const title = `${product.title} — ${product.model} | IndustryPro`;
+const desc = `Industrial ${product.category.toLowerCase()} ${product.model}. MOQ ${product.moq}. ISO 9001 certified manufacturer. OEM/ODM supported. Request a quote today.`;
+const siteUrl = getSiteUrl(import.meta.env.PUBLIC_SITE_URL || Astro.site?.href);
+const productUrl = joinSiteUrl(siteUrl, `/products/${product.slug}/`);
+const productSchemaNode = JSON.parse(productSchema({
+  name: product.title,
+  description: desc,
+  image: joinSiteUrl(siteUrl, product.image),
+  sku: product.model,
+  category: product.category,
+  url: productUrl,
+  brand: 'IndustryPro',
+  offers: { availability: 'InStock' },
+}));
+const pdpSchema = graphSchema([
+  productSchemaNode,
+  JSON.parse(breadcrumbSchema([
+    { name: 'Home', url: siteUrl },
+    { name: 'Products', url: joinSiteUrl(siteUrl, '/products/') },
+    { name: product.title, url: productUrl },
+  ])),
+  JSON.parse(faqSchema(product.faqs)),
+]);
+---
+
+<BaseLayout title={title} description={desc} canonical={`/products/${product.slug}/`} schema={pdpSchema}>
+  <div class="container mx-auto px-4 pb-16">
+    <!-- 1. Breadcrumb -->
+    <Breadcrumb
+      items={[
+        { label: 'Home', href: '/' },
+        { label: 'Products', href: '/products/' },
+        { label: product.title, href: `/products/${product.slug}/` },
+      ]}
+      includeSchema={false}
+    />
+
+    <!-- 2. Hero Block -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
+      <div class="lg:col-span-8">
+        <Gallery mainImage={product.image} alt={`${product.title} — front view`} />
+      </div>
+      <div class="lg:col-span-4">
+        <h1 class="text-heading font-bold text-gray-900 mb-2">{product.title}</h1>
+        <p class="text-caption text-gray-600 mb-4">Model: {product.model}</p>
+        <div class="bg-primary-50 border border-primary-100 rounded-card p-4 mb-5">
+          <h2 class="text-caption font-semibold text-gray-900 mb-2">Best-fit sourcing summary</h2>
+          <p class="text-caption text-gray-600 leading-relaxed">
+            {product.model} is a {product.category.toLowerCase()} option for {product.applications.slice(0, 2).map((app) => app.name).join(' and ')} applications. Buyers typically request it when they need {product.features[0].label.toLowerCase()} of {product.features[0].value}, MOQ {product.moq}, and export-ready certification documents.
+          </p>
+        </div>
+        <StickyInquirySidebar
+          productSlug={product.slug}
+          productModel={product.model}
+          productTitle={product.title}
+          moq={product.moq}
+          leadTime={product.leadTime}
+          payment={product.payment}
+          sample={product.sample}
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Key Commercial Terms -->
+  <KeyCommercialTerms
+    items={[
+      { label: 'MOQ', value: product.moq, subtext: 'Flexible for OEM' },
+      { label: 'Lead Time', value: product.leadTime, subtext: 'Rush available' },
+      { label: 'Payment', value: product.payment, subtext: '30/70 terms' },
+      { label: 'Sample', value: product.sample, subtext: 'Cost deductible' },
+      { label: 'Packaging', value: 'Wooden crate', subtext: '+ VCI protection' },
+      { label: 'Export to', value: '60+ countries', subtext: 'FOB/CIF/DDP' },
+    ]}
+  />
+
+  <section class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="lg:col-span-7">
+          <p class="text-caption font-semibold text-primary mb-3">AEO answer block</p>
+          <h2 class="text-heading font-bold text-gray-900 mb-4">What is {product.model} used for?</h2>
+          <p class="text-subhead text-gray-600 leading-relaxed">
+            {product.model} is used in {product.applications.map((app) => app.name).join(', ')} where buyers need a certified industrial component with predictable lead time, documented specifications, and OEM/ODM support. It is suitable for sourcing teams comparing technical fit, MOQ, sample availability, and export documentation before requesting a quote.
+          </p>
+        </div>
+        <aside class="lg:col-span-5 bg-gray-warm border border-gray-100 rounded-card p-6">
+          <h3 class="text-subhead font-semibold text-gray-900 mb-4">Selection Checklist</h3>
+          <ul class="space-y-3 text-caption text-gray-600">
+            <li><strong class="text-gray-900">Application:</strong> {product.applications[0].name}</li>
+            <li><strong class="text-gray-900">Standard:</strong> {product.standard}</li>
+            <li><strong class="text-gray-900">Certifications:</strong> {product.certifications.join(', ')}</li>
+            <li><strong class="text-gray-900">Quote inputs:</strong> quantity, destination, drawings/specs, required certification.</li>
+            <li><strong class="text-gray-900">Last reviewed:</strong> {product.updated} by IndustryPro engineering team.</li>
+          </ul>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Features & Advantages (FAB-E: A+B) -->
+  <FABENarrative advantages={product.advantages} />
+
+  <!-- 5. Specifications (FAB-E: F) -->
+  <Specifications specs={product.specifications} />
+
+  <!-- 6. Applications (FAB-E: B scenario) -->
+  <Applications applications={product.applications} />
+
+  <!-- 7. Certifications -->
+  <CertLogoWall compact
+    certs={[
+      { name: 'ISO 9001:2015', number: 'CN-2021-ISO9001-XXXX', issuer: 'SGS', valid_until: '2027-06' },
+      { name: 'CE', number: 'CE-2022-XXXX', issuer: 'TÜV', valid_until: '2027-12' },
+      { name: 'RoHS', number: 'ROHS-2023-XXXX', issuer: 'Intertek', valid_until: '2027-03' },
+    ]}
+  />
+
+  <!-- 8. Manufacturing & QC -->
+  <ManufacturingQC capacity="50,000 units/month" />
+
+  <section class="bg-gray-warm" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4">
+      <div class="max-w-3xl mb-8">
+        <h2 class="text-heading font-bold text-gray-900 mb-4">Quality Evidence Buyers Can Verify</h2>
+        <p class="text-body text-gray-600 leading-relaxed">
+          Each {product.model} inquiry can be matched with certification files, outgoing inspection records, packaging photos, and application-specific configuration notes. This gives procurement teams traceable evidence before sample approval or bulk purchase.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {[
+          { title: 'Incoming Material Check', detail: 'Supplier batch records and material inspection before machining or assembly.' },
+          { title: 'Process QC', detail: `Dimensional checks against ${product.standard} and product-specific tolerances.` },
+          { title: 'Pre-shipment Evidence', detail: 'Photos, test records, packaging confirmation, and export document review.' },
+        ].map((item) => (
+          <div class="bg-white rounded-card border border-gray-100 p-5">
+            <h3 class="font-semibold text-gray-900 mb-2">{item.title}</h3>
+            <p class="text-caption text-gray-600 leading-relaxed">{item.detail}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. Case Study -->
+  <CaseStudy
+    cases={[
+      { client: 'PrecisionCNC GmbH', country: 'Germany', project: '5-axis CNC retrofits — 200 units', result: '40% longer uptime vs previous supplier', quote: "The HG-220's low backlash and consistent quality made it our standard gearbox for all new machine builds." },
+    ]}
+  />
+
+  <!-- 10. Downloads -->
+  <DownloadsSection productSlug={product.slug} />
+
+  <!-- 11. FAQ -->
+  <FAQAccordion faqs={product.faqs} includeSchema={false} />
+
+  <!-- 12. Related Products -->
+  <RelatedProducts products={product.relatedProducts} />
+
+  <!-- Inline Inquiry Form -->
+  <div class="container mx-auto px-4 max-w-3xl" style="padding-top: var(--space-section)">
+    <InlineInquiryForm
+      productSlug={product.slug}
+      productName={product.title}
+    />
+  </div>
+
+  <!-- 13. Final CTA -->
+  <FinalCTA productName={product.model} />
+
+  <!-- Quote Cart -->
+  <QuoteCartPanel />
+  <QuoteCartButton />
+  <EmailGateModal />
+</BaseLayout>

@@ -1,0 +1,30 @@
+---
+import { faqSchema } from '../../lib/seo';
+
+export interface Props {
+  faqs: { question: string; answer: string }[];
+  includeSchema?: boolean;
+}
+
+const { faqs, includeSchema = true } = Astro.props;
+const schema = faqSchema(faqs);
+---
+
+<section style="padding-top: var(--space-block); padding-bottom: var(--space-block)">
+  <div class="container mx-auto px-4 max-w-2xl">
+    <h2 class="text-heading font-bold text-center mb-10 text-gray-900">Frequently Asked Questions</h2>
+    <div class="space-y-3">
+      {faqs.map((faq, i) => (
+        <details class="card !p-0 overflow-hidden group">
+          <summary class="px-6 py-4 cursor-pointer font-medium text-caption text-gray-900 hover:text-primary transition-colors list-none flex items-center justify-between">
+            {faq.question}
+            <span class="transform transition-transform group-open:rotate-180 text-gray-400 ml-2 shrink-0">▼</span>
+          </summary>
+          <p class="px-6 pb-4 text-caption text-gray-600 leading-relaxed">{faq.answer}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+{includeSchema && <script type="application/ld+json" set:html={schema} />}

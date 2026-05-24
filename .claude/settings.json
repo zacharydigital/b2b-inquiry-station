@@ -1,0 +1,44 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "filePattern": "wrangler\\.toml",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '⚠️  Editing wrangler.toml — contains D1/R2/Resend deployment config. Verify changes before committing.'"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "filePattern": "src/.*\\.(astro|ts)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /Users/zhenxing.z/dev_projects/b2b-inquiry-station && npx vitest run --reporter=verbose 2>&1 | tail -15"
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(npm:*)",
+      "Bash(pnpm:*)",
+      "Bash(npx:*)",
+      "Bash(git:*)",
+      "Bash(cd:*)",
+      "Bash(mkdir:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(cat:*)",
+      "Bash(echo:*)",
+      "Bash(curl:*)"
+    ]
+  }
+}

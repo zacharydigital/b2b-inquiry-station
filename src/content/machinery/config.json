@@ -1,0 +1,20 @@
+{
+  "name": "machinery",
+  "label": "Industrial Machinery",
+  "meta": {
+    "title": "Industrial Machinery Manufacturer | OEM Factory Supplier",
+    "description": "Professional industrial machinery manufacturer. ISO 9001 certified factory. OEM/ODM supported. Request a quote today."
+  },
+  "tokens": {
+    "primary": "#1A4F86",
+    "primary_900": "#153E6A",
+    "accent": "#E8651A"
+  },
+  "locales": ["en", "es"],
+  "defaultLocale": "en",
+  "modules": {
+    "tier1": ["home", "plp", "pdp", "contact", "quote-cart", "thank-you"],
+    "tier2": ["get-a-quote", "compare", "specs", "certifications"],
+    "tier3": []
+  }
+}

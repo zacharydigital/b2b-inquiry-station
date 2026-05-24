@@ -1,0 +1,120 @@
+---
+import BaseLayout from '../components/ui/BaseLayout.astro';
+import Breadcrumb from '../components/ui/Breadcrumb.astro';
+import FAQAccordion from '../components/ui/FAQAccordion.astro';
+import { breadcrumbSchema, faqSchema, graphSchema, organizationSchema } from '../lib/seo';
+import { companyProfile, getTrustProof } from '../lib/company';
+import { getSiteUrl, joinSiteUrl } from '../lib/site';
+
+const title = `Certifications & Compliance | ${companyProfile.name}`;
+const desc = 'Verify ISO 9001, CE, RoHS, QC process, and export compliance documentation for IndustryPro industrial machinery products.';
+const trust = getTrustProof();
+const siteUrl = getSiteUrl(import.meta.env.PUBLIC_SITE_URL || Astro.site?.href);
+const complianceFaqs = [
+  { question: 'Can I request copies of certificates before placing an order?', answer: 'Yes. Qualified buyers can request the current compliance pack, including certificate scans and product-level documentation relevant to the RFQ.' },
+  { question: 'Are all products covered by the same certification?', answer: 'Factory-level certifications such as ISO 9001 apply to the quality management system. Product-level marks such as CE or RoHS depend on the product family and configuration.' },
+  { question: 'What documents are available before shipment?', answer: 'Depending on the order, we can provide inspection records, packaging photos, certificate copies, commercial invoice, packing list, and shipping documents.' },
+];
+const schema = graphSchema([
+  JSON.parse(organizationSchema({ name: companyProfile.name, url: siteUrl })),
+  {
+    '@type': 'CollectionPage',
+    name: title,
+    description: desc,
+    url: joinSiteUrl(siteUrl, '/certifications/'),
+    about: trust.certifications.map((cert) => ({
+      '@type': 'CreativeWork',
+      name: cert.name,
+      identifier: cert.number,
+      publisher: cert.issuer,
+    })),
+  },
+  JSON.parse(breadcrumbSchema([
+    { name: 'Home', url: siteUrl },
+    { name: 'Certifications', url: joinSiteUrl(siteUrl, '/certifications/') },
+  ])),
+  JSON.parse(faqSchema(complianceFaqs)),
+]);
+---
+
+<BaseLayout title={title} description={desc} canonical="/certifications/" schema={schema}>
+  <div class="container mx-auto px-4 pb-16">
+    <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Certifications', href: '/certifications/' }]} includeSchema={false} />
+  </div>
+
+  <section class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        <div class="lg:col-span-7">
+          <p class="text-caption font-semibold text-primary mb-3">Compliance evidence for export buyers</p>
+          <h1 class="text-display font-bold text-gray-900 leading-tight mb-5">Certifications & Compliance</h1>
+          <p class="text-subhead text-gray-600 leading-relaxed max-w-3xl">
+            Verify factory-level quality systems, product-level compliance marks, and export documentation before you approve samples or issue a purchase order.
+          </p>
+          <div class="mt-7 flex flex-col sm:flex-row gap-3">
+            <a href="/get-a-quote/" class="btn-primary">Request Compliance Pack</a>
+            <a href="/about/" class="btn-outline">View Factory Profile</a>
+          </div>
+        </div>
+        <aside class="lg:col-span-5 bg-gray-warm border border-gray-100 rounded-card p-6">
+          <h2 class="text-subhead font-semibold text-gray-900 mb-4">Available Before Shipment</h2>
+          <ul class="space-y-3 text-caption text-gray-600">
+            {['Certificate copies', 'Outgoing QC records', 'Packaging photos', 'Commercial invoice', 'Packing list', 'Shipping documents'].map((item) => (
+              <li class="flex gap-2"><span class="text-success">✓</span><span>{item}</span></li>
+            ))}
+          </ul>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-gray-warm" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {trust.certifications.map((cert) => (
+          <article class="bg-white rounded-card border border-gray-100 p-6 shadow-card">
+            <span class="text-3xl mb-3 block">📜</span>
+            <h2 class="font-bold text-subhead mb-3">{cert.name}</h2>
+            <dl class="text-caption text-gray-600 space-y-2">
+              <div><dt class="text-gray-900 font-semibold">Certificate No.</dt><dd>{cert.number}</dd></div>
+              <div><dt class="text-gray-900 font-semibold">Issuer</dt><dd>{cert.issuer}</dd></div>
+              <div><dt class="text-gray-900 font-semibold">Valid Until</dt><dd>{cert.valid_until}</dd></div>
+              <div><dt class="text-gray-900 font-semibold">Use</dt><dd>{cert.name.includes('ISO') ? 'Factory quality management system' : 'Product-level compliance evidence'}</dd></div>
+            </dl>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4">
+      <div class="max-w-3xl mb-8">
+        <h2 class="text-heading font-bold text-gray-900 mb-4">How Buyers Should Verify Compliance</h2>
+        <p class="text-body text-gray-600 leading-relaxed">
+          Certifications are most useful when they are connected to a product family, production batch, and shipment record. Use this workflow before confirming a bulk order.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+        {[
+          { title: '1. Match Scope', desc: 'Confirm whether the document is factory-level or product-level.' },
+          { title: '2. Check Validity', desc: 'Review issuer, certificate number, and valid-until date.' },
+          { title: '3. Confirm Product Fit', desc: 'Map compliance needs to the selected model and configuration.' },
+          { title: '4. Request Batch Evidence', desc: 'Ask for outgoing QC and shipment documents before delivery.' },
+        ].map((step) => (
+          <div class="bg-gray-warm border border-gray-100 rounded-card p-5">
+            <h3 class="font-semibold text-gray-900 mb-2">{step.title}</h3>
+            <p class="text-caption text-gray-600 leading-relaxed">{step.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-gray-warm" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4 max-w-4xl">
+      <h2 class="text-heading font-bold text-gray-900 mb-6">Compliance FAQ</h2>
+      <FAQAccordion faqs={complianceFaqs} includeSchema={false} />
+    </div>
+  </section>
+</BaseLayout>

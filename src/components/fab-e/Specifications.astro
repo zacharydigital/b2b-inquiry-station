@@ -1,0 +1,54 @@
+---
+export interface Spec {
+  parameter: string;
+  value: string;
+  note?: string;
+}
+
+export interface Props { specs: Spec[]; }
+
+const { specs } = Astro.props;
+const visibleCount = 8;
+---
+
+<section style="padding-top: var(--space-block); padding-bottom: var(--space-block)">
+  <div class="container mx-auto px-4">
+    <h2 class="text-heading font-bold mb-8 text-gray-900">Technical Specifications</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full border-collapse bg-white rounded-card shadow-card">
+        <thead>
+          <tr class="border-b border-gray-100">
+            <th class="text-left px-6 py-3 text-caption font-semibold text-gray-900">Parameter</th>
+            <th class="text-left px-6 py-3 text-caption font-semibold text-gray-900">Value</th>
+            <th class="text-left px-6 py-3 text-caption font-semibold text-gray-900 hidden md:table-cell">Note</th>
+          </tr>
+        </thead>
+        <tbody id="spec-tbody">
+          {specs.map((s, i) => (
+            <tr class={`border-b border-gray-50 ${i >= visibleCount ? 'spec-hidden hidden' : ''} ${i < 3 ? 'border-l-4 border-l-primary' : ''}`}>
+              <td class="px-6 py-3 text-caption font-medium text-gray-900">{s.parameter}</td>
+              <td class="px-6 py-3 text-caption text-gray-600">{s.value}</td>
+              <td class="px-6 py-3 text-small text-gray-400 hidden md:table-cell">{s.note || '—'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    {specs.length > visibleCount && (
+      <button id="spec-toggle" class="mt-4 text-caption text-primary font-medium hover:underline mx-auto block">
+        Show all {specs.length} specs ▼
+      </button>
+    )}
+  </div>
+</section>
+
+<script>
+  document.getElementById('spec-toggle')?.addEventListener('click', function () {
+    const hidden = document.querySelectorAll('.spec-hidden');
+    const isHidden = hidden[0]?.classList.contains('hidden');
+    hidden.forEach((el) => el.classList.toggle('hidden', !isHidden));
+    this.textContent = isHidden
+      ? 'Show fewer specs ▲'
+      : 'Show all specs ▼';
+  });
+</script>

@@ -1,0 +1,41 @@
+---
+export interface CaseStudyItem {
+  client: string;
+  country: string;
+  project: string;
+  result: string;
+  quote: string;
+}
+
+export interface Props {
+  cases: CaseStudyItem[];
+}
+
+const { cases } = Astro.props;
+---
+
+<section style="padding-top: var(--space-block); padding-bottom: var(--space-block)">
+  <div class="container mx-auto px-4">
+    <h2 class="text-heading font-bold text-center mb-10 text-gray-900">Case Studies</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+      {cases.map((c) => (
+        <div class="card">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center text-lg font-bold text-primary">
+              {c.client[0]}
+            </div>
+            <div>
+              <p class="font-semibold text-caption">{c.client}</p>
+              <p class="text-small text-gray-400">{c.country}</p>
+            </div>
+          </div>
+          <p class="text-caption text-gray-600 mb-2"><strong>Project:</strong> {c.project}</p>
+          <p class="text-caption text-gray-600 mb-3"><strong>Result:</strong> {c.result}</p>
+          <blockquote class="border-l-2 border-primary pl-4 italic text-caption text-gray-600">
+            "{c.quote}"
+          </blockquote>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,43 +1,66 @@
-# Astro Starter Kit: Minimal
+# B2B Inquiry Station
 
-```sh
-pnpm create astro@latest -- --template minimal
+Astro + UnoCSS template for high-conversion B2B export inquiry sites. It is designed for Cloudflare Pages, Cloudflare D1, Cloudflare R2, and Resend transactional email.
+
+## Commands
+
+```bash
+pnpm install
+pnpm dev
+pnpm test
+pnpm build
+pnpm preview
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Local builds default to static output. Cloudflare Pages builds switch to server output when `CF_PAGES` or `CLOUDFLARE_ACCOUNT_ID` is present.
 
-## 🚀 Project Structure
+## Project Structure
 
-Inside of your Astro project, you'll see the following folders and files:
+- `src/pages/`: Astro routes, product pages, and API endpoints.
+- `src/pages/api/`: inquiry, quote cart, and download gate handlers.
+- `src/components/`: UI, trust, inquiry, and FAB-E product sections.
+- `src/content/machinery/`: industry content and locale files.
+- `src/lib/`: shared TypeScript utilities and tests.
+- `migrations/`: Cloudflare D1 schema.
+- `public/`: static assets and Cloudflare headers.
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+## Required Production Configuration
+
+Create Cloudflare resources and keep binding names aligned with `wrangler.toml`.
+
+```toml
+[[d1_databases]]
+binding = "DB"
+database_name = "b2b-inquiries"
+database_id = "<cloudflare-d1-database-id>"
+
+[[r2_buckets]]
+binding = "FILES"
+bucket_name = "b2b-inquiry-files"
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Set these Cloudflare Pages variables or secrets:
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+```env
+RESEND_API_KEY=re_xxx
+NOTIFY_EMAIL=sales@aiseopilot.com
+FROM_EMAIL=inquiry@send.aiseopilot.com
+PUBLIC_SITE_URL=https://b2b.aiseo.dpdns.org
+SITE_URL=https://b2b.aiseo.dpdns.org
+```
 
-Any static assets, like images, can be placed in the `public/` directory.
+`FROM_EMAIL` must use a sender domain verified in Resend. Do not leave production values blank.
 
-## 🧞 Commands
+## D1 Migration
 
-All commands are run from the root of the project, from a terminal:
+Apply the schema before accepting production inquiries:
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+```bash
+pnpm dlx wrangler d1 execute b2b-inquiries --remote --file=migrations/001_schema.sql
+```
 
-## 👀 Want to learn more?
+The schema supports single-product inquiries, batch RFQs, download leads, source-page tracking, attachment keys, and inquiry status fields.
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## Conversion Flow
+
+Product and contact forms POST to `/api/inquiry`. Quote cart submissions POST to `/api/quote-cart`. Download gates POST to `/api/download-gate`. In production, API routes fail closed when required D1 or Resend configuration is missing, so setup issues surface instead of silently losing leads.

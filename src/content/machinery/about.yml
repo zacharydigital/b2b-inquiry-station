@@ -1,0 +1,70 @@
+company:
+  name: "IndustryPro Machinery"
+  founded: 2010
+  tagline: "Precision Engineering, Global Delivery"
+  description: >
+    We are an ISO 9001:2015 certified manufacturer specializing in industrial power
+    transmission and motion control solutions. With 15+ years of experience and
+    exports to 60+ countries, we serve OEMs and industrial distributors worldwide.
+  team:
+    - name: "David Chen"
+      role: "CEO"
+      linkedin: "https://linkedin.com/in/example"
+    - name: "Maria Santos"
+      role: "Sales Director"
+      linkedin: "https://linkedin.com/in/example"
+    - name: "Thomas Mueller"
+      role: "QC Manager"
+      linkedin: "https://linkedin.com/in/example"
+
+trust:
+  certifications:
+    - name: "ISO 9001:2015"
+      number: "CN-2021-ISO9001-XXXX"
+      issuer: "SGS"
+      valid_until: "2027-06"
+    - name: "CE"
+      number: "CE-2022-XXXX"
+      issuer: "TÜV Rheinland"
+      valid_until: "2027-12"
+    - name: "RoHS"
+      number: "ROHS-2023-XXXX"
+      issuer: "Intertek"
+      valid_until: "2027-03"
+
+  clients:
+    - name: "Siemens"
+      logo: "/static/placeholder-logo.svg"
+    - name: "ABB"
+      logo: "/static/placeholder-logo.svg"
+    - name: "Bosch"
+      logo: "/static/placeholder-logo.svg"
+    - name: "Rockwell Automation"
+      logo: "/static/placeholder-logo.svg"
+    - name: "Schneider Electric"
+      logo: "/static/placeholder-logo.svg"
+
+  testimonials:
+    - name: "James Wilson"
+      company: "Wilson Automation Ltd."
+      country: "UK"
+      quote: "IndustryPro has been our primary gearbox supplier for 5 years. Consistent quality and excellent communication."
+    - name: "Luis Fernandez"
+      company: "TechnoMex SA"
+      country: "Mexico"
+      quote: "The team went above and beyond to customize a solution for our unique application. Highly recommended for OEM projects."
+
+  media_badges:
+    - "Forbes Supply Chain 2024"
+    - "Thomas Verified Supplier"
+    - "Made in China Industry Award 2024"
+
+  sample_policy:
+    summary: "Sample cost is deductible from your first order of $500 or more. Ships within 5 business days."
+    free_conditions: "Free samples for orders above 500 units."
+
+  sla:
+    reply_time: "12 business hours"
+    privacy: "No newsletters. No reselling. No calls unless you request."
+    nda: "Check the box and we'll send an NDA template within 1 hour."
+    factory_visit: "Free airport pickup + hotel for verified buyers."

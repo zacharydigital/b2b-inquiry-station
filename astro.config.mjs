@@ -1,5 +1,17 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import unocss from '@unocss/astro';
+import cloudflare from '@astrojs/cloudflare';
 
-// https://astro.build/config
-export default defineConfig({});
+const isCloudflare = !!process.env.CF_PAGES || !!process.env.CLOUDFLARE_ACCOUNT_ID;
+
+export default defineConfig({
+  integrations: [unocss({ injectReset: true })],
+  output: isCloudflare ? 'server' : 'static',
+  adapter: isCloudflare ? cloudflare() : undefined,
+  vite: {
+    ssr: {
+      noExternal: ['@unocss/reset', 'nanostores'],
+    },
+  },
+});

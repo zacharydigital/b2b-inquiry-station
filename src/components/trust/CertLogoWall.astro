@@ -1,0 +1,26 @@
+---
+export interface Props {
+  certs: { name: string; number: string; issuer: string; valid_until: string }[];
+  compact?: boolean;
+}
+
+const { certs, compact = false } = Astro.props;
+---
+
+<section class={`${compact ? 'py-8' : ''}`} style={compact ? '' : 'padding-top: var(--space-section); padding-bottom: var(--space-section)'}>
+  <div class="container mx-auto px-4">
+    {!compact && (
+      <h2 class="text-heading font-bold text-center mb-10 text-gray-900">Certifications & Compliance</h2>
+    )}
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {certs.map((cert) => (
+        <div class="card text-center">
+          <span class="text-2xl mb-2 block">📜</span>
+          <h4 class="font-semibold text-caption mb-1">{cert.name}</h4>
+          <p class="text-small text-gray-600">{cert.number}</p>
+          <p class="text-small text-gray-400">{cert.issuer} · {cert.valid_until}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

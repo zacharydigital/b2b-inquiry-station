@@ -1,0 +1,67 @@
+---
+export interface Props {
+  tagline?: string;
+  links?: { label: string; href: string }[];
+  contact?: { email: string; phone: string };
+  trustBadges?: string[];
+}
+
+const {
+  tagline = 'Professional industrial machinery manufacturer. ISO 9001 certified.',
+  links = [],
+  contact = { email: 'sales@aiseopilot.com', phone: '+1-XXX-XXX-XXXX' },
+  trustBadges = ['ISO 9001:2015', 'CE Certified', 'Global Shipping'],
+} = Astro.props;
+---
+
+<footer class="bg-gray-900 text-white mt-section">
+  <div class="container mx-auto px-4 py-16">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+      <!-- Company -->
+      <div>
+        <h3 class="text-subhead font-semibold mb-4">IndustryPro</h3>
+        <p class="text-gray-300 text-caption leading-relaxed mb-4">{tagline}</p>
+        <div class="flex gap-3">
+          {trustBadges.map((badge) => (
+            <span class="text-small bg-white/10 px-2 py-1 rounded">{badge}</span>
+          ))}
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h4 class="text-subhead font-semibold mb-4">Quick Links</h4>
+        <ul class="space-y-2">
+          {links.map((link) => (
+            <li>
+              <a href={link.href} class="text-gray-300 hover:text-white transition-colors text-caption">
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <h4 class="text-subhead font-semibold mb-4">Contact</h4>
+        <ul class="space-y-2 text-caption text-gray-300">
+          <li>
+            <a href={`mailto:${contact.email}`} class="hover:text-white transition-colors">
+              {contact.email}
+            </a>
+          </li>
+          <li>{contact.phone}</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Trust Badge Bar -->
+    <div class="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-small text-gray-400">
+      <p>&copy; {new Date().getFullYear()} IndustryPro. All rights reserved.</p>
+      <p class="flex items-center gap-1">
+        <span>🔒</span> No spam · No reselling · GDPR compliant
+      </p>
+    </div>
+  </div>
+</footer>

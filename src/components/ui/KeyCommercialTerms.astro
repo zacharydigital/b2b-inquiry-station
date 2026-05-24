@@ -1,0 +1,21 @@
+---
+export interface Props {
+  items: { label: string; value: string; subtext: string }[];
+}
+
+const { items } = Astro.props;
+---
+
+<section class="bg-primary-50 py-8">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-2 md:grid-cols-6 gap-4 text-center">
+      {items.map((item) => (
+        <div>
+          <p class="font-bold text-subhead text-gray-900">{item.value}</p>
+          <p class="text-small text-gray-600">{item.label}</p>
+          {item.subtext && <p class="text-small text-gray-400 mt-0.5">{item.subtext}</p>}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

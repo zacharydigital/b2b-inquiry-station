@@ -1,0 +1,20 @@
+---
+export interface Props {
+  items: { label: string; value: string }[];
+}
+
+const { items } = Astro.props;
+---
+
+<section class="bg-primary-900 text-white">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 py-10">
+      {items.map((item) => (
+        <div class="text-center">
+          <p class="text-display font-bold">{item.value}</p>
+          <p class="text-caption text-primary-100 mt-1">{item.label}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

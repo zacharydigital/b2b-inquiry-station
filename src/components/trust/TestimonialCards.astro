@@ -1,0 +1,27 @@
+---
+export interface Props {
+  testimonials: { name: string; company: string; country: string; quote: string }[];
+}
+
+const { testimonials } = Astro.props;
+---
+
+<section style="padding-top: var(--space-block); padding-bottom: var(--space-block)">
+  <div class="container mx-auto px-4">
+    <h2 class="text-heading font-bold text-center mb-10 text-gray-900">What Our Clients Say</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+      {testimonials.map((t) => (
+        <blockquote class="card relative">
+          <p class="text-body leading-relaxed text-gray-900 mb-4">"{t.quote}"</p>
+          <footer class="text-caption text-gray-600">
+            <strong class="text-gray-900">{t.name}</strong>
+            <span class="mx-1">·</span>
+            {t.company}
+            <span class="mx-1">·</span>
+            {t.country}
+          </footer>
+        </blockquote>
+      ))}
+    </div>
+  </div>
+</section>

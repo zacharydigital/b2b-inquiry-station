@@ -1,0 +1,115 @@
+---
+import BaseLayout from '../components/ui/BaseLayout.astro';
+import FullInquiryForm from '../components/inquiry/FullInquiryForm.astro';
+import QuantifiedStrip from '../components/trust/QuantifiedStrip.astro';
+import FAQAccordion from '../components/ui/FAQAccordion.astro';
+import { faqSchema, graphSchema, breadcrumbSchema } from '../lib/seo';
+import { getSiteUrl, joinSiteUrl } from '../lib/site';
+
+const title = 'Request an Industrial Machinery Quote | IndustryPro';
+const desc = 'Send drawings, specs, quantity, and destination to get an industrial machinery quote from an ISO 9001 manufacturer within 12 business hours.';
+
+const quoteFaqs = [
+  { question: 'What information do I need for a fast quote?', answer: 'Share the product category or model, target quantity, destination country, application, required certifications, and any drawings or technical files.' },
+  { question: 'Can I request a quote before final drawings are ready?', answer: 'Yes. Send the application, target performance, approximate quantity, and any reference model. Our team can recommend a suitable product or OEM path.' },
+  { question: 'Do you support NDA projects?', answer: 'Yes. NDA review is available before sharing confidential drawings, custom dimensions, or private-label requirements.' },
+  { question: 'How fast will I receive a reply?', answer: 'Qualified RFQs are reviewed by the sales engineering team and usually receive a reply within 12 business hours.' },
+];
+
+const siteUrl = getSiteUrl(import.meta.env.PUBLIC_SITE_URL || Astro.site?.href);
+const schema = graphSchema([
+  JSON.parse(breadcrumbSchema([
+    { name: 'Home', url: siteUrl },
+    { name: 'Get a Quote', url: joinSiteUrl(siteUrl, '/get-a-quote/') },
+  ])),
+  JSON.parse(faqSchema(quoteFaqs)),
+  {
+    '@type': 'Service',
+    name: 'Industrial Machinery RFQ Review',
+    provider: { '@type': 'Organization', name: 'IndustryPro', url: siteUrl },
+    areaServed: 'Worldwide',
+    serviceType: 'B2B industrial machinery quotation and OEM/ODM sourcing support',
+  },
+]);
+---
+
+<BaseLayout title={title} description={desc} canonical="/get-a-quote/" schema={schema}>
+  <section class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        <div class="lg:col-span-7">
+          <p class="text-caption font-semibold text-primary mb-3">Engineering RFQ · OEM/ODM · Export-ready documentation</p>
+          <h1 class="text-display font-bold text-gray-900 leading-tight mb-5">
+            Request a machinery quote with the details buyers actually need.
+          </h1>
+          <p class="text-subhead text-gray-600 leading-relaxed max-w-3xl">
+            Send your product category, target quantity, destination country, and drawings or specifications. IndustryPro reviews RFQs with sales engineering context, so you receive a practical sourcing reply instead of a generic brochure.
+          </p>
+          <div class="mt-7 flex flex-col sm:flex-row gap-3">
+            <a href="#rfq-form" class="btn-primary">Start RFQ</a>
+            <a href="#quote-checklist" class="btn-outline">See What to Include</a>
+          </div>
+        </div>
+        <aside class="lg:col-span-5 bg-gray-warm border border-gray-100 rounded-card p-6">
+          <h2 class="text-subhead font-semibold text-gray-900 mb-4">What happens after you submit?</h2>
+          <ol class="space-y-4 text-caption text-gray-600">
+            <li><strong class="text-gray-900">1. RFQ triage:</strong> We review product fit, quantity, destination, and missing technical details.</li>
+            <li><strong class="text-gray-900">2. Engineering check:</strong> Specs, drawings, certification needs, and OEM constraints are checked.</li>
+            <li><strong class="text-gray-900">3. Quote reply:</strong> You receive next steps, lead time, sample path, and commercial terms.</li>
+          </ol>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <QuantifiedStrip
+    items={[
+      { label: 'Reply Window', value: '12h' },
+      { label: 'Export Markets', value: '60+' },
+      { label: 'Factory Area', value: '20k m²' },
+      { label: 'OEM/ODM', value: 'Yes' },
+      { label: 'NDA', value: 'Avail.' },
+    ]}
+  />
+
+  <section id="quote-checklist" class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4">
+      <div class="max-w-3xl mb-8">
+        <h2 class="text-heading font-bold text-gray-900 mb-4">What to Include for a Faster Quote</h2>
+        <p class="text-body text-gray-600 leading-relaxed">
+          RFQs convert faster when procurement, engineering, and supplier teams are looking at the same facts. Include as many of these details as possible.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {[
+          { title: 'Product Fit', items: ['Product category or model', 'Application environment', 'Required performance range'] },
+          { title: 'Commercial Terms', items: ['Target quantity', 'Destination country', 'Sample or bulk order timeline'] },
+          { title: 'Technical Evidence', items: ['Drawings or datasheets', 'Certification requirements', 'OEM/private-label notes'] },
+        ].map((group) => (
+          <div class="bg-gray-warm border border-gray-100 rounded-card p-6">
+            <h3 class="font-semibold text-gray-900 mb-4">{group.title}</h3>
+            <ul class="space-y-2 text-caption text-gray-600">
+              {group.items.map((item) => <li class="flex gap-2"><span class="text-success">✓</span><span>{item}</span></li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <div id="rfq-form">
+    <FullInquiryForm
+      title="Send Your RFQ"
+      subtitle="Attach drawings/specs if available · NDA available · Reply within 12 business hours"
+      inquiryType="rfq"
+      submitLabel="Submit RFQ"
+    />
+  </div>
+
+  <section class="bg-gray-warm" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4 max-w-4xl">
+      <h2 class="text-heading font-bold text-gray-900 mb-6">RFQ Questions</h2>
+      <FAQAccordion faqs={quoteFaqs} includeSchema={false} />
+    </div>
+  </section>
+</BaseLayout>

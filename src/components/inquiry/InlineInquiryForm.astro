@@ -1,0 +1,125 @@
+---
+export interface Props {
+  productSlug?: string;
+  productName?: string;
+  industry?: string;
+  locale?: string;
+}
+
+const { productSlug = '', productName = '', industry = 'machinery', locale = 'en' } = Astro.props;
+const t = {
+  title: 'Get a Quote for This Product',
+  subtitle: 'Reply within 12 hours · No spam · NDA available',
+  name: 'Name',
+  email: 'Email',
+  company: 'Company',
+  country: 'Country',
+  phone: 'Phone / WhatsApp',
+  quantity: 'Quantity',
+  message: 'Tell us about your requirements...',
+  upload: 'Upload drawing / specs (PDF, max 10MB)',
+  submit: 'Get My Quote →',
+  privacy: 'Your info is safe. We never share or spam.',
+};
+---
+
+<div class="bg-gray-warm border border-gray-100 rounded-card p-6 sm:p-8" id="inline-inquiry">
+  <h3 class="text-heading font-bold text-gray-900 mb-2">{t.title}</h3>
+  <p class="text-caption text-gray-600 mb-6">{t.subtitle}</p>
+
+  <form
+    class="inquiry-form space-y-4"
+    method="POST"
+    action="/api/inquiry"
+    enctype="multipart/form-data"
+  >
+    <input type="hidden" name="website_url" tabindex="-1" autocomplete="off" class="hidden" />
+    <input type="hidden" name="product_slug" value={productSlug} />
+    <input type="hidden" name="product_name" value={productName} />
+    <input type="hidden" name="industry" value={industry} />
+    <input type="hidden" name="inquiry_type" value="single" />
+    <input type="hidden" name="locale" value={locale} />
+    <input type="hidden" name="source_page" id="inquiry-source-page" value="" />
+    <input type="hidden" name="utm_source" id="inquiry-utm-source" value="" />
+
+    <div>
+      <label class="block text-small font-medium text-gray-900 mb-1">{t.email} *</label>
+      <input type="email" name="email" required
+        class="w-full border border-gray-300 rounded-input px-4 py-2.5 text-body focus:outline-none focus:border-primary transition-colors" />
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-small font-medium text-gray-900 mb-1">{t.name} *</label>
+        <input type="text" name="name" required
+          class="w-full border border-gray-300 rounded-input px-4 py-2.5 text-body focus:outline-none focus:border-primary transition-colors" />
+      </div>
+      <div>
+        <label class="block text-small font-medium text-gray-900 mb-1">{t.country} *</label>
+        <input type="text" name="country" required
+          class="w-full border border-gray-300 rounded-input px-4 py-2.5 text-body focus:outline-none focus:border-primary transition-colors" />
+      </div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-small font-medium text-gray-900 mb-1">{t.company}</label>
+        <input type="text" name="company"
+          class="w-full border border-gray-300 rounded-input px-4 py-2.5 text-body focus:outline-none focus:border-primary transition-colors" />
+      </div>
+      <div>
+        <label class="block text-small font-medium text-gray-900 mb-1">{t.phone}</label>
+        <input type="tel" name="phone"
+          class="w-full border border-gray-300 rounded-input px-4 py-2.5 text-body focus:outline-none focus:border-primary transition-colors" />
+      </div>
+    </div>
+    <div>
+      <label class="block text-small font-medium text-gray-900 mb-1">{t.quantity}</label>
+      <input type="text" name="quantity"
+        class="w-full border border-gray-300 rounded-input px-4 py-2.5 text-body focus:outline-none focus:border-primary transition-colors" />
+    </div>
+    <div>
+      <label class="block text-small font-medium text-gray-900 mb-1">{t.message}</label>
+      <textarea name="message" rows={3}
+        class="w-full border border-gray-300 rounded-input px-4 py-2.5 text-body focus:outline-none focus:border-primary transition-colors resize-y"
+        placeholder={t.message}></textarea>
+    </div>
+    <div>
+      <label class="block text-small font-medium text-gray-900 mb-1">{t.upload}</label>
+      <input type="file" name="file"
+        class="w-full border border-gray-300 rounded-input px-4 py-2 text-body text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-primary-50 file:text-primary file:font-medium file:cursor-pointer" />
+    </div>
+    <button type="submit" class="btn-primary w-full text-center" data-submit-label={t.submit}>
+      {t.submit}
+    </button>
+    <p class="hidden text-small text-primary text-center" data-form-status aria-live="polite">
+      Submitting your request...
+    </p>
+    <p class="text-small text-gray-400 text-center">{t.privacy}</p>
+  </form>
+</div>
+
+<script>
+  document.querySelectorAll('.inquiry-form').forEach((form) => {
+    const srcInput = form.querySelector('#inquiry-source-page') as HTMLInputElement;
+    if (srcInput) srcInput.value = window.location.href;
+    const utmInput = form.querySelector('#inquiry-utm-source') as HTMLInputElement;
+    if (utmInput) utmInput.value = new URLSearchParams(window.location.search).get('utm_source') || '';
+    form.addEventListener('submit', (e) => {
+      const email = (form.querySelector('input[name="email"]') as HTMLInputElement).value;
+      const name = (form.querySelector('input[name="name"]') as HTMLInputElement).value;
+      const country = (form.querySelector('input[name="country"]') as HTMLInputElement).value;
+      if (!email || !name || !country) {
+        e.preventDefault();
+        alert('Please fill in all required fields (Name, Email, Country).');
+        return;
+      }
+      const button = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+      const status = form.querySelector('[data-form-status]') as HTMLElement;
+      if (button) {
+        button.disabled = true;
+        button.textContent = 'Submitting...';
+        button.classList.add('opacity-75', 'cursor-wait');
+      }
+      if (status) status.classList.remove('hidden');
+    });
+  });
+</script>

@@ -1,0 +1,128 @@
+---
+import BaseLayout from '../components/ui/BaseLayout.astro';
+import Breadcrumb from '../components/ui/Breadcrumb.astro';
+import QuantifiedStrip from '../components/trust/QuantifiedStrip.astro';
+import ManufacturingQC from '../components/trust/ManufacturingQC.astro';
+import TeamPhotoCards from '../components/trust/TeamPhotoCards.astro';
+import CertLogoWall from '../components/trust/CertLogoWall.astro';
+import { breadcrumbSchema, graphSchema, organizationSchema } from '../lib/seo';
+import { companyProfile, getCompanyStats, getTrustProof } from '../lib/company';
+import { getSiteUrl, joinSiteUrl } from '../lib/site';
+
+const title = `About ${companyProfile.name} | ISO 9001 Industrial Machinery Manufacturer`;
+const desc = `${companyProfile.name} is an ISO 9001 industrial machinery manufacturer with 15+ years of experience, ${companyProfile.exportCountries} export markets, and OEM/ODM support.`;
+const trust = getTrustProof();
+const siteUrl = getSiteUrl(import.meta.env.PUBLIC_SITE_URL || Astro.site?.href);
+const schema = graphSchema([
+  JSON.parse(organizationSchema({
+    name: companyProfile.name,
+    url: siteUrl,
+  })),
+  {
+    '@type': 'AboutPage',
+    name: title,
+    description: desc,
+    url: joinSiteUrl(siteUrl, '/about/'),
+    about: { '@type': 'Organization', name: companyProfile.name },
+  },
+  JSON.parse(breadcrumbSchema([
+    { name: 'Home', url: siteUrl },
+    { name: 'About', url: joinSiteUrl(siteUrl, '/about/') },
+  ])),
+]);
+---
+
+<BaseLayout title={title} description={desc} canonical="/about/" schema={schema}>
+  <div class="container mx-auto px-4">
+    <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'About', href: '/about/' }]} includeSchema={false} />
+  </div>
+
+  <section class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        <div class="lg:col-span-7">
+          <p class="text-caption font-semibold text-primary mb-3">Founded {companyProfile.founded} · ISO 9001 · OEM/ODM manufacturing</p>
+          <h1 class="text-display font-bold text-gray-900 leading-tight mb-5">{companyProfile.tagline}</h1>
+          <p class="text-subhead text-gray-600 leading-relaxed max-w-3xl">{companyProfile.description}</p>
+          <div class="mt-7 flex flex-col sm:flex-row gap-3">
+            <a href="/get-a-quote/" class="btn-primary">Request Factory Quote</a>
+            <a href="/certifications/" class="btn-outline">View Certifications</a>
+          </div>
+        </div>
+        <aside class="lg:col-span-5 bg-gray-warm border border-gray-100 rounded-card p-6">
+          <h2 class="text-subhead font-semibold text-gray-900 mb-4">Buyer Assurance</h2>
+          <dl class="space-y-4 text-caption">
+            <div><dt class="text-gray-600">Reply SLA</dt><dd class="font-semibold text-gray-900">{trust.sla.replyTime}</dd></div>
+            <div><dt class="text-gray-600">NDA Support</dt><dd class="font-semibold text-gray-900">{trust.sla.nda}</dd></div>
+            <div><dt class="text-gray-600">Factory Visit</dt><dd class="font-semibold text-gray-900">{trust.sla.factoryVisit}</dd></div>
+          </dl>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <QuantifiedStrip items={getCompanyStats()} />
+
+  <section class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4">
+      <div class="max-w-3xl mb-10">
+        <h2 class="text-heading font-bold text-gray-900 mb-4">What We Manufacture</h2>
+        <p class="text-body text-gray-600 leading-relaxed">
+          We build and customize industrial power transmission and motion control products for distributors, OEM projects, and replacement programs. Each inquiry can be reviewed against application requirements, required standards, MOQ, lead time, and export documentation.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {[
+          { title: 'Power Transmission', desc: 'Planetary gearboxes, helical gearmotors, and custom mounting interfaces.' },
+          { title: 'Motion Control', desc: 'Servo motor solutions for CNC, packaging, textile, and automation equipment.' },
+          { title: 'Fluid Handling', desc: 'Pumps and configured components for water supply, HVAC, and process applications.' },
+        ].map((item) => (
+          <div class="bg-gray-warm border border-gray-100 rounded-card p-6">
+            <h3 class="font-semibold text-gray-900 mb-2">{item.title}</h3>
+            <p class="text-caption text-gray-600 leading-relaxed">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <ManufacturingQC capacity={companyProfile.monthlyCapacity} />
+
+  <section class="bg-gray-warm" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4">
+      <div class="max-w-3xl mb-8">
+        <h2 class="text-heading font-bold text-gray-900 mb-4">How We Support Export Buyers</h2>
+        <p class="text-body text-gray-600 leading-relaxed">
+          The site is built around measurable buyer confidence: clear specs, certifiable compliance, documented QC, responsive RFQ handling, and privacy-first inquiry policies.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {[
+          { title: 'Sample Policy', desc: trust.samplePolicy.summary },
+          { title: 'Privacy Promise', desc: trust.sla.privacy },
+          { title: 'Verified Buyer Visit', desc: trust.sla.factoryVisit },
+        ].map((item) => (
+          <div class="bg-white border border-gray-100 rounded-card p-6">
+            <h3 class="font-semibold text-gray-900 mb-2">{item.title}</h3>
+            <p class="text-caption text-gray-600 leading-relaxed">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CertLogoWall compact certs={trust.certifications} />
+  <TeamPhotoCards team={companyProfile.team} />
+
+  <section class="bg-primary-900 text-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4 text-center max-w-2xl">
+      <h2 class="text-heading font-bold mb-4">Need a supplier your team can verify?</h2>
+      <p class="text-subhead text-primary-100 mb-8">
+        Send your requirements, drawings, or target application. We will reply with practical next steps within {trust.sla.replyTime}.
+      </p>
+      <a href="/get-a-quote/" class="btn inline-flex items-center justify-center bg-accent hover:bg-accent-hover text-white px-8 py-4 rounded-[var(--radius-button)] font-semibold">
+        Start an RFQ
+      </a>
+    </div>
+  </section>
+</BaseLayout>

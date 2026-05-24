@@ -1,0 +1,33 @@
+---
+export interface Props {
+  advantages: { title: string; description: string; image?: string }[];
+}
+
+const { advantages } = Astro.props;
+---
+
+<section style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+  <div class="container mx-auto px-4">
+    <h2 class="text-heading font-bold text-center mb-10 text-gray-900">Features & Advantages</h2>
+    <div class="space-y-16 max-w-5xl mx-auto">
+      {advantages.map((adv, i) => (
+        <div class={`grid grid-cols-1 md:grid-cols-2 gap-8 items-center ${i % 2 === 1 ? 'md:flex-row-reverse' : ''}`}>
+          <div class={i % 2 === 1 ? 'md:order-2' : ''}>
+            <h3 class="text-subhead font-bold text-gray-900 mb-3">{adv.title}</h3>
+            <p class="text-body leading-relaxed text-gray-600">{adv.description}</p>
+            <a href="#inline-inquiry" class="inline-block mt-4 text-caption text-primary font-medium hover:underline">
+              Inquire About This →
+            </a>
+          </div>
+          <div class={i % 2 === 1 ? 'md:order-1' : ''}>
+            {adv.image ? (
+              <img src={adv.image} alt={adv.title} class="w-full rounded-card" loading="lazy" />
+            ) : (
+              <div class="w-full aspect-video bg-primary-50 rounded-card flex items-center justify-center text-4xl">⚙</div>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

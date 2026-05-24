@@ -1,0 +1,87 @@
+---
+import SEOHead from './SEOHead.astro';
+import Header from './Header.astro';
+import Footer from './Footer.astro';
+import MobileNav from './MobileNav.astro';
+import CTADock from './CTADock.astro';
+import '../../styles/tokens.css';
+
+export interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  canonical?: string;
+  schema?: string;
+  noindex?: boolean;
+  headerNav?: { label: string; href: string }[];
+  footerLinks?: { label: string; href: string }[];
+  currentLocale?: string;
+  locales?: { code: string; label: string }[];
+  lang?: string;
+  bodyClass?: string;
+  hreflang?: { code: string; url: string }[];
+}
+
+const {
+  title,
+  description,
+  image,
+  canonical,
+  schema,
+  noindex,
+  hreflang,
+  headerNav = [
+    { label: 'Home', href: '/' },
+    { label: 'Products', href: '/products/' },
+    { label: 'Compare', href: '/compare/' },
+    { label: 'Certifications', href: '/certifications/' },
+    { label: 'About', href: '/about/' },
+    { label: 'Contact', href: '/contact/' },
+  ],
+  footerLinks = [
+    { label: 'Home', href: '/' },
+    { label: 'Products', href: '/products/' },
+    { label: 'Compare', href: '/compare/' },
+    { label: 'Certifications', href: '/certifications/' },
+    { label: 'Contact', href: '/contact/' },
+    { label: 'Get a Quote', href: '/get-a-quote/' },
+  ],
+  currentLocale = 'en',
+  locales,
+  lang = 'en',
+  bodyClass = '',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <title>{title}</title>
+    <SEOHead
+      title={title}
+      description={description}
+      image={image}
+      canonical={canonical}
+      schema={schema}
+      noindex={noindex}
+      hreflang={hreflang}
+    />
+  </head>
+  <body class={`font-sans text-body text-gray-900 bg-gray-warm antialiased ${bodyClass}`}>
+    <Header
+      nav={headerNav}
+      currentLocale={currentLocale}
+      locales={locales}
+    />
+    <MobileNav nav={headerNav} currentLocale={currentLocale} />
+    <main>
+      <slot />
+    </main>
+    <Footer links={footerLinks} />
+    <CTADock />
+  </body>
+</html>

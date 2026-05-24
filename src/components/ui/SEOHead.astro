@@ -1,0 +1,54 @@
+---
+import { getSiteUrl, joinSiteUrl } from '../../lib/site';
+
+export interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  canonical?: string;
+  schema?: string;
+  noindex?: boolean;
+  hreflang?: { code: string; url: string }[];
+}
+
+const {
+  title,
+  description,
+  image = '/static/og-default.jpg',
+  canonical,
+  schema,
+  noindex = false,
+  hreflang,
+} = Astro.props;
+const siteUrl = getSiteUrl(import.meta.env.PUBLIC_SITE_URL || Astro.site?.href);
+const pageUrl = canonical ? joinSiteUrl(siteUrl, canonical) : Astro.url.href;
+---
+
+<meta name="description" content={description} />
+<link rel="canonical" href={pageUrl} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
+
+<!-- Hreflang -->
+{hreflang?.map((h) => (
+  <link rel="alternate" hreflang={h.code} href={h.url} />
+))}
+
+<!-- Open Graph -->
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={joinSiteUrl(siteUrl, image)} />
+<meta property="og:url" content={pageUrl} />
+<meta property="og:type" content="website" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={joinSiteUrl(siteUrl, image)} />
+
+<!-- Structured Data -->
+{schema && <script type="application/ld+json" set:html={schema} />}
+
+<!-- Font preconnect -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

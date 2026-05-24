@@ -1,0 +1,43 @@
+# Hero
+hero:
+  headline: "Your Trusted Industrial Machinery Manufacturer"
+  subheadline: "ISO 9001 certified factory. OEM/ODM supported. Global shipping to 60+ countries."
+  cta_text: "Request a Quote"
+  cta_href: "/contact/"
+  secondary_cta: "Download Catalog"
+  secondary_href: "#downloads"
+
+# Quantified Strip
+quantified:
+  - label: "Years Established"
+    value: "15+"
+  - label: "Export Countries"
+    value: "60+"
+  - label: "Factory Area (m²)"
+    value: "20,000"
+  - label: "Happy Clients"
+    value: "2,000+"
+  - label: "Monthly Capacity"
+    value: "50,000 units"
+
+# Category Cards
+categories:
+  - title: "Gearboxes"
+    description: "Planetary, helical, worm gearboxes for industrial applications."
+    image: "/static/placeholder.jpg"
+    href: "/products/?category=gearboxes"
+  - title: "Electric Motors"
+    description: "AC induction, servo, and stepper motors with custom options."
+    image: "/static/placeholder.jpg"
+    href: "/products/?category=motors"
+  - title: "Pumps & Valves"
+    description: "Centrifugal pumps, control valves, and hydraulic components."
+    image: "/static/placeholder.jpg"
+    href: "/products/?category=pumps"
+
+# Inquiry CTA
+inquiry_cta:
+  headline: "Ready to Source Quality Machinery?"
+  subheadline: "Reply within 12 hours. NDA available. No spam, no reselling."
+  cta_text: "Get Your Quote Now"
+  cta_href: "/contact/"

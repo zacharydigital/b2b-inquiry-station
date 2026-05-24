@@ -1,0 +1,58 @@
+---
+export interface Props {
+  mainImage: string;
+  thumbnails?: string[];
+  alt?: string;
+}
+
+const { mainImage = '/static/placeholder.jpg', thumbnails = [], alt = 'Product image' } = Astro.props;
+const allImages = [mainImage, ...thumbnails];
+---
+
+<div class="gallery">
+  <div class="aspect-square bg-primary-50 rounded-card overflow-hidden mb-4" id="gallery-main-container">
+    <img
+      src={mainImage}
+      alt={alt}
+      width="800"
+      height="800"
+      class="w-full h-full object-cover"
+      id="gallery-main"
+      fetchpriority="high"
+    />
+  </div>
+  {thumbnails.length > 0 && (
+    <div class="flex gap-2 overflow-x-auto pb-2" role="list" aria-label="Product images">
+      {allImages.map((img, i) => (
+        <button
+          type="button"
+          class={`shrink-0 w-16 h-16 rounded overflow-hidden border-2 transition-colors ${i === 0 ? 'border-primary' : 'border-transparent hover:border-gray-300'}`}
+          aria-label={`View image ${i + 1}`}
+        >
+          <img
+            src={img}
+            alt={`${alt} ${i + 1}`}
+            class="w-full h-full object-cover gallery-thumb"
+            data-full={img}
+            loading="lazy"
+          />
+        </button>
+      ))}
+    </div>
+  )}
+</div>
+
+<script>
+  const main = document.getElementById('gallery-main') as HTMLImageElement;
+  document.querySelectorAll('.gallery-thumb').forEach((thumb) => {
+    thumb.addEventListener('click', () => {
+      const fullSrc = (thumb as HTMLElement).dataset.full;
+      if (fullSrc && main) {
+        main.src = fullSrc;
+        // Update active border
+        document.querySelectorAll('[aria-label^="View image"]').forEach((b) => b.classList.remove('border-primary'));
+        (thumb as HTMLElement).closest('button')?.classList.add('border-primary');
+      }
+    });
+  });
+</script>

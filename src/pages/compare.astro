@@ -1,0 +1,189 @@
+---
+import BaseLayout from '../components/ui/BaseLayout.astro';
+import Breadcrumb from '../components/ui/Breadcrumb.astro';
+import FAQAccordion from '../components/ui/FAQAccordion.astro';
+import { breadcrumbSchema, faqSchema, graphSchema, itemListSchema } from '../lib/seo';
+import { listProducts } from '../lib/products';
+import { getSiteUrl, joinSiteUrl } from '../lib/site';
+
+const products = listProducts();
+const title = 'Compare Industrial Machinery Models | IndustryPro';
+const desc = 'Compare industrial gearboxes, motors, and pumps by application fit, specifications, MOQ, lead time, certifications, and quote readiness.';
+const siteUrl = getSiteUrl(import.meta.env.PUBLIC_SITE_URL || Astro.site?.href);
+const pageUrl = joinSiteUrl(siteUrl, '/compare/');
+
+const comparisonFaqs = [
+  { question: 'What is the fastest way to compare industrial machinery models?', answer: 'Start with application fit, required standard, operating range, MOQ, lead time, and certification needs. Then shortlist models that match your drawings or duty cycle.' },
+  { question: 'Should I compare only technical specifications?', answer: 'No. For B2B sourcing, compare technical fit together with quality evidence, available documentation, sample policy, payment terms, and export lead time.' },
+  { question: 'Can IndustryPro recommend a model from incomplete requirements?', answer: 'Yes. Send the application, target performance range, quantity, destination country, and any reference model. The sales engineering team can suggest a suitable path.' },
+];
+
+const comparisonRows = [
+  { label: 'Best-fit applications', values: products.map((product) => product.fit) },
+  { label: 'Key specification', values: products.map((product) => product.features.map((feature) => `${feature.label}: ${feature.value}`).join('; ')) },
+  { label: 'Standard or interface', values: products.map((product) => product.standard) },
+  { label: 'MOQ', values: products.map((product) => product.moq) },
+  { label: 'Lead time', values: products.map((product) => product.leadTime) },
+  { label: 'Sample', values: products.map((product) => product.sample) },
+  { label: 'Payment terms', values: products.map((product) => product.payment) },
+  { label: 'Certifications', values: products.map((product) => product.certifications.join(', ')) },
+  { label: 'Last reviewed', values: products.map((product) => product.updated) },
+];
+
+const schema = graphSchema([
+  {
+    '@type': 'CollectionPage',
+    name: title,
+    description: desc,
+    url: pageUrl,
+    about: products.map((product) => ({
+      '@type': 'Product',
+      name: product.title,
+      sku: product.model,
+      category: product.category,
+      url: joinSiteUrl(siteUrl, `/products/${product.slug}/`),
+    })),
+  },
+  JSON.parse(breadcrumbSchema([
+    { name: 'Home', url: siteUrl },
+    { name: 'Compare', url: pageUrl },
+  ])),
+  JSON.parse(itemListSchema(products.map((product) => ({
+    name: product.title,
+    url: joinSiteUrl(siteUrl, `/products/${product.slug}/`),
+  })))),
+  JSON.parse(faqSchema(comparisonFaqs)),
+]);
+---
+
+<BaseLayout title={title} description={desc} canonical="/compare/" schema={schema}>
+  <div class="container mx-auto px-4 pb-16">
+    <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Compare', href: '/compare/' }]} includeSchema={false} />
+
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
+      <div class="lg:col-span-8">
+        <p class="text-caption font-semibold text-primary mb-3">Model comparison - Procurement checklist - RFQ-ready shortlist</p>
+        <h1 class="text-display font-bold text-gray-900 leading-tight mb-5">Compare industrial machinery models before you send an RFQ.</h1>
+        <p class="text-subhead text-gray-600 leading-relaxed max-w-3xl">
+          Use this comparison page to shortlist gearboxes, motors, pumps, and OEM machinery by technical fit, MOQ, lead time, certification evidence, and export-ready documentation. It is designed for buyers who need a practical sourcing decision, not a generic catalog view.
+        </p>
+        <div class="mt-6 flex flex-col sm:flex-row gap-3">
+          <a href="#comparison-table" class="btn-primary">Compare Models</a>
+          <a href="/get-a-quote/" class="btn-outline">Send RFQ</a>
+        </div>
+      </div>
+      <aside class="lg:col-span-4 bg-white border border-gray-100 rounded-card p-6 shadow-card">
+        <h2 class="text-subhead font-semibold text-gray-900 mb-4">Recommended RFQ Inputs</h2>
+        <ul class="space-y-3 text-caption text-gray-600">
+          <li><strong class="text-gray-900">Application:</strong> machine type, load, speed, duty cycle.</li>
+          <li><strong class="text-gray-900">Commercial:</strong> quantity, target price range, destination.</li>
+          <li><strong class="text-gray-900">Evidence:</strong> drawings, standards, certification needs.</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section class="bg-white rounded-card border border-gray-100 shadow-card overflow-hidden" id="comparison-table">
+      <div class="p-5 border-b border-gray-100">
+        <h2 class="text-heading font-bold text-gray-900">Side-by-Side Product Comparison</h2>
+        <p class="text-caption text-gray-600 mt-2">All models are linked to crawlable PDP pages with specifications, evidence, FAQs, and inquiry modules.</p>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full min-w-[960px] text-left text-caption">
+          <thead class="bg-primary-50">
+            <tr>
+              <th class="p-4 w-48 text-gray-900">Decision Factor</th>
+              {products.map((product) => (
+                <th class="p-4 align-top text-gray-900">
+                  <a href={`/products/${product.slug}/`} class="block group">
+                    <img src={product.image} alt={`${product.title} product image`} class="w-20 h-20 object-cover rounded-card border border-gray-100 mb-3" loading="lazy" />
+                    <span class="block font-semibold group-hover:text-primary">{product.model}</span>
+                    <span class="block text-small text-gray-600 mt-1">{product.title}</span>
+                  </a>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {comparisonRows.map((row) => (
+              <tr class="border-t border-gray-100">
+                <th class="p-4 font-semibold text-gray-900 bg-gray-warm">{row.label}</th>
+                {row.values.map((value) => (
+                  <td class="p-4 text-gray-600 leading-relaxed align-top">{value}</td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <section class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4">
+      <div class="max-w-3xl mb-8">
+        <h2 class="text-heading font-bold text-gray-900 mb-4">How to Choose the Right Model</h2>
+        <p class="text-body text-gray-600 leading-relaxed">
+          The right product is the model that fits the working condition and can be supported with verifiable production, inspection, and export evidence. Use the checklist below before asking for price.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {[
+          { title: '1. Confirm Technical Fit', detail: 'Match torque, power, flow, speed, protection class, mounting interface, and operating environment.' },
+          { title: '2. Check Commercial Fit', detail: 'Compare MOQ, sample availability, lead time, payment terms, and whether OEM/ODM changes are required.' },
+          { title: '3. Verify Evidence', detail: 'Ask for relevant certificates, drawings, outgoing QC records, packaging photos, and shipment documents.' },
+        ].map((item) => (
+          <article class="bg-gray-warm border border-gray-100 rounded-card p-6">
+            <h3 class="font-semibold text-gray-900 mb-3">{item.title}</h3>
+            <p class="text-caption text-gray-600 leading-relaxed">{item.detail}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-gray-warm" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div class="lg:col-span-5">
+          <h2 class="text-heading font-bold text-gray-900 mb-4">Need a recommendation instead of a table?</h2>
+          <p class="text-body text-gray-600 leading-relaxed">
+            Send your application and target performance range. The sales engineering team can recommend a model, identify missing RFQ details, and confirm what evidence is available before sample approval.
+          </p>
+        </div>
+        <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {products.map((product) => (
+            <a href={`/products/${product.slug}/`} class="bg-white rounded-card border border-gray-100 p-5 hover:shadow-elevated transition-shadow">
+              <p class="text-small text-primary font-semibold mb-2">{product.category}</p>
+              <h3 class="font-semibold text-gray-900 mb-2">{product.model}</h3>
+              <p class="text-caption text-gray-600 leading-relaxed">{product.fit}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4 max-w-4xl">
+      <h2 class="text-heading font-bold text-gray-900 mb-6">Comparison FAQ</h2>
+      <FAQAccordion faqs={comparisonFaqs} includeSchema={false} />
+    </div>
+  </section>
+
+  <section class="bg-primary-900 text-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4 text-center max-w-2xl">
+      <h2 class="text-heading font-bold mb-4">Ready to turn a shortlist into a quote?</h2>
+      <p class="text-subhead text-primary-100 mb-8">
+        Send model choices, quantities, destination country, and drawings or standards. We will reply with practical next steps within 12 business hours.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/get-a-quote/" class="btn inline-flex items-center justify-center bg-accent hover:bg-accent-hover text-white px-8 py-4 rounded-[var(--radius-button)] font-semibold">
+          Submit RFQ
+        </a>
+        <a href="/products/" class="btn inline-flex items-center justify-center border-2 border-white/30 text-white hover:bg-white/10 px-8 py-4 rounded-[var(--radius-button)] font-semibold">
+          Browse Products
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
