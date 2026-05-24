@@ -11,6 +11,15 @@ database_id = "1cd039a4-cba8-42bf-aadd-590ec9fb768f"
 binding = "FILES"
 bucket_name = "b2b-inquiry-files"
 
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "b2b-inquiries"
+database_id = "1cd039a4-cba8-42bf-aadd-590ec9fb768f"
+
+[[env.production.r2_buckets]]
+binding = "FILES"
+bucket_name = "b2b-inquiry-files"
+
 [vars]
 PUBLIC_SITE_URL = "http://localhost:4321"
 SITE_URL = "http://localhost:4321"
