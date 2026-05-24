@@ -8,7 +8,12 @@ const isCloudflare = !!process.env.CF_PAGES || !!process.env.CLOUDFLARE_ACCOUNT_
 export default defineConfig({
   integrations: [unocss({ injectReset: true })],
   output: isCloudflare ? 'server' : 'static',
-  adapter: isCloudflare ? cloudflare() : undefined,
+  adapter: isCloudflare
+    ? cloudflare({
+        imageService: 'passthrough',
+        prerenderEnvironment: 'node',
+      })
+    : undefined,
   vite: {
     ssr: {
       noExternal: ['@unocss/reset', 'nanostores'],
