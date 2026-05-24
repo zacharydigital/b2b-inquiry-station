@@ -20,20 +20,22 @@ This document lists the required configuration and execution steps before deploy
 | `RESEND_API_KEY` | Resend transactional email key | Yes | `re_xxx` |
 | `NOTIFY_EMAIL` | Internal sales notification recipient | Yes | `sales@aiseopilot.com` |
 | `FROM_EMAIL` | Verified sender email | Yes | `inquiry@send.aiseopilot.com` |
-| `PUBLIC_SITE_URL` | Public site URL for canonical, schema, sitemap, robots | Yes | `https://b2b.aiseo.dpdns.org` |
-| `SITE_URL` | Backend fallback site URL for email links | Yes | `https://b2b.aiseo.dpdns.org` |
+| `PUBLIC_SITE_URL` | Public site URL for canonical, schema, sitemap, robots | Yes | `https://b2b-inquiry-station.pages.dev` |
+| `SITE_URL` | Backend fallback site URL for email links | Yes | `https://b2b-inquiry-station.pages.dev` |
 | `NODE_VERSION` | Cloudflare Pages build Node version | Recommended | `22.12.0` |
 
 ## 1. Confirm Production Domain
 
-The demo production domain is:
+The temporary demo production domain is:
 
 ```env
-PUBLIC_SITE_URL=https://b2b.aiseo.dpdns.org
-SITE_URL=https://b2b.aiseo.dpdns.org
+PUBLIC_SITE_URL=https://b2b-inquiry-station.pages.dev
+SITE_URL=https://b2b-inquiry-station.pages.dev
 ```
 
 These values affect canonical URLs, Open Graph URLs, JSON-LD, `robots.txt`, and `sitemap.xml`.
+
+Custom domain setup is deferred. Do not point production SEO URLs to `b2b.aiseo.dpdns.org` until a new custom domain is active in Cloudflare Pages and returns HTTP 200.
 
 ## 2. Create Cloudflare D1 Database
 
@@ -131,8 +133,8 @@ Add:
 RESEND_API_KEY=re_xxx
 NOTIFY_EMAIL=sales@aiseopilot.com
 FROM_EMAIL=inquiry@send.aiseopilot.com
-PUBLIC_SITE_URL=https://b2b.aiseo.dpdns.org
-SITE_URL=https://b2b.aiseo.dpdns.org
+PUBLIC_SITE_URL=https://b2b-inquiry-station.pages.dev
+SITE_URL=https://b2b-inquiry-station.pages.dev
 NODE_VERSION=22.12.0
 ```
 
@@ -180,10 +182,10 @@ FROM_EMAIL = "inquiry@send.aiseopilot.com"
 
 After deployment, verify:
 
-- `https://b2b.aiseo.dpdns.org/robots.txt`
-- `https://b2b.aiseo.dpdns.org/sitemap.xml`
-- `https://b2b.aiseo.dpdns.org/products/`
-- `https://b2b.aiseo.dpdns.org/get-a-quote/`
+- `https://b2b-inquiry-station.pages.dev/robots.txt`
+- `https://b2b-inquiry-station.pages.dev/sitemap.xml`
+- `https://b2b-inquiry-station.pages.dev/products/`
+- `https://b2b-inquiry-station.pages.dev/get-a-quote/`
 
 Check that:
 

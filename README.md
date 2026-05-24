@@ -45,8 +45,8 @@ Set these Cloudflare Pages variables or secrets:
 RESEND_API_KEY=re_xxx
 NOTIFY_EMAIL=sales@aiseopilot.com
 FROM_EMAIL=inquiry@send.aiseopilot.com
-PUBLIC_SITE_URL=https://b2b.aiseo.dpdns.org
-SITE_URL=https://b2b.aiseo.dpdns.org
+PUBLIC_SITE_URL=https://b2b-inquiry-station.pages.dev
+SITE_URL=https://b2b-inquiry-station.pages.dev
 ```
 
 `FROM_EMAIL` must use a sender domain verified in Resend. Do not leave production values blank.
