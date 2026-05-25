@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
 import {
   buildInquiryEmails,
+  collectInquiryExtraFields,
   getMailConfig,
   validateInquiryEmail,
   type MailEnv,
@@ -43,6 +44,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const utmSource = formData.get('utm_source')?.toString() || '';
     const locale = formData.get('locale')?.toString() || 'en';
     const cartItems = formData.get('cart_items')?.toString() || '';
+    const extraFields = collectInquiryExtraFields(formData, industry);
 
     // Field validation
     if (!name || !email || !country) {
@@ -110,12 +112,13 @@ export const POST: APIRoute = async ({ request, locals }) => {
     if (db) {
       await (db as D1Database)
         .prepare(
-          `INSERT INTO inquiries (id, industry, product_slug, product_name, name, email, company, country, phone, quantity, message, inquiry_type, source_page, utm_source, locale, cart_items, attachment_key, status, created_at)
-           VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, 'new', ?18)`,
+          `INSERT INTO inquiries (id, industry, product_slug, product_name, name, email, company, country, phone, quantity, message, inquiry_type, source_page, utm_source, locale, cart_items, attachment_key, extra_fields, status, created_at)
+           VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, 'new', ?19)`,
         )
         .bind(
           inquiryId, industry, productSlug, productName, name, email, company, country, phone,
-          quantity, message, inquiryType, sourcePage, utmSource, locale, cartItems, attachmentKey, createdAt,
+          quantity, message, inquiryType, sourcePage, utmSource, locale, cartItems, attachmentKey,
+          JSON.stringify(extraFields), createdAt,
         )
         .run();
     } else if (isProduction()) {
@@ -155,6 +158,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         locale,
         cartItems,
         attachmentKey,
+        extraFields,
       }, mailConfig);
       await resend.emails.send(emails.notification);
       await resend.emails.send(emails.confirmation);

@@ -1,6 +1,15 @@
 ---
+import InquiryFields from './InquiryFields.astro';
+import {
+  getInquiryFields,
+  getVerticalConfig,
+  normalizeVertical,
+  type ProductVertical,
+} from '../../lib/verticals';
+
 export interface Props {
-  industry?: string;
+  industry?: ProductVertical;
+  vertical?: ProductVertical;
   locale?: string;
   title?: string;
   subtitle?: string;
@@ -9,13 +18,19 @@ export interface Props {
 }
 
 const {
-  industry = 'machinery',
+  industry,
+  vertical = industry || 'machinery',
   locale = 'en',
   title = 'Ready to Source Quality Products?',
   subtitle = 'Reply within 12 hours · NDA available · No spam, no reselling',
   inquiryType = 'contact',
-  submitLabel = 'Get My Quote →',
+  submitLabel,
 } = Astro.props;
+const normalizedVertical = normalizeVertical(vertical);
+const config = getVerticalConfig(normalizedVertical);
+const fields = getInquiryFields(normalizedVertical, 'full');
+const hasVisibleInquiryType = fields.some((field) => field.name === 'inquiry_type');
+const resolvedSubmitLabel = submitLabel || config.cta.primary;
 ---
 
 <section class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
@@ -35,66 +50,19 @@ const {
       class="inquiry-form quote-panel space-y-5 p-6 sm:p-8"
     >
       <input type="hidden" name="website_url" tabindex="-1" autocomplete="off" class="hidden" />
-      <input type="hidden" name="industry" value={industry} />
-      <input type="hidden" name="inquiry_type" value={inquiryType} />
+      <input type="hidden" name="industry" value={normalizedVertical} />
+      {!hasVisibleInquiryType && <input type="hidden" name="inquiry_type" value={inquiryType} />}
       <input type="hidden" name="locale" value={locale} />
       <input type="hidden" name="source_page" id="contact-source-page" value="" />
       <input type="hidden" name="utm_source" id="contact-utm-source" value="" />
       <input type="hidden" name="cart_items" id="contact-cart-items" value="" />
 
-      <div>
-        <label class="block text-small font-medium text-gray-900 mb-1">Email *</label>
-        <input type="email" name="email" required class="form-control" />
-      </div>
-
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div>
-          <label class="block text-small font-medium text-gray-900 mb-1">Name *</label>
-          <input type="text" name="name" required class="form-control" />
-        </div>
-        <div>
-          <label class="block text-small font-medium text-gray-900 mb-1">Country *</label>
-          <input type="text" name="country" required class="form-control" />
-        </div>
+        <InquiryFields fields={fields} />
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div>
-          <label class="block text-small font-medium text-gray-900 mb-1">Company</label>
-          <input type="text" name="company" class="form-control" />
-        </div>
-        <div>
-          <label class="block text-small font-medium text-gray-900 mb-1">Phone / WhatsApp</label>
-          <input type="tel" name="phone" class="form-control" />
-        </div>
-      </div>
-
-      <div>
-        <label class="block text-small font-medium text-gray-900 mb-1">Product / Service You're Interested In</label>
-        <select name="product_slug" class="form-control">
-          <option value="">I'm not sure yet — please recommend</option>
-          <option value="gearboxes">Gearboxes</option>
-          <option value="motors">Electric Motors</option>
-          <option value="pumps">Pumps & Valves</option>
-          <option value="custom">Custom / OEM Project</option>
-        </select>
-      </div>
-
-      <div>
-        <label class="block text-small font-medium text-gray-900 mb-1">Tell us about your requirements *</label>
-        <textarea name="message" required rows={4}
-          class="form-control resize-y"
-          placeholder="Describe your requirements, quantity, timeline, or any specific questions..."></textarea>
-      </div>
-
-      <div>
-        <label class="block text-small font-medium text-gray-900 mb-1">Upload drawing / specs (PDF, max 10MB)</label>
-        <input type="file" name="file"
-          class="w-full border border-gray-300 px-4 py-2 file:mr-4 file:py-2 file:px-4 file:border-0 file:bg-primary-50 file:text-primary file:font-medium file:cursor-pointer" />
-      </div>
-
-      <button type="submit" class="btn-primary w-full py-3 text-center text-lg" data-submit-label={submitLabel}>
-        {submitLabel}
+      <button type="submit" class="btn-inquiry w-full py-3 text-center text-lg" data-submit-label={resolvedSubmitLabel}>
+        {resolvedSubmitLabel}
       </button>
       <p class="hidden text-small text-primary text-center" data-form-status aria-live="polite">
         Submitting your request...
@@ -125,9 +93,27 @@ const {
   }
 
   document.querySelectorAll('.inquiry-form').forEach((form) => {
-    form.addEventListener('submit', () => {
-      const button = form.querySelector('button[type="submit"]') as HTMLButtonElement;
-      const status = form.querySelector('[data-form-status]') as HTMLElement;
+    form.querySelectorAll('[data-error-target]').forEach((field) => {
+      field.addEventListener('input', () => {
+        const input = field as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+        const error = form.querySelector(`[data-field-error="${input.name}"]`) as HTMLElement;
+        if (error && input.checkValidity()) error.classList.add('hidden');
+      });
+    });
+    form.addEventListener('submit', (event) => {
+      const htmlForm = form as HTMLFormElement;
+      if (!htmlForm.checkValidity()) {
+        event.preventDefault();
+        htmlForm.querySelectorAll('[data-error-target]').forEach((field) => {
+          const input = field as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+          const error = htmlForm.querySelector(`[data-field-error="${input.name}"]`) as HTMLElement;
+          if (error) error.classList.toggle('hidden', input.checkValidity());
+        });
+        htmlForm.reportValidity();
+        return;
+      }
+      const button = htmlForm.querySelector('button[type="submit"]') as HTMLButtonElement;
+      const status = htmlForm.querySelector('[data-form-status]') as HTMLElement;
       if (button) {
         button.disabled = true;
         button.textContent = 'Submitting...';

@@ -1,3 +1,5 @@
+import { getAllowedExtraFieldNames } from './verticals';
+
 export interface MailEnv {
   RESEND_API_KEY?: string;
   NOTIFY_EMAIL?: string;
@@ -37,6 +39,7 @@ export interface InquiryEmailInput {
   locale: string;
   cartItems: string;
   attachmentKey: string | null;
+  extraFields: Record<string, string>;
 }
 
 export interface RfqEmailInput {
@@ -106,6 +109,28 @@ function row(label: string, value: string): string {
   return `<tr><td style="padding:4px 12px 4px 0;color:#666">${escapeHtml(label)}</td><td style="padding:4px 0"><strong>${escapeHtml(value || '-')}</strong></td></tr>`;
 }
 
+function formatExtraFieldLabel(name: string): string {
+  return name
+    .split('_')
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+}
+
+export function collectInquiryExtraFields(formData: FormData, vertical: string): Record<string, string> {
+  const allowedNames = getAllowedExtraFieldNames(vertical);
+  const extraFields: Record<string, string> = {};
+
+  for (const name of allowedNames) {
+    const value = formData.get(name);
+    if (typeof value === 'string' && value.trim()) {
+      extraFields[name] = value.trim();
+    }
+  }
+
+  return extraFields;
+}
+
 export function buildInquiryEmails(input: InquiryEmailInput, config: MailConfig): {
   notification: EmailPayload;
   confirmation: EmailPayload;
@@ -130,6 +155,12 @@ export function buildInquiryEmails(input: InquiryEmailInput, config: MailConfig)
   const cartBlock = input.cartItems
     ? `<h3>Quote Cart</h3><pre style="white-space:pre-wrap;background:#f7f7f6;padding:12px;border-radius:6px">${escapeHtml(input.cartItems)}</pre>`
     : '';
+  const extraRows = Object.entries(input.extraFields || {})
+    .map(([label, value]) => row(formatExtraFieldLabel(label), value))
+    .join('');
+  const extraBlock = extraRows
+    ? `<h3>Additional Requirements</h3><table cellpadding="0" cellspacing="0">${extraRows}</table>`
+    : '';
 
   return {
     notification: {
@@ -141,6 +172,7 @@ export function buildInquiryEmails(input: InquiryEmailInput, config: MailConfig)
         <table cellpadding="0" cellspacing="0">${contextRows}</table>
         <h3>Requirements</h3>
         <p>${escapeHtml(input.message || '-')}</p>
+        ${extraBlock}
         ${cartBlock}
       </div>`,
     },

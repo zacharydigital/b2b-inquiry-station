@@ -1,11 +1,23 @@
-<div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 z-50 flex gap-2 px-4 py-3">
-  <a href="/get-a-quote/" class="btn-primary flex-1 text-center !text-sm">
+---
+import { getVerticalConfig, normalizeVertical, type ProductVertical } from '../../lib/verticals';
+
+export interface Props {
+  vertical?: ProductVertical;
+  ctaHref?: string;
+}
+
+const { vertical = 'machinery', ctaHref = '/get-a-quote/#rfq-form' } = Astro.props;
+const config = getVerticalConfig(normalizeVertical(vertical));
+---
+
+<div class="md:hidden fixed bottom-0 left-0 right-0 bg-[var(--mobile-cta-bg)] border-t border-hairline z-50 flex gap-2 px-4 py-3">
+  <a href={ctaHref} class="btn-inquiry flex-1 text-center !text-sm whitespace-nowrap">
     <span class="i-carbon-email-new" aria-hidden="true"></span>
-    Inquire Now
+    {config.cta.mobilePrimary}
   </a>
   <a
     href="https://wa.me/1234567890"
-    class="btn-outline flex-1 text-center !text-sm"
+    class="btn-outline flex-1 text-center !text-sm whitespace-nowrap"
     target="_blank"
     rel="noopener noreferrer"
   >

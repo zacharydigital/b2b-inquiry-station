@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildInquiryEmails,
   buildRfqNotificationEmail,
+  collectInquiryExtraFields,
   formatQuoteItems,
   getMailConfig,
   validateInquiryEmail,
@@ -60,6 +61,7 @@ describe('buildInquiryEmails', () => {
         locale: 'en',
         cartItems: '',
         attachmentKey: 'inquiries/machinery/file.pdf',
+        extraFields: {},
       },
       {
         resendKey: 're_123',
@@ -78,6 +80,57 @@ describe('buildInquiryEmails', () => {
     expect(emails.notification.html).toContain('inquiries/machinery/file.pdf');
     expect(emails.confirmation.to).toBe('ana@example.com');
     expect(emails.confirmation.from).toBe('IndustryPro <inquiry@example.com>');
+  });
+
+  it('escapes and renders allowed vertical extra fields in notification emails', () => {
+    const emails = buildInquiryEmails(
+      {
+        id: 'inq_2',
+        name: 'Maya',
+        email: 'maya@example.com',
+        company: 'SafeChem',
+        country: 'Malaysia',
+        phone: '',
+        productSlug: '',
+        productName: 'Industrial Solvent',
+        quantity: '2 tons',
+        message: 'Need documents',
+        inquiryType: 'sample',
+        sourcePage: 'https://factory.example.com/products/solvent/',
+        utmSource: '',
+        locale: 'en',
+        cartItems: '',
+        attachmentKey: null,
+        extraFields: {
+          request_type: 'COA <urgent>',
+          regulatory_requirement: 'REACH & RoHS',
+        },
+      },
+      {
+        resendKey: 're_123',
+        notifyEmail: 'sales@example.com',
+        fromEmail: 'inquiry@example.com',
+        siteUrl: 'https://factory.example.com',
+      },
+    );
+
+    expect(emails.notification.html).toContain('Additional Requirements');
+    expect(emails.notification.html).toContain('COA &lt;urgent&gt;');
+    expect(emails.notification.html).toContain('REACH &amp; RoHS');
+  });
+});
+
+describe('collectInquiryExtraFields', () => {
+  it('keeps allowed vertical fields and ignores unknown form fields', () => {
+    const form = new FormData();
+    form.set('request_type', 'COA');
+    form.set('regulatory_requirement', 'REACH');
+    form.set('admin_notes', 'should not be accepted');
+
+    expect(collectInquiryExtraFields(form, 'materials')).toEqual({
+      request_type: 'COA',
+      regulatory_requirement: 'REACH',
+    });
   });
 });
 

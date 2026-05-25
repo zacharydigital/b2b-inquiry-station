@@ -1,5 +1,11 @@
 ---
-import { addToCart } from '../../lib/store';
+import InquiryFields from './InquiryFields.astro';
+import {
+  getInquiryFields,
+  getVerticalConfig,
+  normalizeVertical,
+  type ProductVertical,
+} from '../../lib/verticals';
 
 export interface Props {
   productSlug: string;
@@ -9,7 +15,8 @@ export interface Props {
   leadTime?: string;
   payment?: string;
   sample?: string;
-  industry?: string;
+  industry?: ProductVertical;
+  vertical?: ProductVertical;
   locale?: string;
 }
 
@@ -21,17 +28,55 @@ const {
   leadTime = '15–25 days',
   payment = 'T/T, L/C',
   sample = 'Available',
-  industry = 'machinery',
+  industry,
+  vertical = industry || 'machinery',
   locale = 'en',
 } = Astro.props;
+const normalizedVertical = normalizeVertical(vertical);
+const config = getVerticalConfig(normalizedVertical);
+const fields = getInquiryFields(normalizedVertical, 'sticky');
+const hiddenFields = [
+  productSlug ? 'product_slug' : '',
+  productTitle ? 'product_interest' : '',
+  productTitle ? 'material_grade' : '',
+].filter(Boolean);
+const hasVisibleInquiryType = fields.some((field) => field.name === 'inquiry_type' && !hiddenFields.includes(field.name));
 ---
 
 <div class="sticky-sidebar sticky top-24 space-y-4">
-  <!-- Price Placeholder -->
-  <a href="#inline-inquiry" class="btn-primary w-full text-center !text-lg">
-    <span class="i-carbon-calculator-check" aria-hidden="true"></span>
-    Get Latest Price
-  </a>
+  <form
+    method="POST"
+    action="/api/inquiry"
+    enctype="multipart/form-data"
+    class="inquiry-form quote-panel space-y-3"
+  >
+    <input type="hidden" name="website_url" tabindex="-1" autocomplete="off" class="hidden" />
+    <input type="hidden" name="product_slug" value={productSlug} />
+    <input type="hidden" name="product_name" value={productTitle} />
+    <input type="hidden" name="product_interest" value={productTitle} />
+    <input type="hidden" name="material_grade" value={productTitle} />
+    <input type="hidden" name="industry" value={normalizedVertical} />
+    {!hasVisibleInquiryType && <input type="hidden" name="inquiry_type" value="sticky" />}
+    <input type="hidden" name="locale" value={locale} />
+    <input type="hidden" name="source_page" data-sticky-source-page value="" />
+    <input type="hidden" name="utm_source" data-sticky-utm-source value="" />
+
+    <div>
+      <p class="section-kicker mb-1">Sales engineering intake</p>
+      <h2 class="text-subhead font-semibold text-gray-900">{config.cta.primary}</h2>
+      <p class="mt-1 text-small text-gray-600">Reply within 12 hours · NDA available</p>
+    </div>
+    <div class="space-y-3">
+      <InquiryFields fields={fields} hiddenFields={hiddenFields} compact />
+    </div>
+    <button type="submit" class="btn-inquiry w-full text-center" data-submit-label={config.cta.primary}>
+      <span class="i-carbon-calculator-check" aria-hidden="true"></span>
+      {config.cta.primary}
+    </button>
+    <p class="hidden text-small text-primary text-center" data-form-status aria-live="polite">
+      Submitting your request...
+    </p>
+  </form>
 
   <!-- Key Info Mini Cards -->
   <div class="grid grid-cols-2 gap-2">
@@ -56,7 +101,7 @@ const {
   <!-- Trust Signals -->
   <div class="quote-panel space-y-2">
     <div class="flex items-center gap-2 text-caption text-gray-600">
-      <span class="i-carbon-time text-accent" aria-hidden="true"></span> Reply within 12 hours
+    <span class="i-carbon-time text-accent" aria-hidden="true"></span> Reply within 12 hours
     </div>
     <div class="flex items-center gap-2 text-caption text-gray-600">
       <span class="i-carbon-locked text-accent" aria-hidden="true"></span> NDA available
@@ -73,8 +118,9 @@ const {
     data-slug={productSlug}
     data-model={productModel}
     data-title={productTitle}
+    data-reset-label={config.cta.secondary}
   >
-    Add to Quote Cart
+    {config.cta.secondary}
   </button>
 
   <!-- WhatsApp -->
@@ -100,9 +146,44 @@ const {
       btn.textContent = 'Added ✓';
       btn.classList.add('bg-green-50', 'text-green-600', 'border-green-500');
       setTimeout(() => {
-        btn.textContent = 'Add to Quote Cart';
+        btn.textContent = btn.dataset.resetLabel || 'Add to Quote Cart';
         btn.classList.remove('bg-green-50', 'text-green-600', 'border-green-500');
       }, 2000);
+    });
+  });
+
+  document.querySelectorAll('.sticky-sidebar .inquiry-form').forEach((form) => {
+    const sourceInput = form.querySelector('[data-sticky-source-page]') as HTMLInputElement;
+    if (sourceInput) sourceInput.value = window.location.href;
+    const utmInput = form.querySelector('[data-sticky-utm-source]') as HTMLInputElement;
+    if (utmInput) utmInput.value = new URLSearchParams(window.location.search).get('utm_source') || '';
+    form.querySelectorAll('[data-error-target]').forEach((field) => {
+      field.addEventListener('input', () => {
+        const input = field as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+        const error = form.querySelector(`[data-field-error="${input.name}"]`) as HTMLElement;
+        if (error && input.checkValidity()) error.classList.add('hidden');
+      });
+    });
+    form.addEventListener('submit', (event) => {
+      const htmlForm = form as HTMLFormElement;
+      if (!htmlForm.checkValidity()) {
+        event.preventDefault();
+        htmlForm.querySelectorAll('[data-error-target]').forEach((field) => {
+          const input = field as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+          const error = htmlForm.querySelector(`[data-field-error="${input.name}"]`) as HTMLElement;
+          if (error) error.classList.toggle('hidden', input.checkValidity());
+        });
+        htmlForm.reportValidity();
+        return;
+      }
+      const button = htmlForm.querySelector('button[type="submit"]') as HTMLButtonElement;
+      const status = htmlForm.querySelector('[data-form-status]') as HTMLElement;
+      if (button) {
+        button.disabled = true;
+        button.textContent = 'Submitting...';
+        button.classList.add('opacity-75', 'cursor-wait');
+      }
+      if (status) status.classList.remove('hidden');
     });
   });
 </script>

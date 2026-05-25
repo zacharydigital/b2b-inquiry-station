@@ -1,32 +1,42 @@
 ---
+import InquiryFields from './InquiryFields.astro';
+import {
+  getInquiryFields,
+  getVerticalConfig,
+  normalizeVertical,
+  type ProductVertical,
+} from '../../lib/verticals';
+
 export interface Props {
   productSlug?: string;
   productName?: string;
-  industry?: string;
+  industry?: ProductVertical;
+  vertical?: ProductVertical;
   locale?: string;
 }
 
-const { productSlug = '', productName = '', industry = 'machinery', locale = 'en' } = Astro.props;
-const t = {
-  title: 'Get a Quote for This Product',
-  subtitle: 'Reply within 12 hours · No spam · NDA available',
-  name: 'Name',
-  email: 'Email',
-  company: 'Company',
-  country: 'Country',
-  phone: 'Phone / WhatsApp',
-  quantity: 'Quantity',
-  message: 'Tell us about your requirements...',
-  upload: 'Upload drawing / specs (PDF, max 10MB)',
-  submit: 'Get My Quote →',
-  privacy: 'Your info is safe. We never share or spam.',
-};
+const {
+  productSlug = '',
+  productName = '',
+  industry,
+  vertical = industry || 'machinery',
+  locale = 'en',
+} = Astro.props;
+const normalizedVertical = normalizeVertical(vertical);
+const config = getVerticalConfig(normalizedVertical);
+const fields = getInquiryFields(normalizedVertical, 'full');
+const hiddenFields = [
+  productSlug ? 'product_slug' : '',
+  productName ? 'product_interest' : '',
+  productName ? 'material_grade' : '',
+].filter(Boolean);
+const hasVisibleInquiryType = fields.some((field) => field.name === 'inquiry_type' && !hiddenFields.includes(field.name));
 ---
 
 <div class="quote-panel p-6 sm:p-8" id="inline-inquiry">
   <p class="section-kicker mb-2">RFQ desk</p>
-  <h3 class="section-heading mb-2">{t.title}</h3>
-  <p class="text-caption text-gray-600 mb-6">{t.subtitle}</p>
+  <h3 class="section-heading mb-2">{config.cta.primary}</h3>
+  <p class="text-caption text-gray-600 mb-6">Reply within 12 hours · No spam · NDA available</p>
 
   <form
     class="inquiry-form space-y-4"
@@ -37,59 +47,25 @@ const t = {
     <input type="hidden" name="website_url" tabindex="-1" autocomplete="off" class="hidden" />
     <input type="hidden" name="product_slug" value={productSlug} />
     <input type="hidden" name="product_name" value={productName} />
-    <input type="hidden" name="industry" value={industry} />
-    <input type="hidden" name="inquiry_type" value="single" />
+    {productName && <input type="hidden" name="product_interest" value={productName} />}
+    {productName && <input type="hidden" name="material_grade" value={productName} />}
+    <input type="hidden" name="industry" value={normalizedVertical} />
+    {!hasVisibleInquiryType && <input type="hidden" name="inquiry_type" value="single" />}
     <input type="hidden" name="locale" value={locale} />
     <input type="hidden" name="source_page" id="inquiry-source-page" value="" />
     <input type="hidden" name="utm_source" id="inquiry-utm-source" value="" />
 
-    <div>
-      <label class="block text-small font-medium text-gray-900 mb-1">{t.email} *</label>
-      <input type="email" name="email" required class="form-control" />
-    </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div>
-        <label class="block text-small font-medium text-gray-900 mb-1">{t.name} *</label>
-        <input type="text" name="name" required class="form-control" />
-      </div>
-      <div>
-        <label class="block text-small font-medium text-gray-900 mb-1">{t.country} *</label>
-        <input type="text" name="country" required class="form-control" />
-      </div>
+      <InquiryFields fields={fields} hiddenFields={hiddenFields} />
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div>
-        <label class="block text-small font-medium text-gray-900 mb-1">{t.company}</label>
-        <input type="text" name="company" class="form-control" />
-      </div>
-      <div>
-        <label class="block text-small font-medium text-gray-900 mb-1">{t.phone}</label>
-        <input type="tel" name="phone" class="form-control" />
-      </div>
-    </div>
-    <div>
-      <label class="block text-small font-medium text-gray-900 mb-1">{t.quantity}</label>
-      <input type="text" name="quantity" class="form-control" />
-    </div>
-    <div>
-      <label class="block text-small font-medium text-gray-900 mb-1">{t.message}</label>
-      <textarea name="message" rows={3}
-        class="form-control resize-y"
-        placeholder={t.message}></textarea>
-    </div>
-    <div>
-      <label class="block text-small font-medium text-gray-900 mb-1">{t.upload}</label>
-      <input type="file" name="file"
-        class="w-full border border-gray-300 px-4 py-2 text-body text-gray-600 file:mr-4 file:py-2 file:px-4 file:border-0 file:bg-primary-50 file:text-primary file:font-medium file:cursor-pointer" />
-    </div>
-    <button type="submit" class="btn-primary w-full text-center" data-submit-label={t.submit}>
-      {t.submit}
+    <button type="submit" class="btn-inquiry w-full text-center" data-submit-label={config.cta.primary}>
+      {config.cta.primary}
     </button>
     <p class="hidden text-small text-primary text-center" data-form-status aria-live="polite">
       Submitting your request...
     </p>
     <p class="text-small text-gray-600 text-center flex items-center justify-center gap-1">
-      <span class="i-carbon-locked" aria-hidden="true"></span>{t.privacy}
+      <span class="i-carbon-locked" aria-hidden="true"></span>Your info is safe. We never share or spam.
     </p>
   </form>
 </div>
@@ -100,13 +76,23 @@ const t = {
     if (srcInput) srcInput.value = window.location.href;
     const utmInput = form.querySelector('#inquiry-utm-source') as HTMLInputElement;
     if (utmInput) utmInput.value = new URLSearchParams(window.location.search).get('utm_source') || '';
+    form.querySelectorAll('[data-error-target]').forEach((field) => {
+      field.addEventListener('input', () => {
+        const input = field as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+        const error = form.querySelector(`[data-field-error="${input.name}"]`) as HTMLElement;
+        if (error && input.checkValidity()) error.classList.add('hidden');
+      });
+    });
     form.addEventListener('submit', (e) => {
-      const email = (form.querySelector('input[name="email"]') as HTMLInputElement).value;
-      const name = (form.querySelector('input[name="name"]') as HTMLInputElement).value;
-      const country = (form.querySelector('input[name="country"]') as HTMLInputElement).value;
-      if (!email || !name || !country) {
+      const htmlForm = form as HTMLFormElement;
+      if (!htmlForm.checkValidity()) {
         e.preventDefault();
-        alert('Please fill in all required fields (Name, Email, Country).');
+        htmlForm.querySelectorAll('[data-error-target]').forEach((field) => {
+          const input = field as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+          const error = htmlForm.querySelector(`[data-field-error="${input.name}"]`) as HTMLElement;
+          if (error) error.classList.toggle('hidden', input.checkValidity());
+        });
+        htmlForm.reportValidity();
         return;
       }
       const button = form.querySelector('button[type="submit"]') as HTMLButtonElement;

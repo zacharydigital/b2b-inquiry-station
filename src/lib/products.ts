@@ -1,3 +1,5 @@
+import type { ProductVertical } from './verticals';
+
 export interface ProductFeature {
   label: string;
   value: string;
@@ -26,6 +28,7 @@ export interface ProductFaq {
 
 export interface RelatedProduct {
   slug: string;
+  vertical?: ProductVertical;
   title: string;
   model: string;
 }
@@ -56,6 +59,7 @@ export interface Product {
 const products: Product[] = [
   {
     slug: 'planetary-gearbox-hg-series',
+    vertical: 'machinery',
     title: 'Planetary Gearbox HG-220 Series',
     model: 'HG-220',
     category: 'Gearboxes',
@@ -110,6 +114,7 @@ const products: Product[] = [
   },
   {
     slug: 'helical-gearmotor-hm-series',
+    vertical: 'machinery',
     title: 'Helical Gearmotor HM-500 Series',
     model: 'HM-500',
     category: 'Gearboxes',
@@ -159,6 +164,7 @@ const products: Product[] = [
   },
   {
     slug: 'ac-servo-motor-sm300',
+    vertical: 'machinery',
     title: 'AC Servo Motor SM-300',
     model: 'SM-300',
     category: 'Motors',
@@ -208,6 +214,7 @@ const products: Product[] = [
   },
   {
     slug: 'centrifugal-pump-cp150',
+    vertical: 'machinery',
     title: 'Centrifugal Pump CP-150',
     model: 'CP-150',
     category: 'Pumps',

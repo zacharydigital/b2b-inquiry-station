@@ -5,6 +5,7 @@ import Footer from './Footer.astro';
 import MobileNav from './MobileNav.astro';
 import CTADock from './CTADock.astro';
 import '../../styles/tokens.css';
+import { normalizeVertical, type ProductVertical } from '../../lib/verticals';
 
 export interface Props {
   title: string;
@@ -20,6 +21,8 @@ export interface Props {
   lang?: string;
   bodyClass?: string;
   hreflang?: { code: string; url: string }[];
+  vertical?: ProductVertical;
+  mobileCtaHref?: string;
 }
 
 const {
@@ -50,7 +53,11 @@ const {
   locales,
   lang = 'en',
   bodyClass = '',
+  vertical = 'machinery',
+  mobileCtaHref = '/get-a-quote/#rfq-form',
 } = Astro.props;
+
+const normalizedVertical = normalizeVertical(vertical);
 ---
 
 <!doctype html>
@@ -60,7 +67,7 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Noto+Sans+SC:wght@300;400;600&display=swap" />
     <title>{title}</title>
     <SEOHead
       title={title}
@@ -72,7 +79,7 @@ const {
       hreflang={hreflang}
     />
   </head>
-  <body class={`font-sans text-body text-gray-900 bg-white antialiased ${bodyClass}`}>
+  <body class={`font-sans text-body text-gray-900 bg-white antialiased pb-20 md:pb-0 ${bodyClass}`} data-vertical={normalizedVertical}>
     <Header
       nav={headerNav}
       currentLocale={currentLocale}
@@ -83,6 +90,6 @@ const {
       <slot />
     </main>
     <Footer links={footerLinks} />
-    <CTADock />
+    <CTADock vertical={normalizedVertical} ctaHref={mobileCtaHref} />
   </body>
 </html>
