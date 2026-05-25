@@ -1,0 +1,270 @@
+---
+import '../../styles/tokens.css';
+
+const title = 'Inquiry Admin';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>{title}</title>
+  </head>
+  <body class="font-sans text-body text-gray-900 bg-surface-1 antialiased" data-vertical="machinery">
+    <main class="min-h-screen">
+      <section class="border-b border-hairline bg-white">
+        <div class="container mx-auto px-4 py-6 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p class="section-kicker mb-2">Admin</p>
+            <h1 class="text-heading font-semibold leading-tight">Inquiry inbox</h1>
+            <p class="mt-2 text-caption text-gray-600">
+              Review D1 inquiry records, filter procurement requests, and export CSV for sales follow-up.
+            </p>
+          </div>
+          <a id="csv-export" class="btn-outline self-start lg:self-auto" href="#" download>
+            <span class="i-carbon-document-export" aria-hidden="true"></span>
+            Export CSV
+          </a>
+        </div>
+      </section>
+
+      <section class="container mx-auto px-4 py-8">
+        <form id="admin-filters" class="quote-panel grid grid-cols-1 gap-4 md:grid-cols-6">
+          <div>
+            <label class="block text-small font-medium mb-1" for="status">Status</label>
+            <select class="form-control" id="status" name="status">
+              <option value="">All</option>
+              <option value="new">New</option>
+              <option value="contacted">Contacted</option>
+              <option value="quoted">Quoted</option>
+              <option value="won">Won</option>
+              <option value="lost">Lost</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-small font-medium mb-1" for="industry">Industry</label>
+            <select class="form-control" id="industry" name="industry">
+              <option value="">All</option>
+              <option value="machinery">Machinery</option>
+              <option value="materials">Materials</option>
+              <option value="consumer-oem">Consumer OEM</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-small font-medium mb-1" for="product_slug">Product slug</label>
+            <input class="form-control" id="product_slug" name="product_slug" type="text" />
+          </div>
+          <div>
+            <label class="block text-small font-medium mb-1" for="email">Email</label>
+            <input class="form-control" id="email" name="email" type="email" />
+          </div>
+          <div>
+            <label class="block text-small font-medium mb-1" for="from">From</label>
+            <input class="form-control" id="from" name="from" type="date" />
+          </div>
+          <div>
+            <label class="block text-small font-medium mb-1" for="to">To</label>
+            <input class="form-control" id="to" name="to" type="date" />
+          </div>
+          <div class="md:col-span-6 flex flex-wrap gap-3">
+            <button class="btn-primary" type="submit">
+              <span class="i-carbon-search" aria-hidden="true"></span>
+              Apply filters
+            </button>
+            <button class="btn-outline" id="reset-filters" type="button">
+              <span class="i-carbon-reset" aria-hidden="true"></span>
+              Reset
+            </button>
+          </div>
+        </form>
+
+        <div class="quote-panel mt-6 overflow-hidden">
+          <div class="flex flex-col gap-3 border-b border-hairline pb-4 md:flex-row md:items-center md:justify-between">
+            <div>
+              <h2 class="text-subhead font-semibold">Records</h2>
+              <p id="admin-summary" class="text-caption text-gray-600">Loading inquiries...</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button class="btn-outline !min-h-10 !py-2" id="prev-page" type="button">Previous</button>
+              <button class="btn-outline !min-h-10 !py-2" id="next-page" type="button">Next</button>
+            </div>
+          </div>
+
+          <div id="admin-state" class="py-8 text-caption text-gray-600" aria-live="polite">
+            Loading admin data...
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="hidden w-full min-w-[1200px] border-separate border-spacing-0 text-caption" id="inquiries-table">
+              <thead class="bg-surface-1 text-left text-gray-600">
+                <tr>
+                  <th class="border-b border-hairline px-3 py-3 font-semibold">Created</th>
+                  <th class="border-b border-hairline px-3 py-3 font-semibold">Status</th>
+                  <th class="border-b border-hairline px-3 py-3 font-semibold">Industry</th>
+                  <th class="border-b border-hairline px-3 py-3 font-semibold">Product</th>
+                  <th class="border-b border-hairline px-3 py-3 font-semibold">Buyer</th>
+                  <th class="border-b border-hairline px-3 py-3 font-semibold">Country</th>
+                  <th class="border-b border-hairline px-3 py-3 font-semibold">Quantity</th>
+                  <th class="border-b border-hairline px-3 py-3 font-semibold">Message</th>
+                  <th class="border-b border-hairline px-3 py-3 font-semibold">Extra fields</th>
+                </tr>
+              </thead>
+              <tbody id="inquiries-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const state = {
+        token: new URLSearchParams(window.location.search).get('token') || '',
+        page: Number(new URLSearchParams(window.location.search).get('page') || '1') || 1,
+        limit: 25,
+      };
+
+      const form = document.querySelector('#admin-filters');
+      const stateEl = document.querySelector('#admin-state');
+      const summaryEl = document.querySelector('#admin-summary');
+      const table = document.querySelector('#inquiries-table');
+      const tbody = document.querySelector('#inquiries-body');
+      const csvExport = document.querySelector('#csv-export');
+      const prevButton = document.querySelector('#prev-page');
+      const nextButton = document.querySelector('#next-page');
+
+      function escapeHtml(value) {
+        return String(value || '')
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#039;');
+      }
+
+      function truncate(value, length = 120) {
+        const text = String(value || '');
+        return text.length > length ? `${text.slice(0, length)}...` : text;
+      }
+
+      function getFilters() {
+        const data = new FormData(form);
+        const params = new URLSearchParams();
+        params.set('token', state.token);
+        params.set('page', String(state.page));
+        params.set('limit', String(state.limit));
+        for (const name of ['status', 'industry', 'product_slug', 'email', 'from', 'to']) {
+          const value = data.get(name)?.toString().trim();
+          if (value) params.set(name, value);
+        }
+        return params;
+      }
+
+      function updateCsvLink() {
+        const params = getFilters();
+        params.delete('page');
+        params.delete('limit');
+        csvExport.href = `/api/admin/inquiries.csv?${params.toString()}`;
+      }
+
+      function renderRows(items) {
+        tbody.innerHTML = items.map((item) => `
+          <tr class="align-top">
+            <td class="border-b border-hairline px-3 py-3">${escapeHtml(item.created_at_iso || '')}</td>
+            <td class="border-b border-hairline px-3 py-3">${escapeHtml(item.status || '')}</td>
+            <td class="border-b border-hairline px-3 py-3">${escapeHtml(item.industry || '')}</td>
+            <td class="border-b border-hairline px-3 py-3">
+              <strong>${escapeHtml(item.product_name || item.product_slug || '-')}</strong>
+              <div class="text-small text-gray-600">${escapeHtml(item.product_slug || '')}</div>
+            </td>
+            <td class="border-b border-hairline px-3 py-3">
+              <strong>${escapeHtml(item.name || '-')}</strong>
+              <div class="text-small text-gray-600">${escapeHtml(item.email || '')}</div>
+              <div class="text-small text-gray-600">${escapeHtml(item.company || '')}</div>
+            </td>
+            <td class="border-b border-hairline px-3 py-3">${escapeHtml(item.country || '')}</td>
+            <td class="border-b border-hairline px-3 py-3">${escapeHtml(item.quantity || '')}</td>
+            <td class="border-b border-hairline px-3 py-3">${escapeHtml(truncate(item.message || ''))}</td>
+            <td class="border-b border-hairline px-3 py-3">
+              <code class="text-small text-gray-600">${escapeHtml(truncate(item.extra_fields || '', 160))}</code>
+              ${item.attachment_key ? `<div class="mt-1 text-small text-gray-600">${escapeHtml(item.attachment_key)}</div>` : ''}
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      async function loadInquiries() {
+        updateCsvLink();
+
+        if (!state.token) {
+          stateEl.textContent = 'Add ?token=ADMIN_TOKEN to the URL. In local development without ADMIN_TOKEN, use ?token=local-admin.';
+          table.classList.add('hidden');
+          summaryEl.textContent = 'Authentication token required.';
+          return;
+        }
+
+        stateEl.textContent = 'Loading admin data...';
+        table.classList.add('hidden');
+
+        try {
+          const response = await fetch(`/api/admin/inquiries.json?${getFilters().toString()}`);
+          const text = await response.text();
+          let data;
+          try {
+            data = JSON.parse(text);
+          } catch {
+            throw new Error('Admin API is unavailable in this local server. Use the Cloudflare Pages Functions runtime for live D1 data.');
+          }
+          if (!response.ok) {
+            throw new Error(data.error || 'Unable to load inquiries.');
+          }
+
+          const totalPages = Math.max(1, Math.ceil(data.total / data.limit));
+          summaryEl.textContent = `${data.total} total inquiry records · Page ${data.page} of ${totalPages}`;
+          prevButton.disabled = data.page <= 1;
+          nextButton.disabled = data.page >= totalPages;
+
+          if (!data.items.length) {
+            stateEl.textContent = 'No inquiries found for the current filters.';
+            table.classList.add('hidden');
+            return;
+          }
+
+          renderRows(data.items);
+          stateEl.textContent = '';
+          table.classList.remove('hidden');
+        } catch (error) {
+          stateEl.textContent = error instanceof Error ? error.message : 'Unable to load inquiries.';
+          summaryEl.textContent = 'Admin data unavailable.';
+        }
+      }
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        state.page = 1;
+        loadInquiries();
+      });
+
+      document.querySelector('#reset-filters').addEventListener('click', () => {
+        form.reset();
+        state.page = 1;
+        loadInquiries();
+      });
+
+      prevButton.addEventListener('click', () => {
+        if (state.page > 1) {
+          state.page -= 1;
+          loadInquiries();
+        }
+      });
+
+      nextButton.addEventListener('click', () => {
+        state.page += 1;
+        loadInquiries();
+      });
+
+      loadInquiries();
+    </script>
+  </body>
+</html>
