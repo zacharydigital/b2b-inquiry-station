@@ -8,16 +8,16 @@ const { team } = Astro.props;
 
 <section style="padding-top: var(--space-block); padding-bottom: var(--space-block)">
   <div class="container mx-auto px-4">
-    <h2 class="text-heading font-light text-center mb-10 text-gray-900">Meet Our Team</h2>
+    <h2 class="text-heading font-semibold text-center mb-10 text-gray-900">Meet Our Team</h2>
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
       {team.map((person) => (
         <div class="card text-center">
-          <div class="w-20 h-20rounded-none bg-primary-100 mx-auto mb-3 flex items-center justify-center text-2xl font-semibold text-primary">
+          <div class="w-20 h-20 rounded-[var(--radius-card)] bg-primary-100 mx-auto mb-3 flex items-center justify-center text-2xl font-semibold text-primary">
             {person.name.split(' ').map((n) => n[0]).join('')}
           </div>
           <h4 class="font-semibold text-caption">{person.name}</h4>
           <p class="text-small text-gray-600">{person.role}</p>
-          <a href={person.linkedin} target="_blank" rel="noopener" class="text-small text-primary hover:underline">
+          <a href={person.linkedin} target="_blank" rel="noopener" class="text-small text-primary hover:text-primary-900">
             LinkedIn
           </a>
         </div>

@@ -43,25 +43,25 @@ export default defineConfig({
     },
   },
   shortcuts: {
-    btn: 'inline-flex items-center justify-center gap-2 font-normal rounded-[var(--radius-button)] transition-colors min-h-12 focus:outline-none focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 text-caption tracking-[0.16px]',
+    btn: 'inline-flex items-center justify-center gap-2 font-semibold rounded-[var(--radius-button)] transition-colors min-h-12 focus:outline-none focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2 text-caption tracking-[0.16px] no-underline hover:no-underline',
     'btn-primary':
-      'btn bg-inquiry text-white hover:bg-inquiry-hover px-4 py-3',
+      'btn bg-inquiry text-white hover:bg-inquiry-hover px-5 py-3 shadow-[0_8px_18px_rgba(232,93,28,0.18)]',
     'btn-secondary':
       'btn bg-gray-900 text-white hover:bg-black px-4 py-3',
     'btn-outline':
-      'btn border border-primary text-primary hover:bg-primary-50 px-4 py-3',
+      'btn border border-primary text-primary hover:bg-primary-50 px-5 py-3',
     'btn-quiet':
       'btn bg-white text-primary hover:bg-primary-50 px-4 py-3',
     'section': 'py-[var(--space-section)]',
     'container': 'max-w-[1584px] mx-auto px-4 sm:px-6 lg:px-8',
     'card': 'bg-white rounded-[var(--radius-card)] border border-gray-100 p-6',
     'section-band': 'py-[var(--space-section)] border-y border-gray-100 bg-surface-1',
-    'section-heading': 'text-heading font-light leading-tight text-gray-900 tracking-normal',
-    'metric-card': 'bg-white border border-gray-100 rounded-[var(--radius-card)] p-6',
-    'proof-card': 'bg-white border border-gray-100 rounded-[var(--radius-card)] p-6',
-    'product-card': 'bg-white border border-gray-100 rounded-[var(--radius-card)] overflow-hidden transition hover:bg-surface-1',
-    'quote-panel': 'bg-white border border-gray-100 rounded-[var(--radius-card)] p-6',
+    'section-heading': 'text-heading font-semibold leading-tight text-gray-900 tracking-normal',
+    'metric-card': 'bg-white border border-gray-100 rounded-[var(--radius-card)] p-5 shadow-[var(--shadow-card)]',
+    'proof-card': 'bg-white border border-gray-100 rounded-[var(--radius-card)] p-6 shadow-[var(--shadow-card)]',
+    'product-card': 'bg-white border border-gray-100 rounded-[var(--radius-card)] shadow-[var(--shadow-card)] overflow-hidden transition hover:shadow-[var(--shadow-elevated)] hover:border-primary-100 no-underline hover:no-underline',
+    'quote-panel': 'bg-white border border-gray-100 rounded-[var(--radius-card)] shadow-[var(--shadow-card)] p-6',
     'table-procurement': 'w-full text-left text-caption border-separate border-spacing-0',
-    'form-control': 'w-full border-0 border-b border-gray-600 bg-surface-1 rounded-[var(--radius-input)] px-4 py-[11px] text-body text-gray-900 placeholder:text-gray-600 focus:outline-none focus:border-b-2 focus:border-primary transition',
+    'form-control': 'w-full border border-gray-300 border-b-gray-600 bg-surface-1 rounded-[var(--radius-input)] px-4 py-[11px] text-body text-gray-900 placeholder:text-gray-600 focus:outline-none focus:border-b-2 focus:border-primary transition',
   },
 });
