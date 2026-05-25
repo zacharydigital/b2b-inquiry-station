@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../../components/ui/BaseLayout.astro';
+import SourcingPageTemplate from '../../components/seo/SourcingPageTemplate.astro';
+import { listProducts } from '../../lib/products';
+import { buildSourcingPageSchema } from '../../lib/sourcing-schema';
+import { getSourcingPagesByType } from '../../lib/sourcing-pages';
+import { getSiteUrl, joinSiteUrl } from '../../lib/site';
+
+export function getStaticPaths() {
+  return getSourcingPagesByType('application').map((page) => ({
+    params: { slug: page.slug },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props;
+const products = listProducts().filter((product) => page.productSlugs.includes(product.slug));
+const siteUrl = getSiteUrl(import.meta.env.PUBLIC_SITE_URL);
+const schema = buildSourcingPageSchema(page, products, siteUrl);
+---
+
+<BaseLayout
+  title={page.title}
+  description={page.description}
+  canonical={joinSiteUrl(siteUrl, page.url)}
+  schema={schema}
+  vertical={page.vertical}
+  mobileCtaHref="#inline-inquiry"
+>
+  <SourcingPageTemplate page={page} products={products} />
+</BaseLayout>

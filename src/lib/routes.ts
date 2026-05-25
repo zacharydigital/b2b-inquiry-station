@@ -1,4 +1,5 @@
 import { listProducts } from './products';
+import { SOURCING_PAGES } from './sourcing-pages';
 
 export interface IndexableRoute {
   url: string;
@@ -14,6 +15,11 @@ export function getIndexableRoutes(): IndexableRoute[] {
       url: `/products/${product.slug}/`,
       changefreq: 'weekly' as const,
       priority: 0.8,
+    })),
+    ...SOURCING_PAGES.map((page) => ({
+      url: page.url,
+      changefreq: 'weekly' as const,
+      priority: 0.75,
     })),
     { url: '/get-a-quote/', changefreq: 'monthly', priority: 0.8 },
     { url: '/contact/', changefreq: 'monthly', priority: 0.7 },
