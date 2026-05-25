@@ -27,20 +27,22 @@ The system combines three conversion models:
 
 ## 2. Design Language Decision
 
-This template uses a Carbon-based B2B enterprise design language as the mandatory core. It must feel technical, structured, international, procurement-ready, and optimized for high-quality B2B inquiry generation.
+This template uses a custom B2B Inquiry Design Language. It is derived from enterprise design-system research and product-catalog research, but the implementation rules in this document are the source of truth.
 
-Carbon rules are the default for:
+The mandatory core is the Enterprise Inquiry Core. It must feel technical, structured, international, procurement-ready, and optimized for high-quality B2B inquiry generation.
+
+Enterprise Inquiry Core rules are the default for:
 
 - Color foundation: white canvas, gray surfaces, dark ink, blue primary.
-- Typography: IBM Plex Sans style, light-to-regular display, 400 body.
+- Typography: technical grotesque type, light-to-regular display, 400 body.
 - Interaction states: visible focus, inline form errors, accessible touch targets.
 - Information density: technical tables, proof blocks, trust evidence, procurement terms.
 - Visual depth: hairline borders and surface shifts before shadows.
 - Form behavior: clear labels, visible validation, low-friction field ordering.
 
-HP-inspired patterns are allowed only as secondary product-catalog patterns.
+Catalog Scan Patterns are allowed only as secondary product-catalog patterns.
 
-HP patterns may be used for:
+Catalog Scan Patterns may be used for:
 
 - Product cards.
 - Variant grids.
@@ -48,30 +50,30 @@ HP patterns may be used for:
 - Product comparison rows.
 - Consumer OEM/ODM visual merchandising sections.
 
-HP patterns must not be used for:
+Catalog Scan Patterns must not be used for:
 
 - The global design foundation.
 - Primary typography.
 - Main CTA color.
-- Decorative chevrons.
+- Decorative brand motifs.
 - Promotional consumer-style hero language.
 - Replacing technical proof, procurement terms, trust evidence, or inquiry modules.
 
 Conflict rule:
 
-When Carbon and HP rules conflict, Carbon wins by default. HP wins only inside product-catalog modules where product comparison, variant scanning, or OEM/ODM option browsing is the primary user task.
+When Enterprise Inquiry Core rules and Catalog Scan Patterns conflict, Enterprise Inquiry Core wins by default. Catalog Scan Patterns win only inside product-catalog modules where product comparison, variant scanning, or OEM/ODM option browsing is the primary user task.
 
-B2B inquiry conversion rules override both Carbon and HP. Sticky inquiry, mobile CTA bar, RFQ fields, MOQ, lead time, certifications, sample policy, document gates, and trust evidence are mandatory even if they do not exist in either source design system.
+Inquiry Conversion Rules override both Enterprise Inquiry Core and Catalog Scan Patterns. Sticky inquiry, mobile CTA bar, RFQ fields, MOQ, lead time, certifications, sample policy, document gates, and trust evidence are mandatory even if they are not typical design-system components.
 
 Agent execution priority:
 
-1. B2B inquiry conversion requirements.
-2. Carbon-based enterprise core.
+1. Inquiry Conversion Rules.
+2. Enterprise Inquiry Core.
 3. Vertical overlay rules.
-4. HP-inspired catalog patterns.
+4. Catalog Scan Patterns.
 5. Local component conventions.
 
-Never choose HP styling when it weakens technical clarity, form completion, trust evidence, or procurement information.
+Never choose catalog styling when it weakens technical clarity, form completion, trust evidence, or procurement information.
 
 Avoid consumer-brand landing page patterns that reduce information density or over-prioritize visual drama. PDP pages must support technical evaluation, not just brand impression.
 
@@ -185,8 +187,8 @@ Recommended token pattern:
 Font stack:
 
 ```css
---font-sans: "IBM Plex Sans", "Inter", "Noto Sans SC", system-ui, sans-serif;
---font-mono: "IBM Plex Mono", "SFMono-Regular", monospace;
+--font-sans: "Inter", "Noto Sans SC", "Helvetica Neue", Arial, system-ui, sans-serif;
+--font-mono: "SFMono-Regular", "Roboto Mono", Consolas, monospace;
 ```
 
 Typography rules:
@@ -662,7 +664,7 @@ Required states:
 
 | State | Visual rule |
 |---|---|
-| Default | `--field-bg`, 1px border or Carbon-style bottom rule |
+| Default | `--field-bg`, 1px border or technical bottom rule |
 | Hover | Border changes to `--field-border-hover` |
 | Focus | `2px` focus ring or 2px bottom rule in `--color-focus` |
 | Filled | Same as default; value text uses `--color-ink` |
