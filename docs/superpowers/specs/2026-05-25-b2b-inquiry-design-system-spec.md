@@ -27,7 +27,51 @@ The system combines three conversion models:
 
 ## 2. Design Language Decision
 
-Use a Carbon-inspired enterprise design language as the core. It should feel technical, structured, international, and procurement-ready. Use restrained HP-style product catalog patterns only where visual product comparison and variant scanning matter.
+This template uses a Carbon-based B2B enterprise design language as the mandatory core. It must feel technical, structured, international, procurement-ready, and optimized for high-quality B2B inquiry generation.
+
+Carbon rules are the default for:
+
+- Color foundation: white canvas, gray surfaces, dark ink, blue primary.
+- Typography: IBM Plex Sans style, light-to-regular display, 400 body.
+- Interaction states: visible focus, inline form errors, accessible touch targets.
+- Information density: technical tables, proof blocks, trust evidence, procurement terms.
+- Visual depth: hairline borders and surface shifts before shadows.
+- Form behavior: clear labels, visible validation, low-friction field ordering.
+
+HP-inspired patterns are allowed only as secondary product-catalog patterns.
+
+HP patterns may be used for:
+
+- Product cards.
+- Variant grids.
+- Packaging, color, size, and option displays.
+- Product comparison rows.
+- Consumer OEM/ODM visual merchandising sections.
+
+HP patterns must not be used for:
+
+- The global design foundation.
+- Primary typography.
+- Main CTA color.
+- Decorative chevrons.
+- Promotional consumer-style hero language.
+- Replacing technical proof, procurement terms, trust evidence, or inquiry modules.
+
+Conflict rule:
+
+When Carbon and HP rules conflict, Carbon wins by default. HP wins only inside product-catalog modules where product comparison, variant scanning, or OEM/ODM option browsing is the primary user task.
+
+B2B inquiry conversion rules override both Carbon and HP. Sticky inquiry, mobile CTA bar, RFQ fields, MOQ, lead time, certifications, sample policy, document gates, and trust evidence are mandatory even if they do not exist in either source design system.
+
+Agent execution priority:
+
+1. B2B inquiry conversion requirements.
+2. Carbon-based enterprise core.
+3. Vertical overlay rules.
+4. HP-inspired catalog patterns.
+5. Local component conventions.
+
+Never choose HP styling when it weakens technical clarity, form completion, trust evidence, or procurement information.
 
 Avoid consumer-brand landing page patterns that reduce information density or over-prioritize visual drama. PDP pages must support technical evaluation, not just brand impression.
 
