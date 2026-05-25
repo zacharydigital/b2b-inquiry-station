@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildInquiryEmails,
   buildRfqNotificationEmail,
+  calculateLeadScore,
   collectInquiryExtraFields,
   formatQuoteItems,
   getMailConfig,
@@ -62,6 +63,8 @@ describe('buildInquiryEmails', () => {
         cartItems: '',
         attachmentKey: 'inquiries/machinery/file.pdf',
         extraFields: {},
+        leadScore: 74,
+        leadGrade: 'hot',
       },
       {
         resendKey: 're_123',
@@ -76,6 +79,8 @@ describe('buildInquiryEmails', () => {
     expect(emails.notification.subject).toContain('Planetary Gearbox HG-220');
     expect(emails.notification.html).toContain('Ana &lt;Buyer&gt;');
     expect(emails.notification.html).toContain('120 pcs');
+    expect(emails.notification.html).toContain('hot');
+    expect(emails.notification.html).toContain('74/100');
     expect(emails.notification.html).toContain('utm_source=google');
     expect(emails.notification.html).toContain('inquiries/machinery/file.pdf');
     expect(emails.confirmation.to).toBe('ana@example.com');
@@ -117,6 +122,32 @@ describe('buildInquiryEmails', () => {
     expect(emails.notification.html).toContain('Additional Requirements');
     expect(emails.notification.html).toContain('COA &lt;urgent&gt;');
     expect(emails.notification.html).toContain('REACH &amp; RoHS');
+  });
+});
+
+describe('calculateLeadScore', () => {
+  it('grades high-intent B2B inquiries as hot', () => {
+    const result = calculateLeadScore({
+      company: 'Acme Importers',
+      country: 'Mexico',
+      phone: '+52 555',
+      quantity: '1200 pcs',
+      message: 'Need OEM quote with logo packaging, target delivery, and certification documents for retail launch.',
+      inquiryType: 'OEM',
+      vertical: 'consumer-oem',
+      attachmentKey: 'inquiries/oem/ref.pdf',
+      extraFields: {
+        logo_or_packaging_needed: 'Logo and packaging',
+        target_market: 'Mexico retail',
+        reference_link: 'https://example.com/ref',
+      },
+    });
+
+    expect(result).toEqual({ score: 100, grade: 'hot' });
+  });
+
+  it('keeps thin inquiries cold', () => {
+    expect(calculateLeadScore({ country: 'US' })).toEqual({ score: 20, grade: 'cold' });
   });
 });
 

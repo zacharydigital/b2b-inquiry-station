@@ -93,6 +93,27 @@ const resolvedSubmitLabel = submitLabel || config.cta.primary;
   }
 
   document.querySelectorAll('.inquiry-form').forEach((form) => {
+    const syncConditionalFields = () => {
+      form.querySelectorAll('[data-conditional-field]').forEach((wrapper) => {
+        const fieldName = (wrapper as HTMLElement).dataset.visibleWhenField || '';
+        const allowedValues = ((wrapper as HTMLElement).dataset.visibleWhenValues || '').split('|').filter(Boolean);
+        const controller = form.querySelector(`[name="${fieldName}"]`) as HTMLInputElement | HTMLSelectElement | null;
+        const shouldShow = !!controller && allowedValues.includes(controller.value);
+        wrapper.classList.toggle('hidden', !shouldShow);
+        wrapper.querySelectorAll('input, textarea, select').forEach((field) => {
+          const input = field as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+          input.disabled = !shouldShow;
+          if (!shouldShow && input.type !== 'file') input.value = '';
+        });
+      });
+    };
+
+    form.querySelectorAll('select, input, textarea').forEach((field) => {
+      field.addEventListener('change', syncConditionalFields);
+      field.addEventListener('input', syncConditionalFields);
+    });
+    syncConditionalFields();
+
     form.querySelectorAll('[data-error-target]').forEach((field) => {
       field.addEventListener('input', () => {
         const input = field as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;

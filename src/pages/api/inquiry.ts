@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
 import {
   buildInquiryEmails,
+  calculateLeadScore,
   collectInquiryExtraFields,
   getMailConfig,
   validateInquiryEmail,
@@ -107,18 +108,30 @@ export const POST: APIRoute = async ({ request, locals }) => {
       }
     }
 
+    const lead = calculateLeadScore({
+      company,
+      country,
+      phone,
+      quantity,
+      message,
+      inquiryType,
+      vertical: industry,
+      attachmentKey,
+      extraFields,
+    });
+
     // D1 write — fail closed in production
     const db = locals.runtime?.env?.DB;
     if (db) {
       await (db as D1Database)
         .prepare(
-          `INSERT INTO inquiries (id, industry, product_slug, product_name, name, email, company, country, phone, quantity, message, inquiry_type, source_page, utm_source, locale, cart_items, attachment_key, extra_fields, status, created_at)
-           VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, 'new', ?19)`,
+          `INSERT INTO inquiries (id, industry, product_slug, product_name, name, email, company, country, phone, quantity, message, inquiry_type, source_page, utm_source, locale, cart_items, attachment_key, extra_fields, lead_score, lead_grade, status, created_at)
+           VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15, ?16, ?17, ?18, ?19, ?20, 'new', ?21)`,
         )
         .bind(
           inquiryId, industry, productSlug, productName, name, email, company, country, phone,
           quantity, message, inquiryType, sourcePage, utmSource, locale, cartItems, attachmentKey,
-          JSON.stringify(extraFields), createdAt,
+          JSON.stringify(extraFields), lead.score, lead.grade, createdAt,
         )
         .run();
     } else if (isProduction()) {
@@ -159,6 +172,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
         cartItems,
         attachmentKey,
         extraFields,
+        leadScore: lead.score,
+        leadGrade: lead.grade,
       }, mailConfig);
       await resend.emails.send(emails.notification);
       await resend.emails.send(emails.confirmation);

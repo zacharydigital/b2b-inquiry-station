@@ -22,6 +22,20 @@ export interface QuoteItem {
   quantity?: number;
 }
 
+export type LeadGrade = 'cold' | 'warm' | 'hot';
+
+export interface LeadScoreInput {
+  company?: string;
+  country?: string;
+  phone?: string;
+  quantity?: string;
+  message?: string;
+  inquiryType?: string;
+  vertical?: string;
+  attachmentKey?: string | null;
+  extraFields?: Record<string, string>;
+}
+
 export interface InquiryEmailInput {
   id: string;
   name: string;
@@ -40,6 +54,8 @@ export interface InquiryEmailInput {
   cartItems: string;
   attachmentKey: string | null;
   extraFields: Record<string, string>;
+  leadScore?: number;
+  leadGrade?: LeadGrade;
 }
 
 export interface RfqEmailInput {
@@ -131,6 +147,49 @@ export function collectInquiryExtraFields(formData: FormData, vertical: string):
   return extraFields;
 }
 
+function extractLargestNumber(value = ''): number {
+  const matches = value.match(/\d+(?:[,.]\d+)?/g) || [];
+  return matches.reduce((max, match) => {
+    const parsed = Number.parseFloat(match.replace(',', ''));
+    return Number.isFinite(parsed) ? Math.max(max, parsed) : max;
+  }, 0);
+}
+
+export function calculateLeadScore(input: LeadScoreInput): { score: number; grade: LeadGrade } {
+  const inquiryType = (input.inquiryType || '').toLowerCase();
+  const messageLength = (input.message || '').trim().length;
+  const quantityNumber = extractLargestNumber(input.quantity);
+  const extraCount = Object.values(input.extraFields || {}).filter(Boolean).length;
+
+  let score = 10;
+  if (input.country?.trim()) score += 10;
+  if (input.company?.trim()) score += 12;
+  if (input.phone?.trim()) score += 8;
+  if ((input.quantity || '').trim()) score += 8;
+  if (quantityNumber >= 1000) score += 14;
+  else if (quantityNumber >= 100) score += 10;
+  else if (quantityNumber >= 10) score += 5;
+  if (messageLength >= 120) score += 15;
+  else if (messageLength >= 40) score += 10;
+  else if (messageLength >= 12) score += 5;
+  if (input.attachmentKey) score += 12;
+  if (extraCount >= 3) score += 10;
+  else if (extraCount >= 1) score += 5;
+  if (['quote', 'bulk quote', 'oem', 'odm', 'private label', 'technical proposal'].includes(inquiryType)) {
+    score += 10;
+  }
+  if (input.vertical === 'materials' && ['coa', 'sds', 'technical consultation'].includes(inquiryType)) {
+    score += 6;
+  }
+  if (input.vertical === 'consumer-oem' && ['oem', 'odm', 'private label'].includes(inquiryType)) {
+    score += 8;
+  }
+
+  const capped = Math.max(0, Math.min(100, score));
+  const grade: LeadGrade = capped >= 70 ? 'hot' : capped >= 40 ? 'warm' : 'cold';
+  return { score: capped, grade };
+}
+
 export function buildInquiryEmails(input: InquiryEmailInput, config: MailConfig): {
   notification: EmailPayload;
   confirmation: EmailPayload;
@@ -150,6 +209,8 @@ export function buildInquiryEmails(input: InquiryEmailInput, config: MailConfig)
     row('UTM Source', input.utmSource),
     row('Source Page', input.sourcePage),
     row('Attachment', input.attachmentKey || ''),
+    row('Lead Grade', input.leadGrade || ''),
+    row('Lead Score', input.leadScore == null ? '' : `${input.leadScore}/100`),
   ].join('');
 
   const cartBlock = input.cartItems

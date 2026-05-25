@@ -18,6 +18,10 @@ export interface InquiryField {
   placeholder?: string;
   helperText?: string;
   options?: string[];
+  visibleWhen?: {
+    field: string;
+    values: string[];
+  };
   validation?: {
     minLength?: number;
     maxLength?: number;
@@ -149,7 +153,14 @@ export const VERTICAL_CONFIGS: Record<ProductVertical, VerticalConfig> = {
       { name: 'target_specification', label: 'Target Specification', type: 'text', required: false },
       { name: 'packaging_requirement', label: 'Packaging Requirement', type: 'text', required: false },
       { name: 'destination_port', label: 'Destination Port', type: 'text', required: false },
-      { name: 'regulatory_requirement', label: 'Regulatory Requirement', type: 'text', required: false },
+      {
+        name: 'regulatory_requirement',
+        label: 'Regulatory Requirement',
+        type: 'text',
+        required: false,
+        helperText: 'Shown for COA, SDS, and technical document requests.',
+        visibleWhen: { field: 'request_type', values: ['COA', 'SDS', 'Technical Consultation'] },
+      },
       { name: 'monthly_demand', label: 'Monthly / Annual Demand', type: 'text', required: false },
       { name: 'company_type', label: 'Company Type', type: 'select', required: false, options: ['Distributor', 'Manufacturer', 'Lab', 'Trader'] },
     ],
@@ -177,10 +188,36 @@ export const VERTICAL_CONFIGS: Record<ProductVertical, VerticalConfig> = {
     stickyFields: consumerOemStickyFields,
     fullFields: [
       ...consumerOemStickyFields,
-      { name: 'logo_or_packaging_needed', label: 'Logo / Packaging Needed', type: 'select', required: false, options: ['No', 'Logo only', 'Packaging only', 'Logo and packaging'] },
-      { name: 'target_market', label: 'Target Market', type: 'text', required: false },
-      { name: 'reference_link', label: 'Reference Link', type: 'url', required: false },
-      { name: 'file', label: 'Upload Reference Product', type: 'file', required: false, helperText: 'PDF, JPG, PNG up to 10MB.' },
+      {
+        name: 'logo_or_packaging_needed',
+        label: 'Logo / Packaging Needed',
+        type: 'select',
+        required: false,
+        options: ['No', 'Logo only', 'Packaging only', 'Logo and packaging'],
+        visibleWhen: { field: 'inquiry_type', values: ['OEM', 'ODM', 'Private Label'] },
+      },
+      {
+        name: 'target_market',
+        label: 'Target Market',
+        type: 'text',
+        required: false,
+        visibleWhen: { field: 'inquiry_type', values: ['OEM', 'ODM', 'Private Label'] },
+      },
+      {
+        name: 'reference_link',
+        label: 'Reference Link',
+        type: 'url',
+        required: false,
+        visibleWhen: { field: 'inquiry_type', values: ['OEM', 'ODM', 'Private Label'] },
+      },
+      {
+        name: 'file',
+        label: 'Upload Reference Product',
+        type: 'file',
+        required: false,
+        helperText: 'PDF, JPG, PNG up to 10MB.',
+        visibleWhen: { field: 'inquiry_type', values: ['OEM', 'ODM', 'Private Label'] },
+      },
       { name: 'expected_unit_price', label: 'Expected Unit Price', type: 'text', required: false },
       { name: 'required_certifications', label: 'Required Certifications', type: 'text', required: false },
       { name: 'sales_channel', label: 'Sales Channel', type: 'text', required: false },

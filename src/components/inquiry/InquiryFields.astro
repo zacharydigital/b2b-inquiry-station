@@ -12,7 +12,15 @@ const visibleFields = fields.filter((field) => !hiddenFields.includes(field.name
 ---
 
 {visibleFields.map((field) => (
-  <div class={field.type === 'textarea' || field.type === 'file' ? 'sm:col-span-2' : ''}>
+  <div
+    class:list={[
+      field.type === 'textarea' || field.type === 'file' ? 'sm:col-span-2' : '',
+      field.visibleWhen ? 'hidden' : '',
+    ]}
+    data-conditional-field={field.visibleWhen ? field.name : undefined}
+    data-visible-when-field={field.visibleWhen?.field}
+    data-visible-when-values={field.visibleWhen?.values.join('|')}
+  >
     <label class="block text-small font-medium text-gray-900 mb-1" for={`field-${field.name}`}>
       {field.label}{field.required ? ' *' : ''}
     </label>

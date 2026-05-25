@@ -54,6 +54,7 @@ export function parseInquiryAdminFilters(requestUrl, options = {}) {
 
   return {
     status: cleanValue(url.searchParams.get('status'), 40),
+    leadGrade: cleanValue(url.searchParams.get('lead_grade'), 20),
     industry: cleanValue(url.searchParams.get('industry'), 60),
     productSlug: cleanValue(url.searchParams.get('product_slug'), 120),
     email: cleanValue(url.searchParams.get('email'), 160),
@@ -71,6 +72,10 @@ function buildWhere(filters) {
   if (filters.status) {
     clauses.push('status = ?');
     binds.push(filters.status);
+  }
+  if (filters.leadGrade) {
+    clauses.push('lead_grade = ?');
+    binds.push(filters.leadGrade);
   }
   if (filters.industry) {
     clauses.push('industry = ?');
@@ -106,6 +111,8 @@ function normalizeRow(row = {}) {
     created_at: createdAt,
     created_at_iso: createdAt ? new Date(createdAt * 1000).toISOString() : '',
     status: row.status || '',
+    lead_score: row.lead_score == null ? null : Number(row.lead_score),
+    lead_grade: row.lead_grade || '',
     industry: row.industry || '',
     inquiry_type: row.inquiry_type || '',
     product_slug: row.product_slug || '',
@@ -135,7 +142,7 @@ export async function queryAdminInquiries(db, filters) {
 
   const rows = await db
     .prepare(
-      `SELECT id, created_at, status, industry, inquiry_type, product_slug, product_name, name, email, company, country, phone, quantity, message, source_page, utm_source, locale, attachment_key, extra_fields
+      `SELECT id, created_at, status, lead_score, lead_grade, industry, inquiry_type, product_slug, product_name, name, email, company, country, phone, quantity, message, source_page, utm_source, locale, attachment_key, extra_fields
        FROM inquiries ${where.sql}
        ORDER BY created_at DESC
        LIMIT ? OFFSET ?`,
@@ -155,6 +162,8 @@ const CSV_HEADERS = [
   'id',
   'created_at',
   'status',
+  'lead_score',
+  'lead_grade',
   'industry',
   'inquiry_type',
   'product_slug',

@@ -11,6 +11,7 @@ export interface AdminAuthResult {
 
 export interface InquiryAdminFilters {
   status?: string;
+  leadGrade?: string;
   industry?: string;
   productSlug?: string;
   email?: string;
@@ -25,6 +26,8 @@ export interface InquiryAdminRow {
   created_at: number;
   created_at_iso: string;
   status: string;
+  lead_score: number | null;
+  lead_grade: string;
   industry: string;
   inquiry_type: string;
   product_slug: string;
@@ -64,6 +67,8 @@ const CSV_HEADERS = [
   'id',
   'created_at',
   'status',
+  'lead_score',
+  'lead_grade',
   'industry',
   'inquiry_type',
   'product_slug',
@@ -143,6 +148,7 @@ export function parseInquiryAdminFilters(
 
   return {
     status: cleanValue(url.searchParams.get('status'), 40),
+    leadGrade: cleanValue(url.searchParams.get('lead_grade'), 20),
     industry: cleanValue(url.searchParams.get('industry'), 60),
     productSlug: cleanValue(url.searchParams.get('product_slug'), 120),
     email: cleanValue(url.searchParams.get('email'), 160),
@@ -160,6 +166,10 @@ function buildWhere(filters: InquiryAdminFilters): { sql: string; binds: unknown
   if (filters.status) {
     clauses.push('status = ?');
     binds.push(filters.status);
+  }
+  if (filters.leadGrade) {
+    clauses.push('lead_grade = ?');
+    binds.push(filters.leadGrade);
   }
   if (filters.industry) {
     clauses.push('industry = ?');
@@ -195,6 +205,8 @@ function normalizeRow(row: Partial<InquiryAdminRow>): InquiryAdminRow {
     created_at: createdAt,
     created_at_iso: createdAt ? new Date(createdAt * 1000).toISOString() : '',
     status: row.status || '',
+    lead_score: row.lead_score == null ? null : Number(row.lead_score),
+    lead_grade: row.lead_grade || '',
     industry: row.industry || '',
     inquiry_type: row.inquiry_type || '',
     product_slug: row.product_slug || '',
@@ -227,7 +239,7 @@ export async function queryAdminInquiries(
 
   const rows = await db
     .prepare(
-      `SELECT id, created_at, status, industry, inquiry_type, product_slug, product_name, name, email, company, country, phone, quantity, message, source_page, utm_source, locale, attachment_key, extra_fields
+      `SELECT id, created_at, status, lead_score, lead_grade, industry, inquiry_type, product_slug, product_name, name, email, company, country, phone, quantity, message, source_page, utm_source, locale, attachment_key, extra_fields
        FROM inquiries ${where.sql}
        ORDER BY created_at DESC
        LIMIT ? OFFSET ?`,

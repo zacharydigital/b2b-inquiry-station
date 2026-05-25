@@ -18,6 +18,8 @@ const row: InquiryAdminRow = {
   created_at: 1_779_724_800,
   created_at_iso: '2026-05-25T00:00:00.000Z',
   status: 'new',
+  lead_score: 82,
+  lead_grade: 'hot',
   industry: 'materials',
   inquiry_type: 'sample',
   product_slug: 'pa66-gf30',
@@ -74,6 +76,7 @@ describe('parseInquiryAdminFilters', () => {
 
     expect(filters).toMatchObject({
       status: 'new',
+      leadGrade: undefined,
       industry: 'materials',
       productSlug: 'pa66-gf30',
       email: 'ana',
@@ -92,6 +95,12 @@ describe('parseInquiryAdminFilters', () => {
     expect(filters.from).toBeUndefined();
     expect(filters.to).toBeUndefined();
   });
+
+  it('parses lead grade filters', () => {
+    const filters = parseInquiryAdminFilters(makeUrl('/api/admin/inquiries.json?lead_grade=hot'));
+
+    expect(filters.leadGrade).toBe('hot');
+  });
 });
 
 describe('buildInquiriesCsv', () => {
@@ -99,6 +108,7 @@ describe('buildInquiriesCsv', () => {
     const csv = buildInquiriesCsv([row]);
 
     expect(csv).toContain('"id","created_at","status"');
+    expect(csv).toContain('"lead_score","lead_grade"');
     expect(csv).toContain('"Need ""COA"", SDS\nand bulk price"');
     expect(csv).toContain('"{""request_type"":""COA""}"');
   });
