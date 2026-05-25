@@ -4,7 +4,7 @@ import SourcingPageTemplate from '../../components/seo/SourcingPageTemplate.astr
 import { listProducts } from '../../lib/products';
 import { buildSourcingPageSchema } from '../../lib/sourcing-schema';
 import { getSourcingPagesByType } from '../../lib/sourcing-pages';
-import { getSiteUrl, joinSiteUrl } from '../../lib/site';
+import { getSiteUrl } from '../../lib/site';
 
 export function getStaticPaths() {
   return getSourcingPagesByType('material').map((page) => ({
@@ -22,7 +22,7 @@ const schema = buildSourcingPageSchema(page, products, siteUrl);
 <BaseLayout
   title={page.title}
   description={page.description}
-  canonical={joinSiteUrl(siteUrl, page.url)}
+  canonical={page.url}
   schema={schema}
   vertical={page.vertical}
   mobileCtaHref="#inline-inquiry"
