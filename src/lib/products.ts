@@ -1,4 +1,4 @@
-import type { ProductVertical } from './verticals';
+import type { PdpModuleKey, ProductVertical } from './verticals';
 
 export interface ProductFeature {
   label: string;
@@ -26,6 +26,36 @@ export interface ProductFaq {
   answer: string;
 }
 
+export interface TechnicalDataPoint {
+  property: string;
+  value: string;
+  method?: string;
+}
+
+export interface ComplianceDocument {
+  name: string;
+  status: string;
+  detail: string;
+}
+
+export interface ProductVariant {
+  label: string;
+  value: string;
+  detail?: string;
+}
+
+export interface ChannelFit {
+  channel: string;
+  fit: string;
+  note: string;
+}
+
+export interface CustomizationOption {
+  area: string;
+  options: string[];
+  moqImpact?: string;
+}
+
 export interface RelatedProduct {
   slug: string;
   vertical?: ProductVertical;
@@ -35,6 +65,7 @@ export interface RelatedProduct {
 
 export interface Product {
   slug: string;
+  vertical?: ProductVertical;
   title: string;
   model: string;
   category: string;
@@ -54,6 +85,12 @@ export interface Product {
   applications: ProductApplication[];
   faqs: ProductFaq[];
   relatedProducts: RelatedProduct[];
+  technicalData?: TechnicalDataPoint[];
+  complianceDocuments?: ComplianceDocument[];
+  variants?: ProductVariant[];
+  channelFit?: ChannelFit[];
+  customization?: CustomizationOption[];
+  pdpModuleOverrides?: PdpModuleKey[];
 }
 
 const products: Product[] = [
@@ -262,6 +299,144 @@ const products: Product[] = [
       { slug: 'helical-gearmotor-hm-series', title: 'Helical Gearmotor HM-500', model: 'HM-500' },
     ],
   },
+  {
+    slug: 'pa66-gf30-engineering-plastic',
+    vertical: 'materials',
+    title: 'PA66 GF30 Engineering Plastic Pellets',
+    model: 'PA66-GF30',
+    category: 'Engineering Plastics',
+    categorySlug: 'engineering-plastics',
+    moq: '1 ton',
+    leadTime: '7-14 days',
+    payment: 'T/T, L/C',
+    sample: '500 g sample available',
+    certifications: ['RoHS', 'REACH', 'COA'],
+    image: '/static/og-default.svg',
+    standard: 'ISO 1874 / ASTM D4066 reference properties',
+    updated: '2026-05-24',
+    fit: 'Automotive parts, electrical housings, industrial connectors',
+    features: [
+      { label: 'Glass Fiber', value: '30%' },
+      { label: 'Tensile Strength', value: '>= 180 MPa' },
+      { label: 'Packaging', value: '25 kg bags' },
+    ],
+    advantages: [
+      { title: 'Consistent Lot Performance', description: 'Batch-controlled compounding keeps tensile, impact, and moisture parameters stable for injection molding programs.' },
+      { title: 'Fast Document Handoff', description: 'COA, RoHS, REACH, and SDS documents can be provided before sample approval or bulk order confirmation.' },
+      { title: 'Export Packaging Ready', description: 'Moisture-resistant bags and palletized export packing reduce handling risk during sea or air freight.' },
+    ],
+    specifications: [
+      { parameter: 'Material', value: 'PA66 GF30' },
+      { parameter: 'Glass Fiber Content', value: '30%' },
+      { parameter: 'Color', value: 'Natural / black' },
+      { parameter: 'Moisture', value: '<= 0.2%' },
+      { parameter: 'Packaging', value: '25 kg bag / 1 ton pallet' },
+      { parameter: 'Processing', value: 'Injection molding' },
+    ],
+    technicalData: [
+      { property: 'Density', value: '1.36 g/cm3', method: 'ISO 1183' },
+      { property: 'Tensile Strength', value: '>= 180 MPa', method: 'ISO 527' },
+      { property: 'Flexural Modulus', value: '>= 8,000 MPa', method: 'ISO 178' },
+      { property: 'Heat Deflection Temperature', value: '>= 245 C', method: 'ISO 75' },
+      { property: 'Moisture Content', value: '<= 0.2%', method: 'Karl Fischer' },
+    ],
+    complianceDocuments: [
+      { name: 'COA', status: 'Available per batch', detail: 'Lot-specific certificate with physical properties and batch number.' },
+      { name: 'SDS', status: 'Available before shipment', detail: 'Safety data sheet for storage, handling, and transport review.' },
+      { name: 'RoHS / REACH', status: 'Declaration available', detail: 'Compliance declaration for EU buyer documentation packages.' },
+    ],
+    applications: [
+      { name: 'Automotive Brackets', description: 'High stiffness and thermal resistance for structural molded parts' },
+      { name: 'Electrical Housings', description: 'Stable performance for connector and enclosure programs' },
+      { name: 'Industrial Components', description: 'Good dimensional stability under load and heat' },
+    ],
+    faqs: [
+      { question: 'Can you provide COA before bulk shipment?', answer: 'Yes. COA is available per production lot, and pre-shipment samples can be arranged for approval.' },
+      { question: 'What packaging options are available?', answer: 'Standard packaging is 25 kg moisture-resistant bags on export pallets. Jumbo bags can be discussed for large-volume orders.' },
+      { question: 'Can you match a target specification?', answer: 'Yes. Share the target TDS or reference material and our technical team will confirm feasibility.' },
+    ],
+    relatedProducts: [
+      { slug: 'planetary-gearbox-hg-series', vertical: 'machinery', title: 'Planetary Gearbox HG-220', model: 'HG-220' },
+      { slug: 'custom-stainless-water-bottle-oem', vertical: 'consumer-oem', title: 'Custom Stainless Water Bottle', model: 'WB-OEM-750' },
+    ],
+  },
+  {
+    slug: 'custom-stainless-water-bottle-oem',
+    vertical: 'consumer-oem',
+    title: 'Custom Stainless Steel Water Bottle OEM',
+    model: 'WB-OEM-750',
+    category: 'Drinkware OEM',
+    categorySlug: 'drinkware-oem',
+    moq: '1,000 pcs',
+    leadTime: '25-35 days',
+    payment: 'T/T, L/C',
+    sample: 'Custom sample available',
+    certifications: ['LFGB', 'FDA', 'BPA Free'],
+    image: '/static/placeholder-logo.svg',
+    standard: 'Food-contact stainless steel 304',
+    updated: '2026-05-24',
+    fit: 'Private label, promotional gifts, retail bundles',
+    features: [
+      { label: 'Capacity', value: '500 / 750 / 1000 ml' },
+      { label: 'Material', value: 'SS304 inner' },
+      { label: 'Branding', value: 'Logo + packaging' },
+    ],
+    advantages: [
+      { title: 'Private Label Ready', description: 'Logo, color, lid, and packaging options help buyers validate retail or promotional programs quickly.' },
+      { title: 'Channel-Friendly MOQ', description: 'MOQ supports importer sampling, online retail tests, and distributor launch batches.' },
+      { title: 'Compliance File Support', description: 'Food-contact declarations and test reports can be prepared for target-market review.' },
+    ],
+    specifications: [
+      { parameter: 'Capacity Options', value: '500 ml / 750 ml / 1000 ml' },
+      { parameter: 'Inner Material', value: 'SS304' },
+      { parameter: 'Outer Finish', value: 'Powder coated / polished / gradient' },
+      { parameter: 'Insulation', value: 'Double-wall vacuum' },
+      { parameter: 'Packaging', value: 'White box / color box / gift box' },
+      { parameter: 'Logo', value: 'Laser / silk print / heat transfer' },
+    ],
+    variants: [
+      { label: 'Capacity', value: '500 ml, 750 ml, 1000 ml', detail: 'Shared body tooling for faster sampling.' },
+      { label: 'Color', value: 'Pantone matching available', detail: 'Matte, gloss, gradient, and metallic finishes.' },
+      { label: 'Lid', value: 'Screw, straw, sport cap', detail: 'Retail channel and use-case dependent.' },
+      { label: 'Packaging', value: 'White box, color box, gift box', detail: 'Barcode and insert options available.' },
+    ],
+    channelFit: [
+      { channel: 'Amazon / Marketplace', fit: 'Strong', note: 'Barcode, carton mark, and retail packaging options available.' },
+      { channel: 'Distributor', fit: 'Strong', note: 'MOQ and color assortment can be planned by region.' },
+      { channel: 'Promotional Gifts', fit: 'Strong', note: 'Logo and campaign packaging can be prepared for events.' },
+    ],
+    customization: [
+      { area: 'Logo', options: ['Laser engraving', 'Silk printing', 'Heat transfer'], moqImpact: 'Available from standard MOQ.' },
+      { area: 'Packaging', options: ['Color box', 'Gift box', 'Instruction insert', 'Barcode label'], moqImpact: 'Custom printed packaging may require 2,000 pcs.' },
+      { area: 'Color', options: ['Pantone match', 'Gradient finish', 'Metallic coating'], moqImpact: 'Special finishes may extend lead time by 5-7 days.' },
+    ],
+    applications: [
+      { name: 'Private Label Retail', description: 'Branded drinkware for ecommerce and retail shelves' },
+      { name: 'Promotional Campaigns', description: 'Custom logo bottles for events and corporate gifts' },
+      { name: 'Distributor Programs', description: 'Assorted color and size ranges for regional wholesale' },
+    ],
+    faqs: [
+      { question: 'Can you make custom packaging?', answer: 'Yes. Color box, gift box, insert, barcode label, and carton mark customization are available.' },
+      { question: 'What files do you need for logo proofing?', answer: 'AI, PDF, EPS, or high-resolution PNG files are preferred. We can prepare a digital proof before sampling.' },
+      { question: 'Can you support Amazon packaging requirements?', answer: 'Yes. Share your target marketplace and packaging checklist so we can confirm carton, barcode, and label details.' },
+    ],
+    relatedProducts: [
+      { slug: 'pa66-gf30-engineering-plastic', vertical: 'materials', title: 'PA66 GF30 Engineering Plastic', model: 'PA66-GF30' },
+      { slug: 'planetary-gearbox-hg-series', vertical: 'machinery', title: 'Planetary Gearbox HG-220', model: 'HG-220' },
+    ],
+    pdpModuleOverrides: [
+      'ProductHero',
+      'Variants',
+      'ChannelFit',
+      'Customization',
+      'Specifications',
+      'TrustEvidence',
+      'CommercialTerms',
+      'ConversionPanel',
+      'FAQ',
+      'RelatedProducts',
+    ],
+  },
 ];
 
 export function listProducts(): Product[] {
@@ -283,6 +458,8 @@ export function listFilterProducts() {
     model: product.model,
     image: product.image,
     category: product.categorySlug,
+    vertical: product.vertical || 'machinery',
+    certifications: product.certifications,
     moq: product.moq,
     leadTime: product.leadTime,
   }));

@@ -18,11 +18,16 @@ import InlineInquiryForm from '../../components/inquiry/InlineInquiryForm.astro'
 import QuoteCartPanel from '../../components/inquiry/QuoteCartPanel.astro';
 import QuoteCartButton from '../../components/inquiry/QuoteCartButton.astro';
 import EmailGateModal from '../../components/inquiry/EmailGateModal.astro';
+import TechnicalData from '../../components/pdp/TechnicalData.astro';
+import ComplianceDocuments from '../../components/pdp/ComplianceDocuments.astro';
+import Variants from '../../components/pdp/Variants.astro';
+import ChannelFit from '../../components/pdp/ChannelFit.astro';
+import Customization from '../../components/pdp/Customization.astro';
 import { breadcrumbSchema, faqSchema, graphSchema, productSchema } from '../../lib/seo';
 import { getPdpModules } from '../../lib/pdp';
 import { getProductBySlug, getProductStaticPaths, listProducts } from '../../lib/products';
 import { getSiteUrl, joinSiteUrl } from '../../lib/site';
-import { getVerticalConfig, normalizeVertical } from '../../lib/verticals';
+import { normalizeVertical } from '../../lib/verticals';
 
 export function getStaticPaths() {
   return getProductStaticPaths();
@@ -31,8 +36,7 @@ export function getStaticPaths() {
 const { slug } = Astro.params;
 const product = getProductBySlug(slug || '') || listProducts()[0];
 const vertical = normalizeVertical(product.vertical);
-const verticalConfig = getVerticalConfig(vertical);
-const pdpModules = getPdpModules(vertical).filter((module) => module !== 'ProductHero');
+const pdpModules = getPdpModules(vertical, product.pdpModuleOverrides).filter((module) => module !== 'ProductHero');
 
 const title = `${product.title} — ${product.model} | IndustryPro`;
 const desc = `Industrial ${product.category.toLowerCase()} ${product.model}. MOQ ${product.moq}. ISO 9001 certified manufacturer. OEM/ODM supported. Request a quote today.`;
@@ -136,15 +140,17 @@ const pdpSchema = graphSchema([
   </section>
 
   {pdpModules.map((module) => (
-    module === 'Specifications' || module === 'TechnicalData' ? (
+    module === 'Specifications' ? (
       <Specifications specs={product.specifications} />
+    ) : module === 'TechnicalData' ? (
+      <TechnicalData items={product.technicalData} fallbackSpecs={product.specifications} />
     ) : module === 'Applications' ? (
       <Applications applications={product.applications} />
     ) : module === 'FABENarrative' ? (
       <FABENarrative advantages={product.advantages} />
     ) : module === 'ManufacturingQC' || module === 'QualityConsistency' ? (
       <ManufacturingQC capacity="50,000 units/month" />
-    ) : module === 'TrustEvidence' || module === 'ComplianceDocuments' ? (
+    ) : module === 'TrustEvidence' ? (
       <CertLogoWall compact
         certs={[
           { name: 'ISO 9001:2015', number: 'CN-2021-ISO9001-XXXX', issuer: 'SGS', valid_until: '2027-06' },
@@ -152,6 +158,8 @@ const pdpSchema = graphSchema([
           { name: 'RoHS', number: 'ROHS-2023-XXXX', issuer: 'Intertek', valid_until: '2027-03' },
         ]}
       />
+    ) : module === 'ComplianceDocuments' ? (
+      <ComplianceDocuments documents={product.complianceDocuments} certifications={product.certifications} />
     ) : module === 'CommercialTerms' ? (
       <KeyCommercialTerms
         items={[
@@ -177,24 +185,12 @@ const pdpSchema = graphSchema([
       <FAQAccordion faqs={product.faqs} includeSchema={false} />
     ) : module === 'RelatedProducts' ? (
       <RelatedProducts products={product.relatedProducts} />
-    ) : module === 'Variants' || module === 'ChannelFit' || module === 'Customization' ? (
-      <section class="section-band">
-        <div class="container mx-auto px-4">
-          <div class="max-w-3xl mb-8">
-            <p class="section-kicker mb-2">{verticalConfig.label}</p>
-            <h2 class="section-heading mb-4">
-              {module === 'Variants' ? 'Product Options Buyers Can Compare' : module === 'ChannelFit' ? 'Channel Fit and Use Cases' : 'Customization Scope'}
-            </h2>
-            <p class="text-body text-gray-600 leading-relaxed">
-              {module === 'Variants'
-                ? `${product.model} can be evaluated by specification, certification, packaging, and application fit before sampling or bulk inquiry.`
-                : module === 'ChannelFit'
-                  ? `${product.model} can support distributor, retail, private-label, and OEM sourcing workflows when buyer requirements are clear.`
-                  : `Share your logo, packaging, performance, certification, or reference-product requirements so the sales engineering team can confirm feasibility.`}
-            </p>
-          </div>
-        </div>
-      </section>
+    ) : module === 'Variants' ? (
+      <Variants variants={product.variants} />
+    ) : module === 'ChannelFit' ? (
+      <ChannelFit items={product.channelFit} />
+    ) : module === 'Customization' ? (
+      <Customization items={product.customization} />
     ) : null
   ))}
 

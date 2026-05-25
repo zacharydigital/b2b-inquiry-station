@@ -32,4 +32,12 @@ describe('getPdpModules', () => {
       'Applications',
     ]);
   });
+
+  it('uses product-level module overrides when provided', () => {
+    expect(getPdpModules('machinery', ['ProductHero', 'Variants', 'ConversionPanel'])).toEqual([
+      'ProductHero',
+      'Variants',
+      'ConversionPanel',
+    ]);
+  });
 });

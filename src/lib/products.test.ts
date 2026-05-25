@@ -5,7 +5,7 @@ describe('product catalog', () => {
   it('lists products with SEO and sourcing metadata', () => {
     const products = listProducts();
 
-    expect(products.length).toBeGreaterThanOrEqual(4);
+    expect(products.length).toBeGreaterThanOrEqual(6);
     expect(products[0]).toMatchObject({
       slug: expect.any(String),
       title: expect.any(String),
@@ -32,5 +32,13 @@ describe('product catalog', () => {
 
     expect(paths).toContainEqual({ params: { slug: 'planetary-gearbox-hg-series' } });
     expect(paths.length).toBe(listProducts().length);
+  });
+
+  it('includes real products for every configured vertical', () => {
+    const verticals = new Set(listProducts().map((product) => product.vertical || 'machinery'));
+
+    expect(verticals).toEqual(new Set(['machinery', 'materials', 'consumer-oem']));
+    expect(getProductBySlug('pa66-gf30-engineering-plastic')?.technicalData?.length).toBeGreaterThan(0);
+    expect(getProductBySlug('custom-stainless-water-bottle-oem')?.variants?.length).toBeGreaterThan(0);
   });
 });
