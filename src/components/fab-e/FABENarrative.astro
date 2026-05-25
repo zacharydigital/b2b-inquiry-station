@@ -6,27 +6,24 @@ export interface Props {
 const { advantages } = Astro.props;
 ---
 
-<section style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+<section class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
   <div class="container mx-auto px-4">
-    <h2 class="text-heading font-bold text-center mb-10 text-gray-900">Features & Advantages</h2>
-    <div class="space-y-16 max-w-5xl mx-auto">
-      {advantages.map((adv, i) => (
-        <div class={`grid grid-cols-1 md:grid-cols-2 gap-8 items-center ${i % 2 === 1 ? 'md:flex-row-reverse' : ''}`}>
-          <div class={i % 2 === 1 ? 'md:order-2' : ''}>
-            <h3 class="text-subhead font-bold text-gray-900 mb-3">{adv.title}</h3>
-            <p class="text-body leading-relaxed text-gray-600">{adv.description}</p>
-            <a href="#inline-inquiry" class="inline-block mt-4 text-caption text-primary font-medium hover:underline">
-              Inquire About This →
-            </a>
+    <div class="max-w-3xl mb-10">
+      <p class="section-kicker mb-2">Engineering advantages</p>
+      <h2 class="section-heading">Features & Advantages</h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      {advantages.map((adv) => (
+        <article class="proof-card">
+          <div class="w-11 h-11 rounded-[var(--radius-card)] bg-primary-50 text-primary flex items-center justify-center mb-5">
+            <span class="i-carbon-settings-check text-2xl" aria-hidden="true"></span>
           </div>
-          <div class={i % 2 === 1 ? 'md:order-1' : ''}>
-            {adv.image ? (
-              <img src={adv.image} alt={adv.title} class="w-full rounded-card" loading="lazy" />
-            ) : (
-              <div class="w-full aspect-video bg-primary-50 rounded-card flex items-center justify-center text-4xl">⚙</div>
-            )}
-          </div>
-        </div>
+          <h3 class="text-subhead font-bold text-gray-900 mb-3">{adv.title}</h3>
+          <p class="text-caption leading-relaxed text-gray-600">{adv.description}</p>
+          <a href="#inline-inquiry" class="inline-flex items-center gap-2 mt-5 text-caption text-primary font-bold hover:underline">
+            Inquire About This <span class="i-carbon-arrow-right" aria-hidden="true"></span>
+          </a>
+        </article>
       ))}
     </div>
   </div>

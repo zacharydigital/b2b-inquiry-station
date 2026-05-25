@@ -13,11 +13,14 @@ const visibleCount = 8;
 
 <section style="padding-top: var(--space-block); padding-bottom: var(--space-block)">
   <div class="container mx-auto px-4">
-    <h2 class="text-heading font-bold mb-8 text-gray-900">Technical Specifications</h2>
-    <div class="overflow-x-auto">
-      <table class="w-full border-collapse bg-white rounded-card shadow-card">
-        <thead>
-          <tr class="border-b border-gray-100">
+    <div class="max-w-3xl mb-8">
+      <p class="section-kicker mb-2">Technical fit</p>
+      <h2 class="section-heading">Technical Specifications</h2>
+    </div>
+    <div class="overflow-x-auto table-shadow-mask bg-white border border-gray-100 rounded-card shadow-card">
+      <table class="table-procurement">
+        <thead class="bg-primary-50">
+          <tr>
             <th class="text-left px-6 py-3 text-caption font-semibold text-gray-900">Parameter</th>
             <th class="text-left px-6 py-3 text-caption font-semibold text-gray-900">Value</th>
             <th class="text-left px-6 py-3 text-caption font-semibold text-gray-900 hidden md:table-cell">Note</th>
@@ -25,8 +28,8 @@ const visibleCount = 8;
         </thead>
         <tbody id="spec-tbody">
           {specs.map((s, i) => (
-            <tr class={`border-b border-gray-50 ${i >= visibleCount ? 'spec-hidden hidden' : ''} ${i < 3 ? 'border-l-4 border-l-primary' : ''}`}>
-              <td class="px-6 py-3 text-caption font-medium text-gray-900">{s.parameter}</td>
+            <tr class={`border-b border-gray-100 ${i >= visibleCount ? 'spec-hidden hidden' : ''}`}>
+              <td class="px-6 py-3 text-caption font-semibold text-gray-900">{s.parameter}</td>
               <td class="px-6 py-3 text-caption text-gray-600">{s.value}</td>
               <td class="px-6 py-3 text-small text-gray-400 hidden md:table-cell">{s.note || '—'}</td>
             </tr>

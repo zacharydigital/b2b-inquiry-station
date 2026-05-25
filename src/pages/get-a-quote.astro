@@ -34,11 +34,11 @@ const schema = graphSchema([
 ---
 
 <BaseLayout title={title} description={desc} canonical="/get-a-quote/" schema={schema}>
-  <section class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+  <section class="industrial-grid-bg border-b border-gray-100" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
     <div class="container mx-auto px-4">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
         <div class="lg:col-span-7">
-          <p class="text-caption font-semibold text-primary mb-3">Engineering RFQ · OEM/ODM · Export-ready documentation</p>
+          <p class="section-kicker mb-3">Engineering RFQ · OEM/ODM · Export-ready documentation</p>
           <h1 class="text-display font-bold text-gray-900 leading-tight mb-5">
             Request a machinery quote with the details buyers actually need.
           </h1>
@@ -46,12 +46,12 @@ const schema = graphSchema([
             Send your product category, target quantity, destination country, and drawings or specifications. IndustryPro reviews RFQs with sales engineering context, so you receive a practical sourcing reply instead of a generic brochure.
           </p>
           <div class="mt-7 flex flex-col sm:flex-row gap-3">
-            <a href="#rfq-form" class="btn-primary">Start RFQ</a>
-            <a href="#quote-checklist" class="btn-outline">See What to Include</a>
+            <a href="#rfq-form" class="btn-primary"><span class="i-carbon-send" aria-hidden="true"></span>Start RFQ</a>
+            <a href="#quote-checklist" class="btn-outline"><span class="i-carbon-checklist" aria-hidden="true"></span>See What to Include</a>
           </div>
         </div>
-        <aside class="lg:col-span-5 bg-gray-warm border border-gray-100 rounded-card p-6">
-          <h2 class="text-subhead font-semibold text-gray-900 mb-4">What happens after you submit?</h2>
+        <aside class="lg:col-span-5 quote-panel">
+          <h2 class="text-subhead font-bold text-gray-900 mb-4">What happens after you submit?</h2>
           <ol class="space-y-4 text-caption text-gray-600">
             <li><strong class="text-gray-900">1. RFQ triage:</strong> We review product fit, quantity, destination, and missing technical details.</li>
             <li><strong class="text-gray-900">2. Engineering check:</strong> Specs, drawings, certification needs, and OEM constraints are checked.</li>
@@ -72,10 +72,11 @@ const schema = graphSchema([
     ]}
   />
 
-  <section id="quote-checklist" class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+  <section id="quote-checklist" class="bg-white border-y border-gray-100" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
     <div class="container mx-auto px-4">
       <div class="max-w-3xl mb-8">
-        <h2 class="text-heading font-bold text-gray-900 mb-4">What to Include for a Faster Quote</h2>
+        <p class="section-kicker mb-2">RFQ checklist</p>
+        <h2 class="section-heading mb-4">What to Include for a Faster Quote</h2>
         <p class="text-body text-gray-600 leading-relaxed">
           RFQs convert faster when procurement, engineering, and supplier teams are looking at the same facts. Include as many of these details as possible.
         </p>
@@ -86,10 +87,10 @@ const schema = graphSchema([
           { title: 'Commercial Terms', items: ['Target quantity', 'Destination country', 'Sample or bulk order timeline'] },
           { title: 'Technical Evidence', items: ['Drawings or datasheets', 'Certification requirements', 'OEM/private-label notes'] },
         ].map((group) => (
-          <div class="bg-gray-warm border border-gray-100 rounded-card p-6">
+          <div class="proof-card">
             <h3 class="font-semibold text-gray-900 mb-4">{group.title}</h3>
             <ul class="space-y-2 text-caption text-gray-600">
-              {group.items.map((item) => <li class="flex gap-2"><span class="text-success">✓</span><span>{item}</span></li>)}
+              {group.items.map((item) => <li class="flex gap-2"><span class="i-carbon-checkmark text-success mt-0.5" aria-hidden="true"></span><span>{item}</span></li>)}
             </ul>
           </div>
         ))}

@@ -5,18 +5,18 @@ export interface Props {
   alt?: string;
 }
 
-const { mainImage = '/static/placeholder.jpg', thumbnails = [], alt = 'Product image' } = Astro.props;
+const { mainImage = '/static/product-gearbox.svg', thumbnails = [], alt = 'Product image' } = Astro.props;
 const allImages = [mainImage, ...thumbnails];
 ---
 
 <div class="gallery">
-  <div class="aspect-square bg-primary-50 rounded-card overflow-hidden mb-4" id="gallery-main-container">
+  <div class="media-frame aspect-[4/3] overflow-hidden mb-4 p-6 md:p-10" id="gallery-main-container">
     <img
       src={mainImage}
       alt={alt}
       width="800"
       height="800"
-      class="w-full h-full object-cover"
+      class="w-full h-full object-contain"
       id="gallery-main"
       fetchpriority="high"
     />
@@ -26,13 +26,13 @@ const allImages = [mainImage, ...thumbnails];
       {allImages.map((img, i) => (
         <button
           type="button"
-          class={`shrink-0 w-16 h-16 rounded overflow-hidden border-2 transition-colors ${i === 0 ? 'border-primary' : 'border-transparent hover:border-gray-300'}`}
+          class={`shrink-0 w-16 h-16 rounded-[var(--radius-input)] overflow-hidden border transition-colors bg-white ${i === 0 ? 'border-primary' : 'border-gray-100 hover:border-gray-300'}`}
           aria-label={`View image ${i + 1}`}
         >
           <img
             src={img}
             alt={`${alt} ${i + 1}`}
-            class="w-full h-full object-cover gallery-thumb"
+            class="w-full h-full object-contain gallery-thumb p-1"
             data-full={img}
             loading="lazy"
           />

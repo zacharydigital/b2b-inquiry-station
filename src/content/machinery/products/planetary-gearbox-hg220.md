@@ -8,7 +8,7 @@ lead_time: "15–25 days"
 certifications:
   - "ISO 9001:2015"
   - "CE"
-image: "/static/placeholder.jpg"
+image: "/static/product-gearbox.svg"
 features:
   - label: "Ratio"
     value: "3:1 to 100:1"

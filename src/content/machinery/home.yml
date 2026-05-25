@@ -24,15 +24,15 @@ quantified:
 categories:
   - title: "Gearboxes"
     description: "Planetary, helical, worm gearboxes for industrial applications."
-    image: "/static/placeholder.jpg"
+    image: "/static/product-gearbox.svg"
     href: "/products/?category=gearboxes"
   - title: "Electric Motors"
     description: "AC induction, servo, and stepper motors with custom options."
-    image: "/static/placeholder.jpg"
+    image: "/static/product-motor.svg"
     href: "/products/?category=motors"
   - title: "Pumps & Valves"
     description: "Centrifugal pumps, control valves, and hydraulic components."
-    image: "/static/placeholder.jpg"
+    image: "/static/product-pump.svg"
     href: "/products/?category=pumps"
 
 # Inquiry CTA

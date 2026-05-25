@@ -42,25 +42,26 @@ const schema = graphSchema([
     <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Certifications', href: '/certifications/' }]} includeSchema={false} />
   </div>
 
-  <section class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+  <section class="industrial-grid-bg border-y border-gray-100" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
     <div class="container mx-auto px-4">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
         <div class="lg:col-span-7">
-          <p class="text-caption font-semibold text-primary mb-3">Compliance evidence for export buyers</p>
+          <p class="section-kicker mb-3">Compliance evidence for export buyers</p>
           <h1 class="text-display font-bold text-gray-900 leading-tight mb-5">Certifications & Compliance</h1>
           <p class="text-subhead text-gray-600 leading-relaxed max-w-3xl">
             Verify factory-level quality systems, product-level compliance marks, and export documentation before you approve samples or issue a purchase order.
           </p>
           <div class="mt-7 flex flex-col sm:flex-row gap-3">
-            <a href="/get-a-quote/" class="btn-primary">Request Compliance Pack</a>
-            <a href="/about/" class="btn-outline">View Factory Profile</a>
+            <a href="/get-a-quote/" class="btn-primary"><span class="i-carbon-certificate" aria-hidden="true"></span>Request Compliance Pack</a>
+            <a href="/about/" class="btn-outline"><span class="i-carbon-industry" aria-hidden="true"></span>View Factory Profile</a>
           </div>
         </div>
-        <aside class="lg:col-span-5 bg-gray-warm border border-gray-100 rounded-card p-6">
-          <h2 class="text-subhead font-semibold text-gray-900 mb-4">Available Before Shipment</h2>
+        <aside class="lg:col-span-5 quote-panel">
+          <img src="/static/certificate-evidence.svg" alt="Certification evidence documents" class="w-full aspect-[16/9] object-contain mb-4 bg-primary-50 rounded-card" />
+          <h2 class="text-subhead font-bold text-gray-900 mb-4">Available Before Shipment</h2>
           <ul class="space-y-3 text-caption text-gray-600">
             {['Certificate copies', 'Outgoing QC records', 'Packaging photos', 'Commercial invoice', 'Packing list', 'Shipping documents'].map((item) => (
-              <li class="flex gap-2"><span class="text-success">✓</span><span>{item}</span></li>
+              <li class="flex gap-2"><span class="i-carbon-checkmark text-success mt-0.5" aria-hidden="true"></span><span>{item}</span></li>
             ))}
           </ul>
         </aside>
@@ -68,12 +69,16 @@ const schema = graphSchema([
     </div>
   </section>
 
-  <section class="bg-gray-warm" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+  <section class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
     <div class="container mx-auto px-4">
+      <div class="max-w-3xl mb-8">
+        <p class="section-kicker mb-2">Document index</p>
+        <h2 class="section-heading">Certificate evidence center</h2>
+      </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         {trust.certifications.map((cert) => (
-          <article class="bg-white rounded-card border border-gray-100 p-6 shadow-card">
-            <span class="text-3xl mb-3 block">📜</span>
+          <article class="proof-card">
+            <span class="i-carbon-certificate text-3xl mb-4 block text-primary" aria-hidden="true"></span>
             <h2 class="font-bold text-subhead mb-3">{cert.name}</h2>
             <dl class="text-caption text-gray-600 space-y-2">
               <div><dt class="text-gray-900 font-semibold">Certificate No.</dt><dd>{cert.number}</dd></div>
@@ -87,10 +92,11 @@ const schema = graphSchema([
     </div>
   </section>
 
-  <section class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+  <section class="section-band">
     <div class="container mx-auto px-4">
       <div class="max-w-3xl mb-8">
-        <h2 class="text-heading font-bold text-gray-900 mb-4">How Buyers Should Verify Compliance</h2>
+        <p class="section-kicker mb-2">Verification workflow</p>
+        <h2 class="section-heading mb-4">How Buyers Should Verify Compliance</h2>
         <p class="text-body text-gray-600 leading-relaxed">
           Certifications are most useful when they are connected to a product family, production batch, and shipment record. Use this workflow before confirming a bulk order.
         </p>
@@ -102,7 +108,7 @@ const schema = graphSchema([
           { title: '3. Confirm Product Fit', desc: 'Map compliance needs to the selected model and configuration.' },
           { title: '4. Request Batch Evidence', desc: 'Ask for outgoing QC and shipment documents before delivery.' },
         ].map((step) => (
-          <div class="bg-gray-warm border border-gray-100 rounded-card p-5">
+          <div class="proof-card">
             <h3 class="font-semibold text-gray-900 mb-2">{step.title}</h3>
             <p class="text-caption text-gray-600 leading-relaxed">{step.desc}</p>
           </div>

@@ -12,58 +12,110 @@ const description = 'Professional industrial machinery manufacturer. ISO 9001 ce
 ---
 
 <BaseLayout title={title} description={description}>
-  <!-- 1. Hook: Hero Banner -->
-  <section class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+  <section class="industrial-grid-bg border-b border-gray-100" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
     <div class="container mx-auto px-4">
-      <div class="text-center max-w-3xl mx-auto">
-        <h1 class="text-display font-bold leading-tight text-gray-900">
-          Your Trusted Industrial Machinery Manufacturer
-        </h1>
-        <p class="mt-6 text-subhead text-gray-600 max-w-2xl mx-auto leading-relaxed">
-          ISO 9001 certified factory. OEM/ODM supported. Global shipping to 60+ countries.
-        </p>
-        <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="/contact/" class="btn-primary !text-lg !px-8 !py-4">Request a Quote</a>
-          <a href="/products/" class="btn-outline !text-lg !px-8 !py-4">View Products</a>
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        <div class="lg:col-span-7">
+          <p class="section-kicker mb-4">ISO 9001 factory · OEM/ODM · Export documentation</p>
+          <h1 class="text-display font-bold leading-tight text-gray-900 max-w-3xl">
+            Industrial machinery supplier built for procurement teams.
+          </h1>
+          <p class="mt-6 text-subhead text-gray-600 max-w-2xl leading-relaxed">
+            Compare gearboxes, motors, pumps, and OEM machinery with clear MOQ, lead time, compliance evidence, and RFQ-ready technical context.
+          </p>
+          <div class="mt-8 flex flex-col sm:flex-row gap-4">
+            <a href="/get-a-quote/" class="btn-primary !text-lg !px-8 !py-4">
+              <span class="i-carbon-email-new" aria-hidden="true"></span>
+              Request a Quote
+            </a>
+            <a href="/products/" class="btn-outline !text-lg !px-8 !py-4">
+              <span class="i-carbon-search" aria-hidden="true"></span>
+              View Products
+            </a>
+          </div>
+          <div class="mt-7 grid grid-cols-1 sm:grid-cols-3 gap-3 text-caption text-gray-600">
+            <span class="flex items-center gap-2"><span class="i-carbon-time text-primary" aria-hidden="true"></span> Reply within 12 hours</span>
+            <span class="flex items-center gap-2"><span class="i-carbon-locked text-primary" aria-hidden="true"></span> NDA available</span>
+            <span class="flex items-center gap-2"><span class="i-carbon-delivery text-primary" aria-hidden="true"></span> Global shipping</span>
+          </div>
         </div>
-        <div class="mt-6 flex justify-center gap-6 text-caption text-gray-600">
-          <span>🛡 Reply within 12 hours</span>
-          <span>🔒 NDA available</span>
-          <span>🚚 Global shipping</span>
-        </div>
+        <aside class="lg:col-span-5">
+          <div class="quote-panel p-0 overflow-hidden">
+            <img src="/static/factory-floor.svg" alt="Factory floor production cells" class="w-full aspect-[16/10] object-cover" />
+            <div class="p-6">
+              <p class="text-small font-bold text-primary uppercase mb-3">Capability snapshot</p>
+              <div class="grid grid-cols-2 gap-3">
+                <div class="metric-card !p-4"><p class="text-small text-gray-600">Factory area</p><strong class="block text-body">20,000 m2</strong></div>
+                <div class="metric-card !p-4"><p class="text-small text-gray-600">Monthly capacity</p><strong class="block text-body">50,000u</strong></div>
+                <div class="metric-card !p-4"><p class="text-small text-gray-600">Export markets</p><strong class="block text-body">60+ countries</strong></div>
+                <div class="metric-card !p-4"><p class="text-small text-gray-600">Compliance</p><strong class="block text-body">ISO / CE</strong></div>
+              </div>
+            </div>
+          </div>
+        </aside>
       </div>
     </div>
   </section>
 
-  <!-- 2. Proof: Quantified Strip -->
   <QuantifiedStrip
     items={[
       { label: 'Years Established', value: '15+' },
       { label: 'Export Countries', value: '60+' },
-      { label: 'Factory Area (m²)', value: '20,000' },
+      { label: 'Factory Area (m2)', value: '20,000' },
       { label: 'Happy Clients', value: '2,000+' },
       { label: 'Monthly Capacity', value: '50,000u' },
     ]}
   />
 
-  <!-- 3. Fit: Category Navigation Cards -->
-  <section style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+  <section class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
     <div class="container mx-auto px-4">
-      <h2 class="text-heading font-bold text-center mb-10 text-gray-900">Our Product Categories</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5 mb-10">
+        <div>
+          <p class="section-kicker mb-2">Product families</p>
+          <h2 class="section-heading">Shortlist by sourcing need</h2>
+        </div>
+        <a href="/compare/" class="btn-quiet">Compare all models <span class="i-carbon-arrow-right" aria-hidden="true"></span></a>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
-          { title: 'Gearboxes', desc: 'Planetary, helical, worm gearboxes for industrial applications.', href: '/products/?category=gearboxes' },
-          { title: 'Electric Motors', desc: 'AC induction, servo, and stepper motors with custom options.', href: '/products/?category=motors' },
-          { title: 'Pumps & Valves', desc: 'Centrifugal pumps, control valves, and hydraulic components.', href: '/products/?category=pumps' },
+          { title: 'Gearboxes', desc: 'Planetary and helical gearboxes for CNC, robotics, conveyors, and pump drives.', href: '/products/?category=gearboxes', icon: 'i-carbon-assembly' },
+          { title: 'Electric Motors', desc: 'Servo and industrial motors with encoder, flange, and brake configuration options.', href: '/products/?category=motors', icon: 'i-carbon-power' },
+          { title: 'Pumps & Valves', desc: 'Centrifugal pumps and process components with export-ready documentation.', href: '/products/?category=pumps', icon: 'i-carbon-flow' },
         ].map((cat) => (
-          <a href={cat.href} class="card hover:shadow-elevated transition-shadow group">
-            <div class="w-full h-48 bg-primary-50 rounded-card mb-4 flex items-center justify-center text-4xl">
-              ⚙
-            </div>
-            <h3 class="text-subhead font-semibold mb-2 group-hover:text-primary transition-colors">{cat.title}</h3>
-            <p class="text-caption text-gray-600">{cat.desc}</p>
+          <a href={cat.href} class="proof-card group">
+            <span class={`${cat.icon} text-3xl text-primary mb-5 block`} aria-hidden="true"></span>
+            <h3 class="text-subhead font-bold mb-3 group-hover:text-primary transition-colors">{cat.title}</h3>
+            <p class="text-caption text-gray-600 leading-relaxed">{cat.desc}</p>
+            <span class="inline-flex items-center gap-2 mt-5 text-small text-primary font-bold">Open category <span class="i-carbon-arrow-right" aria-hidden="true"></span></span>
           </a>
         ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-band">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div class="lg:col-span-5">
+          <p class="section-kicker mb-2">Procurement workflow</p>
+          <h2 class="section-heading mb-4">Evidence before samples, clarity before price.</h2>
+          <p class="text-body text-gray-600 leading-relaxed">
+            The template is structured around the questions sourcing teams ask before sending drawings: technical fit, commercial fit, compliance evidence, and shipping readiness.
+          </p>
+        </div>
+        <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {[
+            { title: 'Technical fit', detail: 'Specs, application notes, standards, and comparable models.' },
+            { title: 'Commercial fit', detail: 'MOQ, lead time, samples, payment terms, and packaging.' },
+            { title: 'Compliance pack', detail: 'Certificate copies, QC records, and shipment documents.' },
+            { title: 'RFQ handoff', detail: 'Inquiry forms, quote cart, file upload, and buyer confirmation.' },
+          ].map((item) => (
+            <article class="metric-card">
+              <h3 class="font-bold text-gray-900 mb-2">{item.title}</h3>
+              <p class="text-caption text-gray-600 leading-relaxed">{item.detail}</p>
+            </article>
+          ))}
+        </div>
       </div>
     </div>
   </section>

@@ -9,13 +9,13 @@
         { id: 'OQC', label: 'Outgoing QC', desc: 'Pre-shipment audit' },
       ].map((step, i, arr) => (
         <>
-          <div class="card text-center w-36 md:w-44">
+          <div class="proof-card text-center w-36 md:w-44">
             <span class="text-2xl font-bold text-primary">{step.id}</span>
             <p class="text-caption font-semibold mt-1">{step.label}</p>
             <p class="text-small text-gray-600">{step.desc}</p>
           </div>
           {i < arr.length - 1 && (
-            <span class="text-2xl text-gray-300 hidden md:block">→</span>
+            <span class="i-carbon-arrow-right text-2xl text-gray-300 hidden md:block" aria-hidden="true"></span>
           )}
         </>
       ))}

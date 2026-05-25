@@ -66,19 +66,31 @@ const pdpSchema = graphSchema([
       includeSchema={false}
     />
 
-    <!-- 2. Hero Block -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
-      <div class="lg:col-span-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16 industrial-grid-bg border border-gray-100 rounded-card p-6 lg:p-8">
+      <div class="lg:col-span-7">
         <Gallery mainImage={product.image} alt={`${product.title} — front view`} />
       </div>
-      <div class="lg:col-span-4">
+      <div class="lg:col-span-5">
+        <p class="section-kicker mb-3">{product.category} · Export-ready model</p>
         <h1 class="text-heading font-bold text-gray-900 mb-2">{product.title}</h1>
-        <p class="text-caption text-gray-600 mb-4">Model: {product.model}</p>
-        <div class="bg-primary-50 border border-primary-100 rounded-card p-4 mb-5">
-          <h2 class="text-caption font-semibold text-gray-900 mb-2">Best-fit sourcing summary</h2>
+        <p class="text-caption text-gray-600 mb-5">Model: <span class="font-semibold text-gray-900">{product.model}</span></p>
+        <div class="quote-panel mb-5">
+          <h2 class="text-caption font-bold text-gray-900 mb-2">Best-fit sourcing summary</h2>
           <p class="text-caption text-gray-600 leading-relaxed">
             {product.model} is a {product.category.toLowerCase()} option for {product.applications.slice(0, 2).map((app) => app.name).join(' and ')} applications. Buyers typically request it when they need {product.features[0].label.toLowerCase()} of {product.features[0].value}, MOQ {product.moq}, and export-ready certification documents.
           </p>
+        </div>
+        <div class="grid grid-cols-2 gap-3 mb-5">
+          {product.features.slice(0, 3).map((feature) => (
+            <div class="metric-card !p-4">
+              <p class="text-small text-gray-600">{feature.label}</p>
+              <p class="font-bold text-gray-900 mt-1">{feature.value}</p>
+            </div>
+          ))}
+          <div class="metric-card !p-4">
+            <p class="text-small text-gray-600">Certifications</p>
+            <p class="font-bold text-gray-900 mt-1">{product.certifications.join(', ')}</p>
+          </div>
         </div>
         <StickyInquirySidebar
           productSlug={product.slug}
@@ -105,17 +117,17 @@ const pdpSchema = graphSchema([
     ]}
   />
 
-  <section class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+  <section class="bg-white border-y border-gray-100" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
     <div class="container mx-auto px-4">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div class="lg:col-span-7">
-          <p class="text-caption font-semibold text-primary mb-3">AEO answer block</p>
-          <h2 class="text-heading font-bold text-gray-900 mb-4">What is {product.model} used for?</h2>
+          <p class="section-kicker mb-3">AEO answer block</p>
+          <h2 class="section-heading mb-4">What is {product.model} used for?</h2>
           <p class="text-subhead text-gray-600 leading-relaxed">
             {product.model} is used in {product.applications.map((app) => app.name).join(', ')} where buyers need a certified industrial component with predictable lead time, documented specifications, and OEM/ODM support. It is suitable for sourcing teams comparing technical fit, MOQ, sample availability, and export documentation before requesting a quote.
           </p>
         </div>
-        <aside class="lg:col-span-5 bg-gray-warm border border-gray-100 rounded-card p-6">
+        <aside class="lg:col-span-5 proof-card">
           <h3 class="text-subhead font-semibold text-gray-900 mb-4">Selection Checklist</h3>
           <ul class="space-y-3 text-caption text-gray-600">
             <li><strong class="text-gray-900">Application:</strong> {product.applications[0].name}</li>
@@ -150,10 +162,11 @@ const pdpSchema = graphSchema([
   <!-- 8. Manufacturing & QC -->
   <ManufacturingQC capacity="50,000 units/month" />
 
-  <section class="bg-gray-warm" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+  <section class="section-band">
     <div class="container mx-auto px-4">
       <div class="max-w-3xl mb-8">
-        <h2 class="text-heading font-bold text-gray-900 mb-4">Quality Evidence Buyers Can Verify</h2>
+        <p class="section-kicker mb-2">Quality evidence</p>
+        <h2 class="section-heading mb-4">Quality Evidence Buyers Can Verify</h2>
         <p class="text-body text-gray-600 leading-relaxed">
           Each {product.model} inquiry can be matched with certification files, outgoing inspection records, packaging photos, and application-specific configuration notes. This gives procurement teams traceable evidence before sample approval or bulk purchase.
         </p>
@@ -164,7 +177,7 @@ const pdpSchema = graphSchema([
           { title: 'Process QC', detail: `Dimensional checks against ${product.standard} and product-specific tolerances.` },
           { title: 'Pre-shipment Evidence', detail: 'Photos, test records, packaging confirmation, and export document review.' },
         ].map((item) => (
-          <div class="bg-white rounded-card border border-gray-100 p-5">
+          <div class="proof-card">
             <h3 class="font-semibold text-gray-900 mb-2">{item.title}</h3>
             <p class="text-caption text-gray-600 leading-relaxed">{item.detail}</p>
           </div>

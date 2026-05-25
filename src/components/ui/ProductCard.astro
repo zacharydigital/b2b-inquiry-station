@@ -13,24 +13,27 @@ const {
   slug,
   title,
   model,
-  image = '/static/placeholder.jpg',
+  image = '/static/product-gearbox.svg',
   category = '',
   moq = '100 pcs',
   leadTime = '15–25 days',
 } = Astro.props;
 ---
 
-<a href={`/products/${slug}/`} class="card hover:shadow-elevated transition-shadow group block">
-  <div class="aspect-square bg-primary-50 rounded-card mb-4 overflow-hidden">
-    <img src={image} alt={title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+<a href={`/products/${slug}/`} class="product-card group block">
+  <div class="media-frame aspect-[4/3] overflow-hidden p-5">
+    <img src={image} alt={title} class="w-full h-full object-contain group-hover:scale-103 transition-transform duration-300" loading="lazy" />
   </div>
-  <h3 class="font-semibold text-caption mb-2 group-hover:text-primary transition-colors line-clamp-2">{title}</h3>
-  <p class="text-small text-gray-400 mb-3">Model: {model}</p>
-  <div class="flex justify-between text-small text-gray-600">
-    <span>MOQ: {moq}</span>
-    <span>Lead: {leadTime}</span>
+  <div class="p-5">
+    <p class="text-small text-primary font-bold uppercase mb-2">{category}</p>
+    <h3 class="font-bold text-body mb-2 group-hover:text-primary transition-colors line-clamp-2">{title}</h3>
+    <p class="text-small text-gray-600 mb-4">Model: <span class="font-semibold text-gray-900">{model}</span></p>
+    <div class="grid grid-cols-2 gap-2 text-small">
+      <span class="bg-panel border border-gray-100 rounded-[var(--radius-input)] px-2 py-2">MOQ <strong class="block text-gray-900">{moq}</strong></span>
+      <span class="bg-panel border border-gray-100 rounded-[var(--radius-input)] px-2 py-2">Lead <strong class="block text-gray-900">{leadTime}</strong></span>
+    </div>
+    <span class="inline-flex items-center gap-2 mt-4 text-small text-primary font-bold group-hover:underline">
+      Inquire Now <span class="i-carbon-arrow-right" aria-hidden="true"></span>
+    </span>
   </div>
-  <span class="inline-block mt-3 text-small text-primary font-medium group-hover:underline">
-    Inquire Now →
-  </span>
 </a>

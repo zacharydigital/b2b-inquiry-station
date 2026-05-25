@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Industrial factory floor illustration</title>
+  <desc id="desc">A factory floor with production cells and quality checkpoints.</desc>
+  <rect width="1200" height="760" fill="#0B2F4D"/>
+  <path d="M0 520h1200v240H0z" fill="#123A5B"/>
+  <g opacity=".18" stroke="#DDEAF3" stroke-width="1">
+    <path d="M0 80h1200M0 160h1200M0 240h1200M0 320h1200M0 400h1200M0 480h1200"/>
+    <path d="M100 0v760M220 0v760M340 0v760M460 0v760M580 0v760M700 0v760M820 0v760M940 0v760M1060 0v760"/>
+  </g>
+  <g transform="translate(92 120)">
+    <rect x="0" y="310" width="1015" height="60" rx="8" fill="#DDEAF3" opacity=".35"/>
+    <rect x="80" y="120" width="250" height="170" rx="12" fill="#FFFFFF"/>
+    <rect x="145" y="68" width="120" height="52" rx="8" fill="#E85D1C"/>
+    <rect x="430" y="80" width="260" height="210" rx="12" fill="#FFFFFF"/>
+    <rect x="730" y="145" width="205" height="145" rx="12" fill="#FFFFFF"/>
+    <g fill="#174E7C">
+      <rect x="115" y="160" width="180" height="26" rx="6"/>
+      <rect x="115" y="205" width="130" height="18" rx="5"/>
+      <rect x="465" y="120" width="190" height="24" rx="6"/>
+      <rect x="465" y="168" width="145" height="18" rx="5"/>
+      <rect x="765" y="180" width="135" height="22" rx="6"/>
+      <rect x="765" y="222" width="95" height="16" rx="5"/>
+    </g>
+    <path d="M190 380h710" stroke="#E85D1C" stroke-width="14" stroke-linecap="round" stroke-dasharray="40 30"/>
+  </g>
+</svg>

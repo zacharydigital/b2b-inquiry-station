@@ -23,8 +23,9 @@ const t = {
 };
 ---
 
-<div class="bg-gray-warm border border-gray-100 rounded-card p-6 sm:p-8" id="inline-inquiry">
-  <h3 class="text-heading font-bold text-gray-900 mb-2">{t.title}</h3>
+<div class="quote-panel p-6 sm:p-8" id="inline-inquiry">
+  <p class="section-kicker mb-2">RFQ desk</p>
+  <h3 class="section-heading mb-2">{t.title}</h3>
   <p class="text-caption text-gray-600 mb-6">{t.subtitle}</p>
 
   <form
@@ -44,42 +45,36 @@ const t = {
 
     <div>
       <label class="block text-small font-medium text-gray-900 mb-1">{t.email} *</label>
-      <input type="email" name="email" required
-        class="w-full border border-gray-300 rounded-input px-4 py-2.5 text-body focus:outline-none focus:border-primary transition-colors" />
+      <input type="email" name="email" required class="form-control" />
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div>
         <label class="block text-small font-medium text-gray-900 mb-1">{t.name} *</label>
-        <input type="text" name="name" required
-          class="w-full border border-gray-300 rounded-input px-4 py-2.5 text-body focus:outline-none focus:border-primary transition-colors" />
+        <input type="text" name="name" required class="form-control" />
       </div>
       <div>
         <label class="block text-small font-medium text-gray-900 mb-1">{t.country} *</label>
-        <input type="text" name="country" required
-          class="w-full border border-gray-300 rounded-input px-4 py-2.5 text-body focus:outline-none focus:border-primary transition-colors" />
+        <input type="text" name="country" required class="form-control" />
       </div>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div>
         <label class="block text-small font-medium text-gray-900 mb-1">{t.company}</label>
-        <input type="text" name="company"
-          class="w-full border border-gray-300 rounded-input px-4 py-2.5 text-body focus:outline-none focus:border-primary transition-colors" />
+        <input type="text" name="company" class="form-control" />
       </div>
       <div>
         <label class="block text-small font-medium text-gray-900 mb-1">{t.phone}</label>
-        <input type="tel" name="phone"
-          class="w-full border border-gray-300 rounded-input px-4 py-2.5 text-body focus:outline-none focus:border-primary transition-colors" />
+        <input type="tel" name="phone" class="form-control" />
       </div>
     </div>
     <div>
       <label class="block text-small font-medium text-gray-900 mb-1">{t.quantity}</label>
-      <input type="text" name="quantity"
-        class="w-full border border-gray-300 rounded-input px-4 py-2.5 text-body focus:outline-none focus:border-primary transition-colors" />
+      <input type="text" name="quantity" class="form-control" />
     </div>
     <div>
       <label class="block text-small font-medium text-gray-900 mb-1">{t.message}</label>
       <textarea name="message" rows={3}
-        class="w-full border border-gray-300 rounded-input px-4 py-2.5 text-body focus:outline-none focus:border-primary transition-colors resize-y"
+        class="form-control resize-y"
         placeholder={t.message}></textarea>
     </div>
     <div>
@@ -93,7 +88,9 @@ const t = {
     <p class="hidden text-small text-primary text-center" data-form-status aria-live="polite">
       Submitting your request...
     </p>
-    <p class="text-small text-gray-400 text-center">{t.privacy}</p>
+    <p class="text-small text-gray-600 text-center flex items-center justify-center gap-1">
+      <span class="i-carbon-locked" aria-hidden="true"></span>{t.privacy}
+    </p>
   </form>
 </div>
 

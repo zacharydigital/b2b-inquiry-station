@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 720" role="img" aria-labelledby="title desc">
+  <title id="title">Industrial pump illustration</title>
+  <desc id="desc">A technical centrifugal pump placeholder drawing.</desc>
+  <rect width="960" height="720" fill="#F1F6FA"/>
+  <path d="M0 585h960v135H0z" fill="#DDEAF3"/>
+  <g opacity=".32" stroke="#174E7C" stroke-width="1">
+    <path d="M100 90h760M100 170h760M100 250h760M100 330h760M100 410h760M100 490h760"/>
+    <path d="M130 70v520M250 70v520M370 70v520M490 70v520M610 70v520M730 70v520M850 70v520"/>
+  </g>
+  <g transform="translate(160 145)">
+    <circle cx="330" cy="250" r="145" fill="#FFFFFF" stroke="#174E7C" stroke-width="12"/>
+    <circle cx="330" cy="250" r="56" fill="#DDEAF3" stroke="#174E7C" stroke-width="10"/>
+    <path d="M435 155h165c58 0 105 43 105 96s-47 96-105 96H438c48-48 48-145-3-192z" fill="#FFFFFF" stroke="#174E7C" stroke-width="12"/>
+    <path d="M96 202h110v96H96c-36 0-66-22-66-48s30-48 66-48z" fill="#566B7F"/>
+    <rect x="250" y="385" width="170" height="52" rx="12" fill="#0B2F4D"/>
+    <rect x="500" y="345" width="130" height="42" rx="11" fill="#0B2F4D"/>
+    <path d="M276 108c70-38 161-20 210 44" fill="none" stroke="#E85D1C" stroke-width="18" stroke-linecap="round"/>
+  </g>
+  <g fill="#0B2F4D" opacity=".82">
+    <rect x="96" y="625" width="180" height="10" rx="5"/>
+    <rect x="96" y="653" width="260" height="8" rx="4"/>
+  </g>
+</svg>

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 720" role="img" aria-labelledby="title desc">
+  <title id="title">Industrial gearbox illustration</title>
+  <desc id="desc">A technical industrial gearbox placeholder drawing.</desc>
+  <rect width="960" height="720" fill="#F1F6FA"/>
+  <path d="M0 580h960v140H0z" fill="#DDEAF3"/>
+  <g opacity=".35" stroke="#174E7C" stroke-width="1">
+    <path d="M80 0v720M200 0v720M320 0v720M440 0v720M560 0v720M680 0v720M800 0v720M920 0v720"/>
+    <path d="M0 80h960M0 200h960M0 320h960M0 440h960M0 560h960"/>
+  </g>
+  <g transform="translate(170 150)">
+    <rect x="180" y="110" width="350" height="250" rx="24" fill="#FFFFFF" stroke="#174E7C" stroke-width="10"/>
+    <circle cx="355" cy="235" r="92" fill="#DDEAF3" stroke="#174E7C" stroke-width="12"/>
+    <circle cx="355" cy="235" r="36" fill="#174E7C"/>
+    <path d="M120 185h90v100h-90c-36 0-65-22-65-50s29-50 65-50z" fill="#566B7F"/>
+    <path d="M530 178h120c42 0 76 26 76 58s-34 58-76 58H530z" fill="#566B7F"/>
+    <rect x="240" y="360" width="230" height="55" rx="14" fill="#0B2F4D"/>
+    <path d="M245 95h220l-28-48H273z" fill="#E85D1C"/>
+    <g fill="#174E7C">
+      <circle cx="225" cy="155" r="12"/>
+      <circle cx="485" cy="155" r="12"/>
+      <circle cx="225" cy="315" r="12"/>
+      <circle cx="485" cy="315" r="12"/>
+    </g>
+  </g>
+  <g fill="#0B2F4D" opacity=".82">
+    <rect x="96" y="610" width="170" height="10" rx="5"/>
+    <rect x="96" y="638" width="270" height="8" rx="4"/>
+    <rect x="760" y="610" width="104" height="10" rx="5"/>
+  </g>
+</svg>

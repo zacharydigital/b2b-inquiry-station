@@ -15,19 +15,24 @@ const { products } = Astro.props;
 
 <section style="padding-top: var(--space-block); padding-bottom: var(--space-block)">
   <div class="container mx-auto px-4">
-    <h2 class="text-heading font-bold text-center mb-10 text-gray-900">Related Products</h2>
+    <div class="max-w-3xl mx-auto text-center mb-10">
+      <p class="section-kicker mb-2">Shortlist alternatives</p>
+      <h2 class="section-heading">Related Products</h2>
+    </div>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
       {products.map((p) => (
-        <a href={`/products/${p.slug}/`} class="card hover:shadow-elevated transition-shadow text-center group">
-          <div class="w-full aspect-square bg-primary-50 rounded-card mb-3 overflow-hidden">
+        <a href={`/products/${p.slug}/`} class="product-card text-left group">
+          <div class="media-frame aspect-[4/3] overflow-hidden p-4 flex items-center justify-center">
             {p.image ? (
-              <img src={p.image} alt={p.title} class="w-full h-full object-cover" loading="lazy" />
+              <img src={p.image} alt={p.title} class="w-full h-full object-contain" loading="lazy" />
             ) : (
-              <div class="w-full h-full flex items-center justify-center text-4xl">⚙</div>
+              <span class="i-carbon-assembly text-4xl text-primary m-auto"></span>
             )}
           </div>
-          <h4 class="font-semibold text-caption group-hover:text-primary transition-colors line-clamp-1">{p.title}</h4>
-          <p class="text-small text-gray-400">{p.model}</p>
+          <div class="p-4">
+            <h4 class="font-semibold text-caption group-hover:text-primary transition-colors line-clamp-1">{p.title}</h4>
+            <p class="text-small text-gray-600 mt-1">{p.model}</p>
+          </div>
         </a>
       ))}
     </div>

@@ -1,8 +1,11 @@
 <!-- Email Gate Modal -->
-<div id="email-gate-overlay" class="fixed inset-0 bg-black/30 z-50 hidden" aria-hidden="true"></div>
+<div id="email-gate-overlay" class="fixed inset-0 bg-graphite/45 backdrop-blur-sm z-50 hidden" aria-hidden="true"></div>
 <div id="email-gate-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-  <div class="bg-white rounded-card shadow-elevated max-w-md w-full p-6 relative">
-    <button id="email-gate-close" class="absolute top-3 right-3 text-gray-400 hover:text-gray-900 text-xl">&times;</button>
+  <div class="bg-white rounded-card shadow-elevated max-w-md w-full p-6 relative border border-gray-100">
+    <button id="email-gate-close" class="absolute top-3 right-3 text-gray-600 hover:text-gray-900 text-xl" aria-label="Close download form">
+      <span class="i-carbon-close" aria-hidden="true"></span>
+    </button>
+    <p class="section-kicker mb-2">Procurement file</p>
     <h3 class="text-subhead font-bold mb-2">Get Your Free Download</h3>
     <p class="text-caption text-gray-600 mb-4">
       Enter your email and we'll send the file instantly. No spam, ever.
@@ -13,11 +16,15 @@
       <input type="hidden" name="industry" id="eg-industry" value="machinery" />
       <div>
         <input type="email" name="email" required placeholder="Your work email"
-          class="w-full border border-gray-300 rounded-input px-4 py-2.5 focus:outline-none focus:border-primary" />
+          class="form-control" />
       </div>
-      <button type="submit" class="btn-primary w-full text-center">Send Me the File →</button>
+      <button type="submit" class="btn-primary w-full text-center">
+        Send Me the File <span class="i-carbon-arrow-right" aria-hidden="true"></span>
+      </button>
     </form>
-    <p class="text-small text-gray-400 text-center mt-3">🔒 No spam · No reselling · GDPR compliant</p>
+    <p class="text-small text-gray-600 text-center mt-3 flex items-center justify-center gap-1">
+      <span class="i-carbon-locked" aria-hidden="true"></span> No spam · No reselling · GDPR compliant
+    </p>
   </div>
 </div>
 

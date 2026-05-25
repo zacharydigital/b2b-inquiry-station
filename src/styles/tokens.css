@@ -1,20 +1,24 @@
 :root {
-  /* Core palette — Steel Blue */
-  --color-primary: #1A4F86;
-  --color-primary-900: #153E6A;
-  --color-primary-100: #E8EEF5;
-  --color-primary-50: #F4F7FA;
+  /* Industrial procurement palette */
+  --color-primary: #174E7C;
+  --color-primary-900: #0B2F4D;
+  --color-primary-100: #DDEAF3;
+  --color-primary-50: #F1F6FA;
+  --color-steel: #566B7F;
+  --color-graphite: #22282E;
+  --color-panel: #F5F7F8;
+  --color-surface: #FFFFFF;
 
-  /* Warm gray system */
-  --color-gray-warm: #F7F7F6;
-  --color-gray-100: #EEEDEC;
-  --color-gray-300: #D4D2D0;
-  --color-gray-600: #8A8783;
-  --color-gray-900: #2D2C2B;
+  /* Neutral system */
+  --color-gray-warm: #F5F6F6;
+  --color-gray-100: #E6EAED;
+  --color-gray-300: #C9D0D6;
+  --color-gray-600: #69757F;
+  --color-gray-900: #202428;
 
-  /* Accent — restrained orange, CTA only */
-  --color-accent: #E8651A;
-  --color-accent-hover: #C85414;
+  /* Signal CTA */
+  --color-accent: #E85D1C;
+  --color-accent-hover: #C94B12;
 
   /* Semantic colors */
   --color-success: #2D8C4A;
@@ -22,19 +26,19 @@
   --color-error: #C0392B;
 
   /* Typography */
-  --font-sans: 'Inter', 'Inter Fallback', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: 'Aptos', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', monospace;
 
   /* Type scale */
-  --text-display: clamp(2.25rem, 4vw, 3.5rem);
-  --text-heading: clamp(1.5rem, 2.5vw, 2rem);
+  --text-display: 3rem;
+  --text-heading: 2rem;
   --text-subhead: 1.125rem;
   --text-body: 1rem;
   --text-caption: 0.875rem;
   --text-small: 0.75rem;
 
   /* Spacing */
-  --space-section: clamp(4rem, 8vw, 7.5rem);
+  --space-section: 5rem;
   --space-block: 2.5rem;
   --space-element: 1.5rem;
   --space-inline: 0.75rem;
@@ -45,6 +49,68 @@
   --radius-input: 4px;
 
   /* Shadows */
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06);
-  --shadow-elevated: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.05), 0 10px 24px rgba(15, 23, 42, 0.04);
+  --shadow-elevated: 0 18px 45px rgba(15, 23, 42, 0.12);
+  --border-subtle: 1px solid var(--color-gray-100);
+}
+
+@media (max-width: 767px) {
+  :root {
+    --text-display: 2.125rem;
+    --text-heading: 1.5rem;
+    --space-section: 3.5rem;
+  }
+}
+
+html {
+  background: var(--color-gray-warm);
+  color: var(--color-gray-900);
+}
+
+body {
+  min-width: 320px;
+}
+
+a {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+::selection {
+  background: var(--color-primary-100);
+  color: var(--color-primary-900);
+}
+
+.industrial-grid-bg {
+  background:
+    linear-gradient(90deg, rgba(23, 78, 124, 0.06) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(23, 78, 124, 0.06) 1px, transparent 1px),
+    var(--color-panel);
+  background-size: 36px 36px;
+}
+
+.procurement-band {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.82), rgba(245,247,248,0.92)),
+    var(--color-panel);
+}
+
+.section-kicker {
+  color: var(--color-primary);
+  font-size: var(--text-small);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.media-frame {
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.92), rgba(221,234,243,0.42)),
+    var(--color-primary-50);
+  border: var(--border-subtle);
+  border-radius: var(--radius-card);
+}
+
+.table-shadow-mask {
+  box-shadow: inset 16px 0 16px -20px rgba(15, 23, 42, 0.28);
 }

@@ -9,19 +9,19 @@ const { capacity = '50,000 units/month', images = [] } = Astro.props;
 
 <section style="padding-top: var(--space-block); padding-bottom: var(--space-block)">
   <div class="container mx-auto px-4">
-    <h2 class="text-heading font-bold text-center mb-6 text-gray-900">Manufacturing & Quality Control</h2>
+    <h2 class="section-heading text-center mb-6">Manufacturing & Quality Control</h2>
     <p class="text-center text-subhead text-gray-600 mb-10">Monthly capacity: <strong class="text-gray-900">{capacity}</strong></p>
 
     <div class="flex flex-wrap justify-center items-center gap-4 md:gap-8 mb-10">
       {['IQC', 'IPQC', 'FQC', 'OQC'].map((step, i, arr) => (
         <>
-          <div class="card text-center w-32 md:w-40 !p-4">
+          <div class="proof-card text-center w-32 md:w-40 !p-4">
             <span class="text-xl font-bold text-primary">{step}</span>
             <p class="text-small text-gray-600 mt-1">
               {['Incoming QC', 'In-Process QC', 'Final QC', 'Outgoing QC'][i]}
             </p>
           </div>
-          {i < arr.length - 1 && <span class="text-xl text-gray-300 hidden md:block">→</span>}
+          {i < arr.length - 1 && <span class="i-carbon-arrow-right text-xl text-gray-300 hidden md:block" aria-hidden="true"></span>}
         </>
       ))}
     </div>
