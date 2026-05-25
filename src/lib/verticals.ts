@@ -32,24 +32,27 @@ export interface InquiryField {
 
 export type InquiryFormType = 'sticky' | 'full';
 
-export type PdpModuleKey =
-  | 'ProductHero'
-  | 'Specifications'
-  | 'TechnicalData'
-  | 'ComplianceDocuments'
-  | 'Applications'
-  | 'FABENarrative'
-  | 'ManufacturingQC'
-  | 'QualityConsistency'
-  | 'TrustEvidence'
-  | 'CommercialTerms'
-  | 'Downloads'
-  | 'ConversionPanel'
-  | 'FAQ'
-  | 'RelatedProducts'
-  | 'Variants'
-  | 'ChannelFit'
-  | 'Customization';
+export const PDP_MODULE_KEYS = [
+  'ProductHero',
+  'Specifications',
+  'TechnicalData',
+  'ComplianceDocuments',
+  'Applications',
+  'FABENarrative',
+  'ManufacturingQC',
+  'QualityConsistency',
+  'TrustEvidence',
+  'CommercialTerms',
+  'Downloads',
+  'ConversionPanel',
+  'FAQ',
+  'RelatedProducts',
+  'Variants',
+  'ChannelFit',
+  'Customization',
+] as const;
+
+export type PdpModuleKey = (typeof PDP_MODULE_KEYS)[number];
 
 export interface VerticalConfig {
   label: string;

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  PDP_MODULE_KEYS,
   VERTICAL_CONFIGS,
   getInquiryFields,
   getVerticalConfig,
@@ -46,6 +47,34 @@ describe('vertical configs', () => {
     expect(getVerticalConfig('machinery').cta.primary).toBe('Request a Quote');
     expect(getVerticalConfig('materials').cta.primary).toBe('Request Sample');
     expect(getVerticalConfig('consumer-oem').cta.primary).toBe('Get OEM Quote');
+  });
+
+  it('requires every vertical to define CTA, sticky fields, full fields, and PDP modules', () => {
+    const allowedModules = new Set(PDP_MODULE_KEYS);
+
+    for (const config of Object.values(VERTICAL_CONFIGS)) {
+      expect(config.cta.primary).toBeTruthy();
+      expect(config.cta.secondary).toBeTruthy();
+      expect(config.cta.mobilePrimary).toBeTruthy();
+      expect(config.stickyFields.length).toBeGreaterThan(0);
+      expect(config.fullFields.length).toBeGreaterThan(config.stickyFields.length);
+      expect(config.pdpModules.length).toBeGreaterThan(0);
+      for (const moduleKey of config.pdpModules) {
+        expect(allowedModules.has(moduleKey)).toBe(true);
+      }
+    }
+  });
+
+  it('defines conditional fields against existing controller fields', () => {
+    for (const config of Object.values(VERTICAL_CONFIGS)) {
+      const fieldNames = new Set(config.fullFields.map((field) => field.name));
+      for (const field of config.fullFields) {
+        if (field.visibleWhen) {
+          expect(fieldNames.has(field.visibleWhen.field)).toBe(true);
+          expect(field.visibleWhen.values.length).toBeGreaterThan(0);
+        }
+      }
+    }
   });
 
   it('falls back unknown vertical values to machinery', () => {

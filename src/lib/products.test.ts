@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { getProductBySlug, getProductStaticPaths, listProducts } from './products';
+import { PDP_MODULE_KEYS, VERTICAL_CONFIGS } from './verticals';
 
 describe('product catalog', () => {
   it('lists products with SEO and sourcing metadata', () => {
@@ -40,5 +41,17 @@ describe('product catalog', () => {
     expect(verticals).toEqual(new Set(['machinery', 'materials', 'consumer-oem']));
     expect(getProductBySlug('pa66-gf30-engineering-plastic')?.technicalData?.length).toBeGreaterThan(0);
     expect(getProductBySlug('custom-stainless-water-bottle-oem')?.variants?.length).toBeGreaterThan(0);
+  });
+
+  it('keeps product verticals and PDP overrides valid', () => {
+    const verticals = new Set(Object.keys(VERTICAL_CONFIGS));
+    const modules = new Set(PDP_MODULE_KEYS);
+
+    for (const product of listProducts()) {
+      expect(verticals.has(product.vertical || 'machinery')).toBe(true);
+      for (const moduleKey of product.pdpModuleOverrides || []) {
+        expect(modules.has(moduleKey)).toBe(true);
+      }
+    }
   });
 });
