@@ -16,7 +16,7 @@ const { capacity = '50,000 units/month', images = [] } = Astro.props;
       {['IQC', 'IPQC', 'FQC', 'OQC'].map((step, i, arr) => (
         <>
           <div class="proof-card text-center w-32 md:w-40 !p-4">
-            <span class="text-xl font-bold text-primary">{step}</span>
+            <span class="text-xl font-semibold text-primary">{step}</span>
             <p class="text-small text-gray-600 mt-1">
               {['Incoming QC', 'In-Process QC', 'Final QC', 'Outgoing QC'][i]}
             </p>
@@ -29,7 +29,7 @@ const { capacity = '50,000 units/month', images = [] } = Astro.props;
     {images.length > 0 && (
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         {images.map((img, i) => (
-          <img src={img} alt={`Factory ${i + 1}`} class="w-full rounded-card" loading="lazy" />
+          <img src={img} alt={`Factory ${i + 1}`} class="w-full" loading="lazy" />
         ))}
       </div>
     )}

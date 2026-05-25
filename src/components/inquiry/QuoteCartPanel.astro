@@ -13,11 +13,11 @@ const { industry = 'machinery', locale = 'en' } = Astro.props;
 <!-- Cart Panel -->
 <div
   id="cart-panel"
-  class="fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-elevated z-50 transform translate-x-full transition-transform duration-300 flex flex-col"
+  class="fixed top-0 right-0 h-full w-full sm:w-96 bg-white border-l border-gray-100 z-50 transform translate-x-full transition-transform duration-300 flex flex-col"
 >
   <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
     <h3 class="font-semibold text-subhead">Quote Cart</h3>
-    <button id="cart-close" class="p-1 hover:bg-gray-100 rounded" aria-label="Close cart">
+    <button id="cart-close" class="p-1 hover:bg-gray-100" aria-label="Close cart">
       <span class="text-xl">&times;</span>
     </button>
   </div>
@@ -88,7 +88,7 @@ const { industry = 'machinery', locale = 'en' } = Astro.props;
     itemsEl.innerHTML = items
       .map(
         (item) => `
-      <div class="flex items-center justify-between bg-gray-50 rounded-card p-3">
+      <div class="flex items-center justify-between bg-gray-50 border border-gray-100 p-3">
         <div class="min-w-0 flex-1">
           <p class="text-caption font-medium truncate">${item.model}</p>
           <p class="text-small text-gray-400 truncate">${item.title}</p>

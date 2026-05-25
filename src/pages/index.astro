@@ -17,7 +17,7 @@ const description = 'Professional industrial machinery manufacturer. ISO 9001 ce
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
         <div class="lg:col-span-7">
           <p class="section-kicker mb-4">ISO 9001 factory · OEM/ODM · Export documentation</p>
-          <h1 class="text-display font-bold leading-tight text-gray-900 max-w-3xl">
+          <h1 class="text-display font-light leading-tight text-gray-900 max-w-3xl">
             Industrial machinery supplier built for procurement teams.
           </h1>
           <p class="mt-6 text-subhead text-gray-600 max-w-2xl leading-relaxed">
@@ -43,7 +43,7 @@ const description = 'Professional industrial machinery manufacturer. ISO 9001 ce
           <div class="quote-panel p-0 overflow-hidden">
             <img src="/static/factory-floor.svg" alt="Factory floor production cells" class="w-full aspect-[16/10] object-cover" />
             <div class="p-6">
-              <p class="text-small font-bold text-primary uppercase mb-3">Capability snapshot</p>
+              <p class="text-small font-semibold text-primary mb-3">Capability snapshot</p>
               <div class="grid grid-cols-2 gap-3">
                 <div class="metric-card !p-4"><p class="text-small text-gray-600">Factory area</p><strong class="block text-body">20,000 m2</strong></div>
                 <div class="metric-card !p-4"><p class="text-small text-gray-600">Monthly capacity</p><strong class="block text-body">50,000u</strong></div>
@@ -84,9 +84,9 @@ const description = 'Professional industrial machinery manufacturer. ISO 9001 ce
         ].map((cat) => (
           <a href={cat.href} class="proof-card group">
             <span class={`${cat.icon} text-3xl text-primary mb-5 block`} aria-hidden="true"></span>
-            <h3 class="text-subhead font-bold mb-3 group-hover:text-primary transition-colors">{cat.title}</h3>
+            <h3 class="text-subhead font-normal mb-3 group-hover:text-primary transition-colors">{cat.title}</h3>
             <p class="text-caption text-gray-600 leading-relaxed">{cat.desc}</p>
-            <span class="inline-flex items-center gap-2 mt-5 text-small text-primary font-bold">Open category <span class="i-carbon-arrow-right" aria-hidden="true"></span></span>
+            <span class="inline-flex items-center gap-2 mt-5 text-small text-primary font-semibold">Open category <span class="i-carbon-arrow-right" aria-hidden="true"></span></span>
           </a>
         ))}
       </div>
@@ -111,7 +111,7 @@ const description = 'Professional industrial machinery manufacturer. ISO 9001 ce
             { title: 'RFQ handoff', detail: 'Inquiry forms, quote cart, file upload, and buyer confirmation.' },
           ].map((item) => (
             <article class="metric-card">
-              <h3 class="font-bold text-gray-900 mb-2">{item.title}</h3>
+              <h3 class="font-semibold text-gray-900 mb-2">{item.title}</h3>
               <p class="text-caption text-gray-600 leading-relaxed">{item.detail}</p>
             </article>
           ))}
@@ -163,7 +163,7 @@ const description = 'Professional industrial machinery manufacturer. ISO 9001 ce
   <!-- 7. Convert: Final CTA -->
   <section class="bg-primary-900 text-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
     <div class="container mx-auto px-4 text-center max-w-2xl">
-      <h2 class="text-heading font-bold mb-4">Ready to Source Quality Machinery?</h2>
+      <h2 class="text-heading font-light mb-4">Ready to Source Quality Machinery?</h2>
       <p class="text-subhead text-primary-100 mb-8">
         Reply within 12 hours. NDA available. No spam, no reselling.
       </p>

@@ -19,9 +19,9 @@ const { productSlug = '', productName = '', industry = 'machinery' } = Astro.pro
 
 <div id="quick-quote-overlay" class="fixed inset-0 bg-black/30 z-50 hidden"></div>
 <div id="quick-quote-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-  <div class="bg-white rounded-card shadow-elevated max-w-sm w-full p-6">
+  <div class="bg-white border border-gray-100 max-w-sm w-full p-6">
     <button id="qq-close" class="float-right text-gray-400 hover:text-gray-900 text-xl">&times;</button>
-    <h3 class="text-subhead font-bold mb-4">Quick Quote</h3>
+    <h3 class="text-subhead font-normal mb-4">Quick Quote</h3>
     <form id="qq-form" class="space-y-3">
       <input type="hidden" name="website_url" tabindex="-1" autocomplete="off" />
       <input type="hidden" name="product_slug" id="qq-product-slug" value={productSlug} />
@@ -30,15 +30,15 @@ const { productSlug = '', productName = '', industry = 'machinery' } = Astro.pro
       <input type="hidden" name="source_page" value="" />
       <div>
         <input type="email" name="email" required placeholder="Your email *"
-          class="w-full border border-gray-300 rounded-input px-4 py-2.5 focus:outline-none focus:border-primary" />
+          class="form-control" />
       </div>
       <div>
         <input type="text" name="name" required placeholder="Your name *"
-          class="w-full border border-gray-300 rounded-input px-4 py-2.5 focus:outline-none focus:border-primary" />
+          class="form-control" />
       </div>
       <div>
         <input type="text" name="country" required placeholder="Your country *"
-          class="w-full border border-gray-300 rounded-input px-4 py-2.5 focus:outline-none focus:border-primary" />
+          class="form-control" />
       </div>
       <button type="submit" class="btn-primary w-full text-center">Get My Quote →</button>
     </form>

@@ -14,9 +14,6 @@ importers:
       '@unocss/astro':
         specifier: ^66.6.8
         version: 66.6.8(vite@7.3.3(jiti@2.7.0))
-      '@unocss/reset':
-        specifier: ^66.6.8
-        version: 66.6.8
       astro:
         specifier: ^6.3.3
         version: 6.3.3(jiti@2.7.0)(rollup@4.60.3)

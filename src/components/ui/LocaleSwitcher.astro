@@ -9,13 +9,13 @@ const { currentLocale, locales } = Astro.props;
 
 <div class="relative group inline-block">
   <button
-    class="flex items-center gap-1 text-caption text-gray-600 hover:text-primary transition-colors uppercase"
+    class="flex items-center gap-1 text-caption text-gray-600 hover:text-primary transition-colors"
     aria-label="Switch language"
   >
     <span>{currentLocale}</span>
     <span class="i-carbon-chevron-down text-sm" />
   </button>
-  <div class="absolute right-0 top-full mt-2 bg-white rounded-card shadow-elevated py-2 min-w-28 hidden group-hover:block z-20">
+  <div class="absolute right-0 top-full mt-2 bg-white border border-gray-100 py-2 min-w-28 hidden group-hover:block z-20">
     {locales.map((loc) => (
       <a
         href={`/?lang=${loc.code}`}

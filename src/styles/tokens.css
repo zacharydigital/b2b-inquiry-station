@@ -1,57 +1,75 @@
 :root {
-  /* Industrial procurement palette */
-  --color-primary: #174E7C;
-  --color-primary-900: #0B2F4D;
-  --color-primary-100: #DDEAF3;
-  --color-primary-50: #F1F6FA;
-  --color-steel: #566B7F;
-  --color-graphite: #22282E;
-  --color-panel: #F5F7F8;
-  --color-surface: #FFFFFF;
+  /* Carbon core tokens */
+  --color-primary: #0f62fe;
+  --color-primary-900: #002d9c;
+  --color-primary-100: #d0e2ff;
+  --color-primary-50: #edf5ff;
+  --color-blue-60: #0f62fe;
+  --color-blue-80: #002d9c;
+  --color-blue-hover: #0353e9;
+  --color-canvas: #ffffff;
+  --color-surface-1: #f4f4f4;
+  --color-surface-2: #e0e0e0;
+  --color-hairline: #e0e0e0;
+  --color-hairline-strong: #161616;
+  --color-inverse-canvas: #161616;
+  --color-inverse-surface-1: #262626;
+  --color-ink: #161616;
+  --color-ink-muted: #525252;
+  --color-ink-subtle: #8d8d8d;
+  --color-inverse-ink: #ffffff;
+  --color-inverse-ink-muted: #c6c6c6;
 
-  /* Neutral system */
-  --color-gray-warm: #F5F6F6;
-  --color-gray-100: #E6EAED;
-  --color-gray-300: #C9D0D6;
-  --color-gray-600: #69757F;
-  --color-gray-900: #202428;
+  /* B2B inquiry conversion token. Use only for the main inquiry path. */
+  --color-inquiry-cta: #e85d1c;
+  --color-inquiry-cta-hover: #ba4e00;
 
-  /* Signal CTA */
-  --color-accent: #E85D1C;
-  --color-accent-hover: #C94B12;
+  /* Backward-compatible aliases consumed by existing Uno utilities */
+  --color-steel: var(--color-ink-muted);
+  --color-graphite: var(--color-inverse-canvas);
+  --color-panel: var(--color-surface-1);
+  --color-surface: var(--color-canvas);
+  --color-gray-warm: var(--color-surface-1);
+  --color-gray-100: var(--color-hairline);
+  --color-gray-300: #c6c6c6;
+  --color-gray-600: var(--color-ink-muted);
+  --color-gray-900: var(--color-ink);
+  --color-accent: var(--color-inquiry-cta);
+  --color-accent-hover: var(--color-inquiry-cta-hover);
 
   /* Semantic colors */
-  --color-success: #2D8C4A;
-  --color-warning: #D4A017;
-  --color-error: #C0392B;
+  --color-success: #24a148;
+  --color-warning: #f1c21b;
+  --color-error: #da1e28;
 
   /* Typography */
-  --font-sans: 'Aptos', 'Segoe UI', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', 'SFMono-Regular', monospace;
+  --font-sans: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'SFMono-Regular', monospace;
 
   /* Type scale */
-  --text-display: 3rem;
-  --text-heading: 2rem;
-  --text-subhead: 1.125rem;
+  --text-display: 3.75rem;
+  --text-heading: 2.625rem;
+  --text-subhead: 1.25rem;
   --text-body: 1rem;
   --text-caption: 0.875rem;
   --text-small: 0.75rem;
 
   /* Spacing */
-  --space-section: 5rem;
-  --space-block: 2.5rem;
+  --space-section: 6rem;
+  --space-block: 3rem;
   --space-element: 1.5rem;
-  --space-inline: 0.75rem;
+  --space-inline: 1rem;
 
   /* Radii */
-  --radius-card: 8px;
-  --radius-button: 6px;
-  --radius-input: 4px;
+  --radius-card: 0px;
+  --radius-button: 0px;
+  --radius-input: 0px;
+  --radius-none: 0px;
 
   /* Shadows */
-  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.05), 0 10px 24px rgba(15, 23, 42, 0.04);
-  --shadow-elevated: 0 18px 45px rgba(15, 23, 42, 0.12);
-  --border-subtle: 1px solid var(--color-gray-100);
+  --shadow-card: none;
+  --shadow-elevated: none;
+  --border-subtle: 1px solid var(--color-hairline);
 }
 
 @media (max-width: 767px) {
@@ -63,12 +81,18 @@
 }
 
 html {
-  background: var(--color-gray-warm);
-  color: var(--color-gray-900);
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  letter-spacing: 0.16px;
 }
 
 body {
   min-width: 320px;
+  margin: 0;
+  font-size: var(--text-body);
+  line-height: 1.5;
+  background: var(--color-canvas);
 }
 
 a {
@@ -83,34 +107,30 @@ a {
 
 .industrial-grid-bg {
   background:
-    linear-gradient(90deg, rgba(23, 78, 124, 0.06) 1px, transparent 1px),
-    linear-gradient(0deg, rgba(23, 78, 124, 0.06) 1px, transparent 1px),
-    var(--color-panel);
+    linear-gradient(90deg, rgba(15, 98, 254, 0.05) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(15, 98, 254, 0.05) 1px, transparent 1px),
+    var(--color-canvas);
   background-size: 36px 36px;
 }
 
 .procurement-band {
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.82), rgba(245,247,248,0.92)),
-    var(--color-panel);
+  background: var(--color-surface-1);
 }
 
 .section-kicker {
   color: var(--color-primary);
-  font-size: var(--text-small);
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: var(--text-caption);
+  font-weight: 400;
+  letter-spacing: 0.16px;
+  text-transform: none;
 }
 
 .media-frame {
-  background:
-    linear-gradient(135deg, rgba(255,255,255,0.92), rgba(221,234,243,0.42)),
-    var(--color-primary-50);
+  background: var(--color-surface-1);
   border: var(--border-subtle);
   border-radius: var(--radius-card);
 }
 
 .table-shadow-mask {
-  box-shadow: inset 16px 0 16px -20px rgba(15, 23, 42, 0.28);
+  box-shadow: none;
 }

@@ -12,7 +12,7 @@ const { items } = Astro.props;
       {items.map((item) => (
         <div class="metric-card !p-4">
           <p class="text-small text-gray-600">{item.label}</p>
-          <p class="font-bold text-body text-gray-900 mt-1">{item.value}</p>
+          <p class="font-semibold text-body text-gray-900 mt-1">{item.value}</p>
           {item.subtext && <p class="text-small text-gray-600 mt-1">{item.subtext}</p>}
         </div>
       ))}

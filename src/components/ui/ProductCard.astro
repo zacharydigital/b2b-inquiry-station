@@ -25,14 +25,14 @@ const {
     <img src={image} alt={title} class="w-full h-full object-contain group-hover:scale-103 transition-transform duration-300" loading="lazy" />
   </div>
   <div class="p-5">
-    <p class="text-small text-primary font-bold uppercase mb-2">{category}</p>
-    <h3 class="font-bold text-body mb-2 group-hover:text-primary transition-colors line-clamp-2">{title}</h3>
+    <p class="text-small text-primary font-semibold mb-2">{category}</p>
+    <h3 class="font-semibold text-body mb-2 group-hover:text-primary transition-colors line-clamp-2">{title}</h3>
     <p class="text-small text-gray-600 mb-4">Model: <span class="font-semibold text-gray-900">{model}</span></p>
     <div class="grid grid-cols-2 gap-2 text-small">
       <span class="bg-panel border border-gray-100 rounded-[var(--radius-input)] px-2 py-2">MOQ <strong class="block text-gray-900">{moq}</strong></span>
       <span class="bg-panel border border-gray-100 rounded-[var(--radius-input)] px-2 py-2">Lead <strong class="block text-gray-900">{leadTime}</strong></span>
     </div>
-    <span class="inline-flex items-center gap-2 mt-4 text-small text-primary font-bold group-hover:underline">
+    <span class="inline-flex items-center gap-2 mt-4 text-small text-primary font-semibold group-hover:underline">
       Inquire Now <span class="i-carbon-arrow-right" aria-hidden="true"></span>
     </span>
   </div>
