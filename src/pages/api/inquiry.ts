@@ -17,6 +17,14 @@ function isProduction(): boolean {
   return !!(process.env.CF_PAGES);
 }
 
+export const GET: APIRoute = async () => new Response(JSON.stringify({ error: 'Method not allowed.' }), {
+  status: 405,
+  headers: {
+    'Content-Type': 'application/json',
+    'Allow': 'POST',
+  },
+});
+
 export const POST: APIRoute = async ({ request, locals }) => {
   try {
     const formData = await request.formData();

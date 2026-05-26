@@ -9,7 +9,7 @@ const { nav } = Astro.props;
 
 <div
   id="mobile-menu"
-  class="fixed inset-0 z-50 lg:hidden bg-white transform translate-x-full transition-transform duration-300"
+  class="fixed inset-0 z-[var(--z-drawer)] lg:hidden bg-[var(--drawer-bg)] transform translate-x-full transition-transform duration-[var(--motion-duration-base)] ease-[var(--motion-ease-standard)]"
   role="dialog"
   aria-modal="true"
   aria-label="Mobile menu"

@@ -16,13 +16,14 @@ const visibleFields = fields.filter((field) => !hiddenFields.includes(field.name
     class:list={[
       field.type === 'textarea' || field.type === 'file' ? 'sm:col-span-2' : '',
       field.visibleWhen ? 'hidden' : '',
+      field.visibleWhen ? 'conditional-field' : '',
     ]}
     data-conditional-field={field.visibleWhen ? field.name : undefined}
     data-visible-when-field={field.visibleWhen?.field}
     data-visible-when-values={field.visibleWhen?.values.join('|')}
   >
     <label class="block text-small font-medium text-gray-900 mb-1" for={`field-${field.name}`}>
-      {field.label}{field.required ? ' *' : ''}
+      {field.label}{field.required ? <span class="required-marker"> *</span> : ''}
     </label>
     {field.type === 'textarea' ? (
       <textarea
@@ -35,6 +36,8 @@ const visibleFields = fields.filter((field) => !hiddenFields.includes(field.name
         placeholder={field.placeholder}
         class="form-control resize-y"
         data-error-target={field.name}
+        data-error-label={field.label}
+        aria-describedby={`field-${field.name}-error${field.helperText ? ` field-${field.name}-helper` : ''}`}
       ></textarea>
     ) : field.type === 'select' ? (
       <select
@@ -43,6 +46,8 @@ const visibleFields = fields.filter((field) => !hiddenFields.includes(field.name
         required={field.required}
         class="form-control"
         data-error-target={field.name}
+        data-error-label={field.label}
+        aria-describedby={`field-${field.name}-error${field.helperText ? ` field-${field.name}-helper` : ''}`}
       >
         <option value="">Select {field.label.toLowerCase()}</option>
         {(field.options || []).map((option) => (
@@ -55,8 +60,10 @@ const visibleFields = fields.filter((field) => !hiddenFields.includes(field.name
         type="file"
         name={field.name}
         required={field.required}
-        class="w-full border border-[var(--field-border)] bg-[var(--field-bg)] rounded-[var(--radius-input)] px-4 py-2 text-body text-gray-600 file:mr-4 file:py-2 file:px-4 file:border-0 file:bg-primary-50 file:text-primary file:font-medium file:cursor-pointer focus:outline-none focus:ring-2 focus:ring-[var(--color-focus)]"
+        class="file-control"
         data-error-target={field.name}
+        data-error-label={field.label}
+        aria-describedby={`field-${field.name}-error${field.helperText ? ` field-${field.name}-helper` : ''}`}
       />
     ) : (
       <input
@@ -71,10 +78,12 @@ const visibleFields = fields.filter((field) => !hiddenFields.includes(field.name
         placeholder={field.placeholder}
         class="form-control"
         data-error-target={field.name}
+        data-error-label={field.label}
+        aria-describedby={`field-${field.name}-error${field.helperText ? ` field-${field.name}-helper` : ''}`}
       />
     )}
-    {field.helperText && <p class="mt-1 text-small text-gray-600">{field.helperText}</p>}
-    <p class="hidden mt-1 text-small text-error" data-field-error={field.name}>
+    {field.helperText && <p id={`field-${field.name}-helper`} class="mt-1 text-small text-gray-600">{field.helperText}</p>}
+    <p id={`field-${field.name}-error`} class="hidden mt-1 text-small text-error" data-field-error={field.name}>
       Please complete {field.label.toLowerCase()}.
     </p>
   </div>

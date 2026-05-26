@@ -4,6 +4,7 @@ import {
   buildRfqNotificationEmail,
   calculateLeadScore,
   collectInquiryExtraFields,
+  EMAIL_THEME_TOKENS,
   formatQuoteItems,
   getMailConfig,
   validateInquiryEmail,
@@ -43,6 +44,12 @@ describe('getMailConfig', () => {
 });
 
 describe('buildInquiryEmails', () => {
+  it('uses the shared email theme tokens for inline email styles', () => {
+    expect(EMAIL_THEME_TOKENS.bodyText).toBe('#2D2C2B');
+    expect(EMAIL_THEME_TOKENS.ctaBg).toBe('#e85d1c');
+    expect(EMAIL_THEME_TOKENS.preBg).toBe('#f4f4f4');
+  });
+
   it('builds notification and confirmation emails with conversion context', () => {
     const emails = buildInquiryEmails(
       {
@@ -83,8 +90,10 @@ describe('buildInquiryEmails', () => {
     expect(emails.notification.html).toContain('74/100');
     expect(emails.notification.html).toContain('utm_source=google');
     expect(emails.notification.html).toContain('inquiries/machinery/file.pdf');
+    expect(emails.notification.html).toContain(`color:${EMAIL_THEME_TOKENS.bodyText}`);
     expect(emails.confirmation.to).toBe('ana@example.com');
     expect(emails.confirmation.from).toBe('IndustryPro <inquiry@example.com>');
+    expect(emails.confirmation.html).toContain(`color:${EMAIL_THEME_TOKENS.mutedText}`);
   });
 
   it('escapes and renders allowed vertical extra fields in notification emails', () => {
@@ -203,5 +212,6 @@ describe('buildRfqNotificationEmail', () => {
     expect(email.subject).toContain('1 item');
     expect(email.html).toContain('HG-220');
     expect(email.html).toContain('https://factory.example.com/contact/');
+    expect(email.html).toContain(`background:${EMAIL_THEME_TOKENS.preBg}`);
   });
 });

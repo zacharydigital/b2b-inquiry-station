@@ -1,5 +1,6 @@
 ---
 import { getVerticalConfig, normalizeVertical, type ProductVertical } from '../../lib/verticals';
+import InquiryCTA from '../inquiry/InquiryCTA.astro';
 
 export interface Props {
   vertical?: ProductVertical;
@@ -10,11 +11,10 @@ const { vertical = 'machinery', ctaHref = '/get-a-quote/#rfq-form' } = Astro.pro
 const config = getVerticalConfig(normalizeVertical(vertical));
 ---
 
-<div class="md:hidden fixed bottom-0 left-0 right-0 bg-[var(--mobile-cta-bg)] border-t border-hairline z-50 flex gap-2 px-4 py-3">
-  <a href={ctaHref} class="btn-inquiry flex-1 text-center !text-sm whitespace-nowrap">
-    <span class="i-carbon-email-new" aria-hidden="true"></span>
+<div class="mobile-cta-dock">
+  <InquiryCTA href={ctaHref} icon="i-carbon-email-new" class="flex-1 text-center !text-sm whitespace-nowrap">
     {config.cta.mobilePrimary}
-  </a>
+  </InquiryCTA>
   <a
     href="https://wa.me/1234567890"
     class="btn-outline flex-1 text-center !text-sm whitespace-nowrap"

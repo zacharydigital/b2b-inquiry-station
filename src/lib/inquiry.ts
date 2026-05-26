@@ -1,4 +1,5 @@
 import { getAllowedExtraFieldNames } from './verticals';
+import { DESIGN_TOKEN_CONTRACT } from './design-token-contract';
 
 export interface MailEnv {
   RESEND_API_KEY?: string;
@@ -84,6 +85,17 @@ const disposableDomains = new Set([
   '10minutemail.com',
 ]);
 
+export const EMAIL_THEME_TOKENS = DESIGN_TOKEN_CONTRACT.emailTheme;
+
+export const EMAIL_STYLES = {
+  root: `font-family:${EMAIL_THEME_TOKENS.fontFamily};color:${EMAIL_THEME_TOKENS.bodyText}`,
+  labelCell: `padding:4px 12px 4px 0;color:${EMAIL_THEME_TOKENS.mutedText}`,
+  valueCell: 'padding:4px 0',
+  pre: `white-space:pre-wrap;background:${EMAIL_THEME_TOKENS.preBg};padding:12px;border-radius:${EMAIL_THEME_TOKENS.radius}`,
+  cta: `display:inline-block;background:${EMAIL_THEME_TOKENS.ctaBg};color:${EMAIL_THEME_TOKENS.ctaText};padding:${EMAIL_THEME_TOKENS.buttonPadding};border-radius:${EMAIL_THEME_TOKENS.radius};text-decoration:none`,
+  footer: `color:${EMAIL_THEME_TOKENS.mutedText};font-size:${EMAIL_THEME_TOKENS.smallTextSize}`,
+} as const;
+
 export function validateInquiryEmail(email: string): boolean {
   const normalized = email.trim().toLowerCase();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalized)) return false;
@@ -122,7 +134,11 @@ export function formatQuoteItems(items: QuoteItem[]): string {
 }
 
 function row(label: string, value: string): string {
-  return `<tr><td style="padding:4px 12px 4px 0;color:#666">${escapeHtml(label)}</td><td style="padding:4px 0"><strong>${escapeHtml(value || '-')}</strong></td></tr>`;
+  return `<tr><td style="${EMAIL_STYLES.labelCell}">${escapeHtml(label)}</td><td style="${EMAIL_STYLES.valueCell}"><strong>${escapeHtml(value || '-')}</strong></td></tr>`;
+}
+
+function preBlock(value: string): string {
+  return `<pre style="${EMAIL_STYLES.pre}">${escapeHtml(value)}</pre>`;
 }
 
 function formatExtraFieldLabel(name: string): string {
@@ -214,7 +230,7 @@ export function buildInquiryEmails(input: InquiryEmailInput, config: MailConfig)
   ].join('');
 
   const cartBlock = input.cartItems
-    ? `<h3>Quote Cart</h3><pre style="white-space:pre-wrap;background:#f7f7f6;padding:12px;border-radius:6px">${escapeHtml(input.cartItems)}</pre>`
+    ? `<h3>Quote Cart</h3>${preBlock(input.cartItems)}`
     : '';
   const extraRows = Object.entries(input.extraFields || {})
     .map(([label, value]) => row(formatExtraFieldLabel(label), value))
@@ -228,7 +244,7 @@ export function buildInquiryEmails(input: InquiryEmailInput, config: MailConfig)
       from: `IndustryPro Inquiry <${config.fromEmail}>`,
       to: config.notifyEmail,
       subject: `New Inquiry: ${product} from ${input.country || 'Unknown country'}`,
-      html: `<div style="font-family:Arial,sans-serif;color:#2D2C2B">
+      html: `<div style="${EMAIL_STYLES.root}">
         <h2>New B2B Inquiry</h2>
         <table cellpadding="0" cellspacing="0">${contextRows}</table>
         <h3>Requirements</h3>
@@ -241,13 +257,13 @@ export function buildInquiryEmails(input: InquiryEmailInput, config: MailConfig)
       from: `IndustryPro <${config.fromEmail}>`,
       to: input.email,
       subject: 'We received your inquiry - reply within 12 hours',
-      html: `<div style="font-family:Arial,sans-serif;color:#2D2C2B">
+      html: `<div style="${EMAIL_STYLES.root}">
         <h2>Thank you for your inquiry, ${escapeHtml(input.name)}.</h2>
         <p>We received your request for <strong>${escapeHtml(product)}</strong>. Our sales engineer will reply within 12 business hours.</p>
         <p>Your inquiry ID: <strong>${escapeHtml(input.id)}</strong></p>
         <p>If you need to add drawings or urgent details, reply directly to this email.</p>
         <hr />
-        <p style="color:#666;font-size:12px">No spam. No reselling. NDA available.</p>
+        <p style="${EMAIL_STYLES.footer}">No spam. No reselling. NDA available.</p>
       </div>`,
     },
   };
@@ -261,7 +277,7 @@ export function buildRfqNotificationEmail(input: RfqEmailInput, config: MailConf
     from: `IndustryPro Inquiry <${config.fromEmail}>`,
     to: config.notifyEmail,
     subject: `Batch RFQ from ${input.name || input.country} - ${itemCount} ${itemCount === 1 ? 'item' : 'items'}`,
-    html: `<div style="font-family:Arial,sans-serif;color:#2D2C2B">
+    html: `<div style="${EMAIL_STYLES.root}">
       <h2>Batch RFQ Received</h2>
       <table cellpadding="0" cellspacing="0">
         ${row('RFQ ID', input.id)}
@@ -274,7 +290,7 @@ export function buildRfqNotificationEmail(input: RfqEmailInput, config: MailConf
         ${row('Source Page', input.sourcePage)}
       </table>
       <h3>Items</h3>
-      <pre style="white-space:pre-wrap;background:#f7f7f6;padding:12px;border-radius:6px">${escapeHtml(itemList)}</pre>
+      ${preBlock(itemList)}
     </div>`,
   };
 }

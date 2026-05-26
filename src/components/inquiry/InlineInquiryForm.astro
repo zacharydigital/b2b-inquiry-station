@@ -55,13 +55,24 @@ const hasVisibleInquiryType = fields.some((field) => field.name === 'inquiry_typ
     <input type="hidden" name="source_page" id="inquiry-source-page" value="" />
     <input type="hidden" name="utm_source" id="inquiry-utm-source" value="" />
 
+    <div
+      class="form-error-summary hidden"
+      data-form-error-summary
+      role="alert"
+      aria-live="assertive"
+      tabindex="-1"
+    >
+      <strong>Check required RFQ fields.</strong>
+      <span data-form-error-message>Please complete the required fields before sending.</span>
+    </div>
+
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <InquiryFields fields={fields} hiddenFields={hiddenFields} />
     </div>
     <button type="submit" class="btn-inquiry w-full text-center" data-submit-label={config.cta.primary}>
       {config.cta.primary}
     </button>
-    <p class="hidden text-small text-primary text-center" data-form-status aria-live="polite">
+    <p class="hidden form-status-submitting text-center" data-form-status aria-live="polite">
       Submitting your request...
     </p>
     <p class="text-small text-gray-600 text-center flex items-center justify-center gap-1">
@@ -71,60 +82,14 @@ const hasVisibleInquiryType = fields.some((field) => field.name === 'inquiry_typ
 </div>
 
 <script>
-  document.querySelectorAll('.inquiry-form').forEach((form) => {
+  import { initInquiryFormState } from '../../lib/inquiry-form-state';
+
+  document.querySelectorAll<HTMLFormElement>('#inline-inquiry .inquiry-form').forEach((form) => {
     const srcInput = form.querySelector('#inquiry-source-page') as HTMLInputElement;
     if (srcInput) srcInput.value = window.location.href;
     const utmInput = form.querySelector('#inquiry-utm-source') as HTMLInputElement;
     if (utmInput) utmInput.value = new URLSearchParams(window.location.search).get('utm_source') || '';
 
-    const syncConditionalFields = () => {
-      form.querySelectorAll('[data-conditional-field]').forEach((wrapper) => {
-        const fieldName = (wrapper as HTMLElement).dataset.visibleWhenField || '';
-        const allowedValues = ((wrapper as HTMLElement).dataset.visibleWhenValues || '').split('|').filter(Boolean);
-        const controller = form.querySelector(`[name="${fieldName}"]`) as HTMLInputElement | HTMLSelectElement | null;
-        const shouldShow = !!controller && allowedValues.includes(controller.value);
-        wrapper.classList.toggle('hidden', !shouldShow);
-        wrapper.querySelectorAll('input, textarea, select').forEach((field) => {
-          const input = field as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
-          input.disabled = !shouldShow;
-          if (!shouldShow && input.type !== 'file') input.value = '';
-        });
-      });
-    };
-
-    form.querySelectorAll('select, input, textarea').forEach((field) => {
-      field.addEventListener('change', syncConditionalFields);
-      field.addEventListener('input', syncConditionalFields);
-    });
-    syncConditionalFields();
-
-    form.querySelectorAll('[data-error-target]').forEach((field) => {
-      field.addEventListener('input', () => {
-        const input = field as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
-        const error = form.querySelector(`[data-field-error="${input.name}"]`) as HTMLElement;
-        if (error && input.checkValidity()) error.classList.add('hidden');
-      });
-    });
-    form.addEventListener('submit', (e) => {
-      const htmlForm = form as HTMLFormElement;
-      if (!htmlForm.checkValidity()) {
-        e.preventDefault();
-        htmlForm.querySelectorAll('[data-error-target]').forEach((field) => {
-          const input = field as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
-          const error = htmlForm.querySelector(`[data-field-error="${input.name}"]`) as HTMLElement;
-          if (error) error.classList.toggle('hidden', input.checkValidity());
-        });
-        htmlForm.reportValidity();
-        return;
-      }
-      const button = form.querySelector('button[type="submit"]') as HTMLButtonElement;
-      const status = form.querySelector('[data-form-status]') as HTMLElement;
-      if (button) {
-        button.disabled = true;
-        button.textContent = 'Submitting...';
-        button.classList.add('opacity-75', 'cursor-wait');
-      }
-      if (status) status.classList.remove('hidden');
-    });
+    initInquiryFormState(form);
   });
 </script>

@@ -1,62 +1,19 @@
-export const CORE_TOKENS = {
-  color: {
-    canvas: '#ffffff',
-    surface1: '#f4f4f4',
-    surface2: '#e0e0e0',
-    ink: '#161616',
-    inkMuted: '#525252',
-    hairline: '#e0e0e0',
-    primary: '#0f62fe',
-    accent: '#e85d1c',
-    success: '#24a148',
-    warning: '#f1c21b',
-    error: '#da1e28',
-  },
-  radius: {
-    card: '8px',
-    button: '4px',
-    input: '4px',
-  },
-  typography: {
-    sans: 'Inter, Noto Sans SC, Helvetica Neue, Arial, system-ui, sans-serif',
-    mono: 'SFMono-Regular, Roboto Mono, Consolas, monospace',
-  },
-};
+import { DESIGN_TOKEN_CONTRACT } from './design-token-contract';
 
-export const COMPONENT_TOKENS = {
-  buttonPrimaryBg: 'var(--color-primary)',
-  buttonInquiryBg: 'var(--color-accent)',
-  fieldBg: 'var(--color-surface-1)',
-  fieldBorder: '#8d8d8d',
-  fieldFocusRing: '0 0 0 2px var(--color-focus)',
-  cardBg: 'var(--color-canvas)',
-  sidebarBg: 'var(--color-canvas)',
-  mobileCtaBg: 'var(--color-canvas)',
-};
-
-export const VERTICAL_TOKENS = {
-  machinery: {
-    primary: '#0f62fe',
-    accent: '#e85d1c',
-    surfaceTint: '#f8fbff',
-    specBg: '#f4f4f4',
-    proofBg: '#edf5ff',
-  },
-  materials: {
-    primary: '#007d79',
-    accent: '#e85d1c',
-    surfaceTint: '#f6fbfa',
-    specBg: '#eef7f6',
-    proofBg: '#defbe6',
-  },
-  'consumer-oem': {
-    primary: '#0f62fe',
-    accent: '#ff6f00',
-    surfaceTint: '#fffaf2',
-    specBg: '#f4f4f4',
-    proofBg: '#fff1e0',
-  },
-};
+export const CORE_TOKENS = DESIGN_TOKEN_CONTRACT.core;
+export const COMPONENT_TOKENS = DESIGN_TOKEN_CONTRACT.components;
+export const LAYOUT_TOKENS = DESIGN_TOKEN_CONTRACT.layout;
+export const STATE_TOKENS = DESIGN_TOKEN_CONTRACT.state;
+export const CONVERSION_TOKENS = DESIGN_TOKEN_CONTRACT.conversion;
+export const DATA_DISPLAY_TOKENS = DESIGN_TOKEN_CONTRACT.dataDisplay;
+export const MEDIA_TOKENS = DESIGN_TOKEN_CONTRACT.media;
+export const MOTION_TOKENS = DESIGN_TOKEN_CONTRACT.motion;
+export const LAYER_TOKENS = DESIGN_TOKEN_CONTRACT.layers;
+export const ACCESSIBILITY_TOKENS = DESIGN_TOKEN_CONTRACT.accessibility;
+export const BRAND_TOKENS = DESIGN_TOKEN_CONTRACT.brand;
+export const EMAIL_THEME_TOKENS = DESIGN_TOKEN_CONTRACT.emailTheme;
+export const MODULE_TOKENS = DESIGN_TOKEN_CONTRACT.modules;
+export const VERTICAL_TOKENS = DESIGN_TOKEN_CONTRACT.verticals;
 
 export function getDesignTokenExport() {
   return {
@@ -64,6 +21,17 @@ export function getDesignTokenExport() {
     version: '1.0.0',
     core: CORE_TOKENS,
     components: COMPONENT_TOKENS,
+    layout: LAYOUT_TOKENS,
+    state: STATE_TOKENS,
+    conversion: CONVERSION_TOKENS,
+    dataDisplay: DATA_DISPLAY_TOKENS,
+    media: MEDIA_TOKENS,
+    motion: MOTION_TOKENS,
+    layers: LAYER_TOKENS,
+    accessibility: ACCESSIBILITY_TOKENS,
+    brand: BRAND_TOKENS,
+    emailTheme: EMAIL_THEME_TOKENS,
+    modules: MODULE_TOKENS,
     verticals: VERTICAL_TOKENS,
   };
 }

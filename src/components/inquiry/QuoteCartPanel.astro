@@ -8,12 +8,12 @@ const { industry = 'machinery', locale = 'en' } = Astro.props;
 ---
 
 <!-- Cart Panel Overlay -->
-<div id="cart-overlay" class="fixed inset-0 bg-black/30 z-40 hidden" aria-hidden="true"></div>
+<div id="cart-overlay" class="fixed inset-0 bg-[var(--overlay-bg-subtle)] z-[var(--z-modal-backdrop)] hidden" aria-hidden="true"></div>
 
 <!-- Cart Panel -->
 <div
   id="cart-panel"
-  class="fixed top-0 right-0 h-full w-full sm:w-96 bg-white border-l border-gray-100 z-50 transform translate-x-full transition-transform duration-300 flex flex-col"
+  class="drawer-panel"
 >
   <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
     <h3 class="font-semibold text-subhead">Quote Cart</h3>
@@ -88,7 +88,7 @@ const { industry = 'machinery', locale = 'en' } = Astro.props;
     itemsEl.innerHTML = items
       .map(
         (item) => `
-      <div class="flex items-center justify-between bg-gray-50 border border-gray-100 p-3">
+      <div class="flex items-center justify-between bg-[var(--module-quote-cart-item-bg)] border border-hairline p-3 rounded-[var(--radius-input)]">
         <div class="min-w-0 flex-1">
           <p class="text-caption font-medium truncate">${item.model}</p>
           <p class="text-small text-gray-400 truncate">${item.title}</p>

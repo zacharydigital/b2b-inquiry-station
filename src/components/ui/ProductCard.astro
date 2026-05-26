@@ -32,8 +32,8 @@ const {
   data-vertical={vertical}
   data-certifications={certifications.join(' ').toLowerCase()}
 >
-  <div class="media-frame aspect-[4/3] overflow-hidden p-5">
-    <img src={image} alt={title} class="w-full h-full object-contain group-hover:scale-103 transition-transform duration-300" loading="lazy" />
+  <div class="product-media-frame">
+    <img src={image} alt={title} class="product-media-image" loading="lazy" />
   </div>
   <div class="p-5">
     <p class="text-small text-primary font-semibold mb-2">{vertical} · {category}</p>

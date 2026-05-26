@@ -13,6 +13,10 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Playwright workflow artifacts
+.playwright-cli/
+output/playwright/
+
 # local brainstorming companion artifacts
 .superpowers/
 

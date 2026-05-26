@@ -94,8 +94,22 @@ Token order:
 
 1. Primitive tokens: fixed color, spacing, type, radius, and shadow values.
 2. Semantic core tokens: canvas, surface, ink, primary, accent, focus, success, warning, error.
-3. Component tokens: button, field, card, table, sidebar, CTA dock.
-4. Vertical overlay tokens: machinery, materials, consumer-oem.
+3. Layout tokens: container, section rhythm, grid gaps, sticky offsets, sidebar and dock sizes.
+4. State tokens: hover, active, focus, disabled, loading, selected, invalid, and valid.
+5. Component tokens: button, field, card, table, sidebar, modal, drawer, CTA dock.
+6. Conversion tokens: inquiry CTA, sticky inquiry sidebar, mobile CTA dock, download gate, quote cart, trust reassurance, RFQ progress.
+7. Data display tokens: specification table, comparison table, procurement row, chip, badge, density, empty, loading, and error states.
+8. Media tokens: gallery ratio, product image ratio, thumbnails, media frame, placeholders, document previews.
+9. Z-index and overlay tokens: header, sticky, dock, drawer, modal, toast, overlay color, overlay blur.
+10. Motion tokens: fast, base, slow durations and standard/emphasized easing.
+11. Accessibility tokens: focus ring, focus offset, minimum touch target, contrast-safe pairs, error feedback.
+12. Vertical overlay tokens: machinery, materials, consumer-oem.
+13. Brand overlay tokens: customer primary/surface/font/ink overrides with protected conversion and accessibility boundaries.
+14. Module tokens: RFQWizard, ProductConfigurator, QuoteCartManager, DownloadCenter, ComparisonBuilder, LeadScoringPanel.
+
+Execution rule:
+
+The token layer is not only a CSS variable collection. It is the B2B Inquiry Interface Contract consumed by Astro components, UnoCSS shortcuts, nanostores-driven conversion components, future React islands, and Headless/ARIA primitives. Third-party primitives may provide behavior and accessibility, but must not define the visual language.
 
 Naming rules:
 
@@ -105,6 +119,17 @@ Naming rules:
 - Use `--vertical-*` tokens for industry-specific overrides.
 - Keep `--color-accent` reserved for inquiry CTA intent.
 - Do not use accent orange for neutral links, tabs, or decorative labels.
+- Use `--conversion-*` for inquiry, RFQ, sticky sidebar, mobile dock, quote cart, and document gate behavior.
+- Use `--module-*` for productized React island modules, not page-level decorations.
+- Use `--brand-*` only for customer branding overrides; brand tokens must not override conversion CTA, error, focus, or accessibility tokens.
+- Use `--z-*`, `--overlay-*`, and `--motion-*` instead of hard-coded layer, backdrop, and transition values in components.
+
+Forbidden implementation patterns:
+
+- Do not hard-code inquiry orange outside the token file.
+- Do not use `z-40`, `z-50`, `bg-black/30`, `bg-graphite/45`, fixed drawer widths, or raw transition durations in core conversion components.
+- Do not let Headless, React Aria, Radix, TanStack, Uppy, or any future third-party library introduce its own visual theme.
+- Do not let brand overlays weaken RFQ CTA visibility, form error clarity, focus visibility, or minimum touch target size.
 
 Recommended token pattern:
 

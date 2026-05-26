@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
-import { escapeHtml, getMailConfig, validateInquiryEmail, type MailEnv } from '../../lib/inquiry';
+import { EMAIL_STYLES, escapeHtml, getMailConfig, validateInquiryEmail, type MailEnv } from '../../lib/inquiry';
 
 function generateId(): string {
   return `dl_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
@@ -9,6 +9,14 @@ function generateId(): string {
 function isProduction(): boolean {
   return !!(process.env.CF_PAGES);
 }
+
+export const GET: APIRoute = async () => new Response(JSON.stringify({ error: 'Method not allowed.' }), {
+  status: 405,
+  headers: {
+    'Content-Type': 'application/json',
+    'Allow': 'POST',
+  },
+});
 
 export const POST: APIRoute = async ({ request, locals }) => {
   try {
@@ -63,15 +71,15 @@ export const POST: APIRoute = async ({ request, locals }) => {
         from: `IndustryPro <${mailConfig.fromEmail}>`,
         to: email,
         subject: `Your ${safeFileType} is ready`,
-        html: `<div style="font-family:sans-serif">
+        html: `<div style="${EMAIL_STYLES.root}">
           <h2>Your download is ready</h2>
           <p>Click below to download your ${safeFileType}:</p>
           <a href="${mailConfig.siteUrl}/downloads/${safeFileType}-${safeProductSlug}.pdf"
-             style="display:inline-block;background:#E8651A;color:white;padding:12px 24px;border-radius:6px;text-decoration:none">
+             style="${EMAIL_STYLES.cta}">
             Download ${safeFileType}
           </a>
           <hr />
-          <p style="color:#666;font-size:12px">No spam · No reselling · GDPR compliant</p>
+          <p style="${EMAIL_STYLES.footer}">No spam · No reselling · GDPR compliant</p>
         </div>`,
       });
     } else if (isProduction()) {

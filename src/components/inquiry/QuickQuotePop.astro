@@ -17,10 +17,10 @@ const { productSlug = '', productName = '', industry = 'machinery' } = Astro.pro
   Quick Quote
 </button>
 
-<div id="quick-quote-overlay" class="fixed inset-0 bg-black/30 z-50 hidden"></div>
-<div id="quick-quote-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-  <div class="bg-white border border-gray-100 max-w-sm w-full p-6">
-    <button id="qq-close" class="float-right text-gray-400 hover:text-gray-900 text-xl">&times;</button>
+<div id="quick-quote-overlay" class="fixed inset-0 bg-[var(--overlay-bg-subtle)] z-[var(--z-modal-backdrop)] hidden"></div>
+<div id="quick-quote-modal" class="modal-shell" aria-hidden="true">
+  <div class="modal-panel max-w-sm">
+    <button id="qq-close" class="absolute top-3 right-3 text-gray-400 hover:text-gray-900 text-xl min-w-[var(--a11y-min-touch-target)] min-h-[var(--a11y-min-touch-target)]" aria-label="Close quick quote">&times;</button>
     <h3 class="text-subhead font-normal mb-4">Quick Quote</h3>
     <form id="qq-form" class="space-y-3">
       <input type="hidden" name="website_url" tabindex="-1" autocomplete="off" />
@@ -55,11 +55,15 @@ const { productSlug = '', productName = '', industry = 'machinery' } = Astro.pro
   trigger.addEventListener('click', () => {
     overlay.classList.remove('hidden');
     modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    modal.setAttribute('aria-hidden', 'false');
   });
 
   function close() {
     overlay.classList.add('hidden');
     modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    modal.setAttribute('aria-hidden', 'true');
   }
 
   overlay.addEventListener('click', close);

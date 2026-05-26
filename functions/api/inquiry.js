@@ -1,4 +1,5 @@
 import {
+  EMAIL_STYLES,
   escapeHtml,
   generateId,
   getMailConfig,
@@ -184,7 +185,7 @@ export async function onRequestPost({ request, env }) {
       from: `IndustryPro Inquiry <${mailConfig.fromEmail}>`,
       to: mailConfig.notifyEmail,
       subject: `New ${inquiryType.toUpperCase()} inquiry from ${name}`,
-      html: `<div style="font-family:Arial,sans-serif;color:#2D2C2B">
+      html: `<div style="${EMAIL_STYLES.root}">
         <h2>New inquiry</h2>
         <p><strong>ID:</strong> ${escapeHtml(inquiryId)}</p>
         <p><strong>Name:</strong> ${escapeHtml(name)}</p>
@@ -199,7 +200,7 @@ export async function onRequestPost({ request, env }) {
         <p><strong>UTM Source:</strong> ${escapeHtml(utmSource)}</p>
         <p><strong>Attachment:</strong> ${escapeHtml(attachmentKey || 'None')}</p>
         <p><strong>Extra Fields:</strong> ${escapeHtml(JSON.stringify(extraFields))}</p>
-        <pre style="white-space:pre-wrap;background:#f7f7f6;padding:12px;border-radius:6px">${escapeHtml(message)}</pre>
+        <pre style="${EMAIL_STYLES.pre}">${escapeHtml(message)}</pre>
       </div>`,
     });
 
@@ -209,7 +210,7 @@ export async function onRequestPost({ request, env }) {
       from: `IndustryPro <${mailConfig.fromEmail}>`,
       to: email,
       subject: 'We received your inquiry',
-      html: `<div style="font-family:Arial,sans-serif;color:#2D2C2B">
+      html: `<div style="${EMAIL_STYLES.root}">
         <h2>Thank you, ${escapeHtml(name)}.</h2>
         <p>We received your inquiry and will reply within 12 business hours.</p>
         <p>Your inquiry ID: <strong>${escapeHtml(inquiryId)}</strong></p>

@@ -1,0 +1,22 @@
+---
+export interface Props {
+  kicker?: string;
+  title?: string;
+  description?: string;
+  class?: string;
+}
+
+const {
+  kicker,
+  title,
+  description,
+  class: className = '',
+} = Astro.props;
+---
+
+<article class:list={['conversion-panel', className]}>
+  {kicker && <p class="section-kicker mb-2">{kicker}</p>}
+  {title && <h3 class="text-subhead font-semibold text-gray-900 mb-2">{title}</h3>}
+  {description && <p class="text-caption text-gray-600 mb-4">{description}</p>}
+  <slot />
+</article>

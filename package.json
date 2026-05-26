@@ -12,7 +12,10 @@
     "astro": "astro",
     "test": "vitest run",
     "check:design-system": "node scripts/validate-design-system.mjs",
-    "check:local": "pnpm test && pnpm build && pnpm check:design-system"
+    "check:local": "pnpm test && pnpm build && pnpm check:design-system",
+    "accept:visual": "node scripts/playwright-visual-acceptance.mjs",
+    "accept:rfq": "node scripts/playwright-rfq-workflow.mjs",
+    "accept:local": "node scripts/playwright-local-acceptance.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^13.5.1",

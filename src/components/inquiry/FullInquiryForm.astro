@@ -57,6 +57,17 @@ const resolvedSubmitLabel = submitLabel || config.cta.primary;
       <input type="hidden" name="utm_source" id="contact-utm-source" value="" />
       <input type="hidden" name="cart_items" id="contact-cart-items" value="" />
 
+      <div
+        class="form-error-summary hidden"
+        data-form-error-summary
+        role="alert"
+        aria-live="assertive"
+        tabindex="-1"
+      >
+        <strong>Check required RFQ fields.</strong>
+        <span data-form-error-message>Please complete the required fields before sending.</span>
+      </div>
+
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <InquiryFields fields={fields} />
       </div>
@@ -64,7 +75,7 @@ const resolvedSubmitLabel = submitLabel || config.cta.primary;
       <button type="submit" class="btn-inquiry w-full py-3 text-center text-lg" data-submit-label={resolvedSubmitLabel}>
         {resolvedSubmitLabel}
       </button>
-      <p class="hidden text-small text-primary text-center" data-form-status aria-live="polite">
+      <p class="hidden form-status-submitting text-center" data-form-status aria-live="polite">
         Submitting your request...
       </p>
 
@@ -76,6 +87,8 @@ const resolvedSubmitLabel = submitLabel || config.cta.primary;
 </section>
 
 <script>
+  import { initInquiryFormState } from '../../lib/inquiry-form-state';
+
   const sourceInput = document.getElementById('contact-source-page') as HTMLInputElement;
   if (sourceInput) sourceInput.value = window.location.href;
 
@@ -92,55 +105,7 @@ const resolvedSubmitLabel = submitLabel || config.cta.primary;
     if (typeEl) typeEl.value = 'rfq';
   }
 
-  document.querySelectorAll('.inquiry-form').forEach((form) => {
-    const syncConditionalFields = () => {
-      form.querySelectorAll('[data-conditional-field]').forEach((wrapper) => {
-        const fieldName = (wrapper as HTMLElement).dataset.visibleWhenField || '';
-        const allowedValues = ((wrapper as HTMLElement).dataset.visibleWhenValues || '').split('|').filter(Boolean);
-        const controller = form.querySelector(`[name="${fieldName}"]`) as HTMLInputElement | HTMLSelectElement | null;
-        const shouldShow = !!controller && allowedValues.includes(controller.value);
-        wrapper.classList.toggle('hidden', !shouldShow);
-        wrapper.querySelectorAll('input, textarea, select').forEach((field) => {
-          const input = field as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
-          input.disabled = !shouldShow;
-          if (!shouldShow && input.type !== 'file') input.value = '';
-        });
-      });
-    };
-
-    form.querySelectorAll('select, input, textarea').forEach((field) => {
-      field.addEventListener('change', syncConditionalFields);
-      field.addEventListener('input', syncConditionalFields);
-    });
-    syncConditionalFields();
-
-    form.querySelectorAll('[data-error-target]').forEach((field) => {
-      field.addEventListener('input', () => {
-        const input = field as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
-        const error = form.querySelector(`[data-field-error="${input.name}"]`) as HTMLElement;
-        if (error && input.checkValidity()) error.classList.add('hidden');
-      });
-    });
-    form.addEventListener('submit', (event) => {
-      const htmlForm = form as HTMLFormElement;
-      if (!htmlForm.checkValidity()) {
-        event.preventDefault();
-        htmlForm.querySelectorAll('[data-error-target]').forEach((field) => {
-          const input = field as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
-          const error = htmlForm.querySelector(`[data-field-error="${input.name}"]`) as HTMLElement;
-          if (error) error.classList.toggle('hidden', input.checkValidity());
-        });
-        htmlForm.reportValidity();
-        return;
-      }
-      const button = htmlForm.querySelector('button[type="submit"]') as HTMLButtonElement;
-      const status = htmlForm.querySelector('[data-form-status]') as HTMLElement;
-      if (button) {
-        button.disabled = true;
-        button.textContent = 'Submitting...';
-        button.classList.add('opacity-75', 'cursor-wait');
-      }
-      if (status) status.classList.remove('hidden');
-    });
+  document.querySelectorAll<HTMLFormElement>('#rfq-form .inquiry-form, .inquiry-form.quote-panel').forEach((form) => {
+    initInquiryFormState(form);
   });
 </script>

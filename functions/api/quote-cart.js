@@ -1,4 +1,5 @@
 import {
+  EMAIL_STYLES,
   escapeHtml,
   formatQuoteItems,
   generateId,
@@ -53,7 +54,7 @@ export async function onRequestPost({ request, env }) {
       from: `IndustryPro Inquiry <${mailConfig.fromEmail}>`,
       to: mailConfig.notifyEmail,
       subject: `New batch RFQ from ${name}`,
-      html: `<div style="font-family:Arial,sans-serif;color:#2D2C2B">
+      html: `<div style="${EMAIL_STYLES.root}">
         <h2>New batch RFQ</h2>
         <p><strong>ID:</strong> ${escapeHtml(inquiryId)}</p>
         <p><strong>Name:</strong> ${escapeHtml(name)}</p>
@@ -61,7 +62,7 @@ export async function onRequestPost({ request, env }) {
         <p><strong>Company:</strong> ${escapeHtml(company)}</p>
         <p><strong>Country:</strong> ${escapeHtml(country)}</p>
         <p><strong>Source:</strong> ${escapeHtml(sourcePage)}</p>
-        <pre style="white-space:pre-wrap;background:#f7f7f6;padding:12px;border-radius:6px">${escapeHtml(itemSummary)}</pre>
+        <pre style="${EMAIL_STYLES.pre}">${escapeHtml(itemSummary)}</pre>
       </div>`,
     });
 
@@ -71,10 +72,10 @@ export async function onRequestPost({ request, env }) {
       from: `IndustryPro <${mailConfig.fromEmail}>`,
       to: email,
       subject: 'We received your batch RFQ',
-      html: `<div style="font-family:Arial,sans-serif;color:#2D2C2B">
+      html: `<div style="${EMAIL_STYLES.root}">
         <h2>Thank you for your RFQ, ${escapeHtml(name)}.</h2>
         <p>We received your request for ${items.length} ${items.length === 1 ? 'item' : 'items'} and will reply within 12 business hours.</p>
-        <pre style="white-space:pre-wrap;background:#f7f7f6;padding:12px;border-radius:6px">${escapeHtml(itemSummary)}</pre>
+        <pre style="${EMAIL_STYLES.pre}">${escapeHtml(itemSummary)}</pre>
         <p>Your RFQ ID: <strong>${escapeHtml(inquiryId)}</strong></p>
       </div>`,
     });

@@ -1,0 +1,29 @@
+---
+interface TrustItem {
+  label: string;
+  icon?: string;
+}
+
+export interface Props {
+  items?: TrustItem[];
+  class?: string;
+}
+
+const {
+  items = [
+    { label: 'Reply within 12 hours', icon: 'i-carbon-time' },
+    { label: 'NDA available', icon: 'i-carbon-locked' },
+    { label: 'No resale of buyer data', icon: 'i-carbon-security' },
+  ],
+  class: className = '',
+} = Astro.props;
+---
+
+<div class:list={['space-y-2', className]}>
+  {items.map((item) => (
+    <p class="trust-reassurance">
+      {item.icon && <span class:list={[item.icon, 'text-[var(--conversion-trust-icon-color)]']} aria-hidden="true"></span>}
+      <span>{item.label}</span>
+    </p>
+  ))}
+</div>

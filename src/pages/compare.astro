@@ -101,11 +101,11 @@ const schema = graphSchema([
           ))}
         </div>
       </div>
-      <div class="overflow-x-auto table-shadow-mask">
+      <div class="table-surface">
         <table class="table-procurement min-w-[1040px]">
-          <thead class="bg-primary-50">
+          <thead class="bg-[var(--table-header-bg)]">
             <tr>
-              <th class="p-4 w-48 text-gray-900 sticky left-0 z-10 bg-primary-50">Decision Factor</th>
+              <th class="p-4 w-48 text-gray-900 sticky left-0 z-[var(--z-table-sticky)] bg-[var(--table-header-bg)]">Decision Factor</th>
               {products.map((product) => (
                 <th class="p-4 align-top text-gray-900" data-compare-column data-vertical={product.vertical || 'machinery'}>
                   <a href={`/products/${product.slug}/`} class="block group">
@@ -122,7 +122,7 @@ const schema = graphSchema([
           <tbody>
             {comparisonRows.map((row) => (
               <tr class="border-t border-gray-100">
-                <th class="p-4 font-semibold text-gray-900 bg-panel sticky left-0 z-10">{row.label}</th>
+                <th class="p-4 font-semibold text-gray-900 bg-[var(--table-sticky-bg)] sticky left-0 z-[var(--z-table-sticky)]">{row.label}</th>
                 {row.values.map((value, index) => (
                   <td class="p-4 text-gray-600 leading-relaxed align-top" data-compare-column data-vertical={products[index]?.vertical || 'machinery'}>{value}</td>
                 ))}
@@ -195,7 +195,7 @@ const schema = graphSchema([
         Send model choices, quantities, destination country, and drawings or standards. We will reply with practical next steps within 12 business hours.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="/get-a-quote/" class="btn inline-flex items-center justify-center bg-accent hover:bg-accent-hover text-white px-8 py-4 rounded-[var(--radius-button)] font-semibold">
+        <a href="/get-a-quote/" class="btn-inquiry px-8 py-4">
           Submit RFQ
         </a>
         <a href="/products/" class="btn inline-flex items-center justify-center border-2 border-white/30 text-white hover:bg-white/10 px-8 py-4 rounded-[var(--radius-button)] font-semibold">

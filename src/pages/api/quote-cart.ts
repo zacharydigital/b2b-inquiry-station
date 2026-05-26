@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
 import {
   buildRfqNotificationEmail,
+  EMAIL_STYLES,
   escapeHtml,
   formatQuoteItems,
   getMailConfig,
@@ -17,6 +18,14 @@ function generateId(): string {
 function isProduction(): boolean {
   return !!(process.env.CF_PAGES);
 }
+
+export const GET: APIRoute = async () => new Response(JSON.stringify({ error: 'Method not allowed.' }), {
+  status: 405,
+  headers: {
+    'Content-Type': 'application/json',
+    'Allow': 'POST',
+  },
+});
 
 export const POST: APIRoute = async ({ request, locals }) => {
   try {
@@ -102,10 +111,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
         from: `IndustryPro <${mailConfig.fromEmail}>`,
         to: email,
         subject: 'We received your batch RFQ',
-        html: `<div style="font-family:Arial,sans-serif;color:#2D2C2B">
+        html: `<div style="${EMAIL_STYLES.root}">
           <h2>Thank you for your RFQ, ${escapeHtml(name)}.</h2>
           <p>We received your request for ${items.length} ${items.length === 1 ? 'item' : 'items'} and will reply within 12 business hours.</p>
-          <pre style="white-space:pre-wrap;background:#f7f7f6;padding:12px;border-radius:6px">${escapeHtml(formatQuoteItems(items))}</pre>
+          <pre style="${EMAIL_STYLES.pre}">${escapeHtml(formatQuoteItems(items))}</pre>
           <p>Your RFQ ID: <strong>${escapeHtml(inquiryId)}</strong></p>
         </div>`,
       });

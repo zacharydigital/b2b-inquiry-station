@@ -4,6 +4,7 @@ import { join } from 'node:path';
 const root = process.cwd();
 const requiredFiles = [
   'src/lib/design-tokens.ts',
+  'src/lib/design-token-contract.ts',
   'src/pages/design-system/index.astro',
   'src/pages/design-system/tokens.json.ts',
   'src/lib/verticals.ts',
@@ -25,9 +26,46 @@ function read(file) {
 }
 
 if (!failures.length) {
+  const tokenContract = read('src/lib/design-token-contract.ts');
+  if (!tokenContract.includes('DESIGN_TOKEN_CONTRACT')) {
+    failures.push('Token contract must export DESIGN_TOKEN_CONTRACT.');
+  }
+  for (const group of [
+    'core',
+    'components',
+    'layout',
+    'state',
+    'conversion',
+    'dataDisplay',
+    'media',
+    'motion',
+    'layers',
+    'accessibility',
+    'brand',
+    'emailTheme',
+    'modules',
+    'verticals',
+  ]) {
+    if (!tokenContract.includes(`${group}:`)) {
+      failures.push(`Token contract missing group: ${group}`);
+    }
+  }
+  for (const marker of ['machinery', 'materials', 'consumer-oem']) {
+    if (!tokenContract.includes(marker)) {
+      failures.push(`Token contract missing vertical overlay: ${marker}`);
+    }
+  }
+  for (const marker of ['conversion-inquiry-cta-bg', 'conversion-inquiry-cta-hover-bg', 'protectedConversion']) {
+    if (!tokenContract.includes(marker)) {
+      failures.push(`Token contract missing conversion guardrail: ${marker}`);
+    }
+  }
+
   const tokens = read('src/lib/design-tokens.ts');
-  for (const marker of ['CORE_TOKENS', 'COMPONENT_TOKENS', 'VERTICAL_TOKENS', 'machinery', 'materials', 'consumer-oem']) {
-    if (!tokens.includes(marker)) failures.push(`Token export missing marker: ${marker}`);
+  for (const marker of ['getDesignTokenExport', 'DESIGN_TOKEN_CONTRACT', 'CORE_TOKENS', 'COMPONENT_TOKENS', 'VERTICAL_TOKENS']) {
+    if (!tokens.includes(marker)) {
+      failures.push(`Token export missing marker: ${marker}`);
+    }
   }
 
   const tokenRoute = read('src/pages/design-system/tokens.json.ts');
@@ -41,7 +79,7 @@ if (!failures.length) {
   }
 
   const unoConfig = read('uno.config.ts');
-  for (const marker of ['btn-primary', 'btn-inquiry', '--button-inquiry-bg']) {
+  for (const marker of ['btn-primary', 'btn-inquiry', '--conversion-inquiry-cta-bg', '--conversion-inquiry-cta-hover-bg']) {
     if (!unoConfig.includes(marker)) failures.push(`UnoCSS config missing marker: ${marker}`);
   }
 

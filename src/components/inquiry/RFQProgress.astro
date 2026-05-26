@@ -1,0 +1,25 @@
+---
+export interface Props {
+  value?: number;
+  label?: string;
+  class?: string;
+}
+
+const {
+  value = 0,
+  label = 'RFQ progress',
+  class: className = '',
+} = Astro.props;
+const clampedValue = Math.max(0, Math.min(100, value));
+---
+
+<div
+  class:list={['rfq-progress', className]}
+  role="progressbar"
+  aria-label={label}
+  aria-valuemin="0"
+  aria-valuemax="100"
+  aria-valuenow={clampedValue}
+>
+  <span class="rfq-progress-value block" style={`width:${clampedValue}%`}></span>
+</div>
