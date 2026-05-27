@@ -37,8 +37,9 @@ src/components/
 │                 TestimonialCards, ProdFlowDiagram, TeamPhotoCards,
 │                 ManufacturingQC, CaseStudy
 ├── fab-e/        FABENarrative, Specifications, Applications
-└── pdp/          ChannelFit, ComplianceDocuments, TechnicalData,
-                  Customization, Variants
+├── pdp/          ChannelFit, ComplianceDocuments, TechnicalData,
+│                 Customization, Variants
+└── seo/          SourcingPageTemplate
 ```
 
 **Rules**:
