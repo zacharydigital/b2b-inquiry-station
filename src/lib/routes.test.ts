@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { getIndexableRoutes } from './routes';
 import { listProducts } from './products';
+import { SOURCING_PAGES } from './sourcing-pages';
 
 describe('getIndexableRoutes', () => {
   it('includes core conversion and trust pages', () => {
@@ -18,6 +19,14 @@ describe('getIndexableRoutes', () => {
 
     for (const product of listProducts()) {
       expect(urls).toContain(`/products/${product.slug}/`);
+    }
+  });
+
+  it('includes every programmatic sourcing page', () => {
+    const urls = getIndexableRoutes().map((route) => route.url);
+
+    for (const page of SOURCING_PAGES) {
+      expect(urls).toContain(page.url);
     }
   });
 

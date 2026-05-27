@@ -5,6 +5,8 @@ export interface Props {
   model: string;
   image?: string;
   category?: string;
+  vertical?: string;
+  certifications?: string[];
   moq?: string;
   leadTime?: string;
 }
@@ -15,17 +17,26 @@ const {
   model,
   image = '/static/product-gearbox.svg',
   category = '',
+  vertical = 'machinery',
+  certifications = [],
   moq = '100 pcs',
   leadTime = '15–25 days',
 } = Astro.props;
 ---
 
-<a href={`/products/${slug}/`} class="product-card group block">
-  <div class="media-frame aspect-[4/3] overflow-hidden p-5">
-    <img src={image} alt={title} class="w-full h-full object-contain group-hover:scale-103 transition-transform duration-300" loading="lazy" />
+<a
+  href={`/products/${slug}/`}
+  class="product-card group block"
+  data-product-card
+  data-category={category}
+  data-vertical={vertical}
+  data-certifications={certifications.join(' ').toLowerCase()}
+>
+  <div class="product-media-frame">
+    <img src={image} alt={title} class="product-media-image" loading="lazy" />
   </div>
   <div class="p-5">
-    <p class="text-small text-primary font-semibold mb-2">{category}</p>
+    <p class="text-small text-primary font-semibold mb-2">{vertical} · {category}</p>
     <h3 class="font-semibold text-body mb-2 group-hover:text-primary transition-colors line-clamp-2">{title}</h3>
     <p class="text-small text-gray-600 mb-4">Model: <span class="font-semibold text-gray-900">{model}</span></p>
     <div class="grid grid-cols-2 gap-2 text-small">

@@ -1,0 +1,155 @@
+---
+import InlineInquiryForm from '../inquiry/InlineInquiryForm.astro';
+import type { Product } from '../../lib/products';
+import type { SourcingPage } from '../../lib/sourcing-pages';
+
+export interface Props {
+  page: SourcingPage;
+  products: Product[];
+}
+
+const { page, products } = Astro.props;
+---
+
+<section class="industrial-grid-bg border-b border-hairline" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+      <div class="lg:col-span-7">
+        <p class="section-kicker mb-4">{page.kicker}</p>
+        <h1 class="text-display font-semibold leading-tight max-w-4xl">{page.h1}</h1>
+        <p class="mt-6 text-subhead text-gray-600 leading-relaxed max-w-3xl">{page.hook}</p>
+        <div class="mt-8 flex flex-col sm:flex-row gap-4">
+          <a href="#inline-inquiry" class="btn-inquiry !text-lg !px-8 !py-4">
+            <span class="i-carbon-email-new" aria-hidden="true"></span>
+            Start RFQ
+          </a>
+          <a href="/compare/" class="btn-outline !text-lg !px-8 !py-4">
+            <span class="i-carbon-compare" aria-hidden="true"></span>
+            Compare Options
+          </a>
+        </div>
+      </div>
+      <aside class="lg:col-span-5">
+        <div class="quote-panel">
+          <p class="text-small font-semibold text-primary mb-4">RFQ evidence snapshot</p>
+          <div class="grid grid-cols-2 gap-3">
+            {page.proof.map((item) => (
+              <div class="metric-card !p-4">
+                <p class="text-small text-gray-600">{item.label}</p>
+                <strong class="block text-body">{item.value}</strong>
+              </div>
+            ))}
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div class="lg:col-span-4">
+        <p class="section-kicker mb-2">Fit</p>
+        <h2 class="section-heading">Application and sourcing fit</h2>
+      </div>
+      <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+        {page.fit.map((item) => (
+          <article class="proof-card">
+            <h3 class="text-subhead font-normal mb-3">{item.title}</h3>
+            <p class="text-caption text-gray-600 leading-relaxed">{item.detail}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section-band">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div class="lg:col-span-5">
+        <p class="section-kicker mb-2">Trust</p>
+        <h2 class="section-heading mb-4">Evidence buyers can forward internally.</h2>
+        <ul class="space-y-3 text-caption text-gray-700">
+          {page.trust.map((item) => (
+            <li class="flex gap-2"><span class="i-carbon-checkmark-filled text-primary mt-1" aria-hidden="true"></span>{item}</li>
+          ))}
+        </ul>
+      </div>
+      <div class="lg:col-span-7">
+        <p class="section-kicker mb-2">Terms</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {page.terms.map((item) => (
+            <div class="metric-card">
+              <p class="text-small text-gray-600">{item.label}</p>
+              <strong class="block text-body">{item.value}</strong>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{products.length > 0 && (
+  <section class="bg-white" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5 mb-8">
+        <div>
+          <p class="section-kicker mb-2">Related products</p>
+          <h2 class="section-heading">Shortlist matching products</h2>
+        </div>
+        <a href="/products/" class="btn-quiet">Open product catalog <span class="i-carbon-arrow-right" aria-hidden="true"></span></a>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        {products.map((product) => (
+          <a class="product-card group" href={`/products/${product.slug}/`}>
+            <div class="flex flex-col gap-2">
+              <p class="section-kicker">{product.vertical || 'machinery'}</p>
+              <h3 class="text-subhead font-semibold group-hover:text-primary transition-colors">{product.name}</h3>
+              <p class="text-caption text-gray-600 leading-relaxed">{product.shortDescription}</p>
+            </div>
+            <span class="mt-5 inline-flex items-center gap-2 text-small text-primary font-semibold">
+              View PDP <span class="i-carbon-arrow-right" aria-hidden="true"></span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<section class="section-band">
+  <div class="container mx-auto px-4 max-w-4xl">
+    <p class="section-kicker mb-2">FAQ</p>
+    <h2 class="section-heading mb-8">Procurement questions</h2>
+    <div class="space-y-4">
+      {page.faqs.map((faq) => (
+        <details class="quote-panel">
+          <summary class="cursor-pointer text-subhead font-semibold">{faq.question}</summary>
+          <p class="mt-3 text-caption text-gray-600 leading-relaxed">{faq.answer}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div class="lg:col-span-5">
+        <p class="section-kicker mb-2">Convert</p>
+        <h2 class="section-heading mb-4">{page.cta.heading}</h2>
+        <p class="text-body text-gray-600 leading-relaxed">{page.cta.detail}</p>
+      </div>
+      <div class="lg:col-span-7">
+        <InlineInquiryForm
+          vertical={page.vertical}
+          productSlug={page.productSlugs[0] || ''}
+          productName={products[0]?.name || page.h1}
+        />
+      </div>
+    </div>
+  </div>
+</section>

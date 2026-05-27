@@ -1,0 +1,36 @@
+---
+export interface Props {
+  href?: string;
+  label?: string;
+  icon?: string;
+  type?: 'button' | 'submit';
+  target?: string;
+  rel?: string;
+  id?: string;
+  class?: string;
+}
+
+const {
+  href,
+  label = 'Request a Quote',
+  icon,
+  type = 'button',
+  target,
+  rel,
+  id,
+  class: className = '',
+} = Astro.props;
+const resolvedRel = rel || (target === '_blank' ? 'noopener noreferrer' : undefined);
+---
+
+{href ? (
+  <a id={id} href={href} target={target} rel={resolvedRel} class:list={['btn-inquiry', className]}>
+    {icon && <span class={icon} aria-hidden="true"></span>}
+    <slot>{label}</slot>
+  </a>
+) : (
+  <button id={id} type={type} class:list={['btn-inquiry', className]}>
+    {icon && <span class={icon} aria-hidden="true"></span>}
+    <slot>{label}</slot>
+  </button>
+)}

@@ -1,0 +1,253 @@
+---
+import '../../styles/tokens.css';
+import { getDesignTokenExport } from '../../lib/design-tokens';
+import { getVerticalConfig, type ProductVertical } from '../../lib/verticals';
+import ConversionPanel from '../../components/inquiry/ConversionPanel.astro';
+import InquiryCTA from '../../components/inquiry/InquiryCTA.astro';
+import RFQProgress from '../../components/inquiry/RFQProgress.astro';
+import TrustReassurance from '../../components/inquiry/TrustReassurance.astro';
+
+const tokens = getDesignTokenExport();
+const verticals = Object.keys(tokens.verticals) as ProductVertical[];
+const contractGroups = [
+  ['Layout', tokens.layout],
+  ['State', tokens.state],
+  ['Conversion', tokens.conversion],
+  ['Data Display', tokens.dataDisplay],
+  ['Media', tokens.media],
+  ['Motion', tokens.motion],
+  ['Layers', tokens.layers],
+  ['Accessibility', tokens.accessibility],
+  ['Brand', tokens.brand],
+  ['Modules', tokens.modules],
+  ['Email Theme', tokens.emailTheme],
+].map(([label, group]) => ({
+  label,
+  entries: Object.entries(group as Record<string, unknown>).slice(0, 5).map(([name, value]) => ({
+    name,
+    value: Array.isArray(value) ? `${value.length} protected` : typeof value === 'object' ? 'contract' : String(value),
+  })),
+}));
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>B2B Inquiry Design System</title>
+  </head>
+  <body class="font-sans text-body text-gray-900 bg-white antialiased" data-vertical="machinery">
+    <main>
+      <section class="border-b border-hairline bg-white">
+        <div class="container mx-auto px-4 py-10">
+          <p class="section-kicker mb-3">Internal design language</p>
+          <h1 class="text-display font-semibold leading-tight max-w-4xl">B2B Inquiry Design System</h1>
+          <p class="mt-4 text-subhead text-gray-600 max-w-3xl leading-relaxed">
+            A conversion-focused design language for export B2B PDPs, RFQ workflows, procurement proof, and multi-industry sourcing pages.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href="/design-system/tokens.json" class="btn-primary">Export tokens JSON</a>
+            <a href="/products/" class="btn-outline">View product system</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-band">
+        <div class="container mx-auto px-4">
+          <div class="max-w-3xl mb-8">
+            <p class="section-kicker mb-2">Vertical overlays</p>
+            <h2 class="section-heading mb-4">Industry-Specific Visual Modes</h2>
+            <p class="text-body text-gray-600 leading-relaxed">
+              Each vertical keeps the same enterprise inquiry core while adjusting proof color, CTA wording, PDP sequence, and form schema.
+            </p>
+          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            {verticals.map((vertical) => {
+              const config = getVerticalConfig(vertical);
+              const overlay = tokens.verticals[vertical];
+              return (
+                <article class="proof-card" data-vertical={vertical}>
+                  <div class="h-2 mb-5 rounded-[var(--radius-input)]" style={`background:${overlay.primary}`}></div>
+                  <p class="text-small text-primary font-semibold mb-2">{vertical}</p>
+                  <h3 class="font-semibold text-gray-900 mb-3">{config.label}</h3>
+                  <p class="text-caption text-gray-600 mb-5">Primary CTA: <strong class="text-gray-900">{config.cta.primary}</strong></p>
+                  <div class="grid grid-cols-3 gap-2 text-small">
+                    <span class="h-10 border border-hairline" style={`background:${overlay.primary}`}></span>
+                    <span class="h-10 border border-hairline" style={`background:${overlay.accent}`}></span>
+                    <span class="h-10 border border-hairline" style={`background:${overlay.proofBg}`}></span>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-white border-y border-hairline" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+        <div class="container mx-auto px-4">
+          <div class="max-w-3xl mb-8">
+            <p class="section-kicker mb-2">Components</p>
+            <h2 class="section-heading mb-4">Button, Form, and CTA Semantics</h2>
+          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="quote-panel">
+              <h3 class="font-semibold text-gray-900 mb-4">Buttons</h3>
+              <div class="flex flex-wrap gap-3">
+                <button class="btn-primary" type="button">Technical Action</button>
+                <button class="btn-inquiry" type="button">Request a Quote</button>
+                <button class="btn-outline" type="button">Secondary Action</button>
+                <button class="btn-primary" type="button" disabled>Disabled</button>
+              </div>
+              <p class="mt-4 text-caption text-gray-600">Orange inquiry buttons are reserved for RFQ, sample, quote, and conversion paths only.</p>
+            </div>
+            <form class="quote-panel">
+              <h3 class="font-semibold text-gray-900 mb-4">Form states</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <label class="block text-small font-medium text-gray-900">Required field <span class="required-marker">*</span><input class="form-control mt-1" required placeholder="Buyer email" /></label>
+                <label class="block text-small font-medium text-gray-900">Select field<select class="form-control mt-1"><option>Sample request</option><option>Bulk quote</option></select></label>
+                <label class="block text-small font-medium text-gray-900">Disabled<input class="form-control mt-1" disabled value="Locked state" /></label>
+                <label class="block text-small font-medium text-gray-900">Upload<input class="file-control mt-1" type="file" /></label>
+              </div>
+              <div class="form-error-summary mt-4" role="alert" aria-live="assertive">
+                <strong>Error summary</strong>: Work email and country are required before the RFQ can be sent.
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
+                <p class="form-status-submitting">Submitting state</p>
+                <p class="form-status-success">Success state</p>
+                <p class="form-status-failed">Failed state</p>
+              </div>
+              <p class="mt-4 text-small bg-[var(--file-upload-selected-bg)] border border-hairline rounded-[var(--radius-input)] px-3 py-2">
+                File upload state: drawing.pdf selected
+              </p>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-band">
+        <div class="container mx-auto px-4">
+          <div class="max-w-3xl mb-8">
+            <p class="section-kicker mb-2">Interface contract</p>
+            <h2 class="section-heading mb-4">Token Layers for Astro, UnoCSS, and Islands</h2>
+            <p class="text-body text-gray-600 leading-relaxed">
+              These groups are exported at <code>/design-system/tokens.json</code> so high-interaction islands and headless primitives consume the same visual contract as Astro components.
+            </p>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            {contractGroups.map((group) => (
+              <article class="proof-card">
+                <h3 class="font-semibold text-gray-900 mb-3">{group.label}</h3>
+                <dl class="space-y-2 text-small">
+                  {group.entries.map((entry) => (
+                    <div class="flex items-start justify-between gap-4 border-b border-hairline pb-2">
+                      <dt class="text-gray-600">{entry.name}</dt>
+                      <dd class="text-gray-900 font-mono text-right break-all">{entry.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-white border-y border-hairline" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+        <div class="container mx-auto px-4">
+          <div class="max-w-3xl mb-8">
+            <p class="section-kicker mb-2">Conversion primitives</p>
+            <h2 class="section-heading mb-4">Sticky, Mobile, Modal, and Data States</h2>
+          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <ConversionPanel
+              kicker="Sticky inquiry"
+              title="Request a Quote"
+              description="Uses conversion panel, trust note, and inquiry CTA tokens."
+            >
+              <p class="text-small font-semibold text-gray-900 mb-2">RFQ progress</p>
+              <RFQProgress value={67} class="mb-4" />
+              <TrustReassurance
+                class="mb-4"
+                items={[
+                  { label: 'Trust reassurance: NDA available', icon: 'i-carbon-locked' },
+                  { label: 'No resale of buyer data', icon: 'i-carbon-security' },
+                ]}
+              />
+              <InquiryCTA class="w-full" label="Send RFQ" />
+            </ConversionPanel>
+            <article class="modal-panel static max-w-none">
+              <p class="section-kicker mb-2">Download gate</p>
+              <h3 class="text-subhead font-semibold text-gray-900 mb-2">Document Request</h3>
+              <input class="form-control mb-3" placeholder="Work email" />
+              <button class="btn-inquiry w-full" type="button">Send Me the File</button>
+            </article>
+            <article class="proof-card">
+              <p class="section-kicker mb-2">Media contract</p>
+              <div class="media-frame aspect-[var(--media-gallery-aspect)] flex items-center justify-center mb-4">
+                <span class="i-carbon-image text-4xl text-primary" aria-hidden="true"></span>
+              </div>
+              <div class="flex gap-2">
+                <span class="w-[var(--media-thumbnail-size)] h-[var(--media-thumbnail-size)] media-frame"></span>
+                <span class="w-[var(--media-thumbnail-size)] h-[var(--media-thumbnail-size)] media-frame"></span>
+              </div>
+            </article>
+          </div>
+
+          <div class="mt-8 table-surface">
+            <table class="table-procurement">
+              <thead class="bg-[var(--table-header-bg)]">
+                <tr>
+                  <th class="table-header-cell">Tokenized Table</th>
+                  <th class="table-header-cell">State</th>
+                  <th class="table-header-cell">Usage</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="border-t border-hairline">
+                  <td class="table-cell font-semibold text-gray-900">Specification row</td>
+                  <td class="table-cell">Default density</td>
+                  <td class="table-cell">PDP specifications and comparison tables</td>
+                </tr>
+                <tr class="border-t border-hairline bg-[var(--state-selected-bg)]">
+                  <td class="table-cell font-semibold text-gray-900">Selected row</td>
+                  <td class="table-cell">Selected</td>
+                  <td class="table-cell">ComparisonBuilder and product filters</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="mt-8 border border-hairline bg-[var(--brand-surface)] p-5 rounded-[var(--radius-card)]">
+            <p class="section-kicker mb-2">Brand overlay boundary</p>
+            <p class="text-caption text-gray-600 max-w-3xl">
+              Brand overlays may adjust primary color, surface, ink, and font. Protected conversion, error, and accessibility tokens remain governed by the B2B inquiry contract.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-band">
+        <div class="container mx-auto px-4">
+          <div class="max-w-3xl mb-8">
+            <p class="section-kicker mb-2">PDP contract</p>
+            <h2 class="section-heading mb-4">Module Order by Vertical</h2>
+          </div>
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            {verticals.map((vertical) => {
+              const config = getVerticalConfig(vertical);
+              return (
+                <article class="proof-card">
+                  <h3 class="font-semibold text-gray-900 mb-4">{config.label}</h3>
+                  <ol class="space-y-2 text-caption text-gray-600">
+                    {config.pdpModules.map((module, index) => <li><span class="text-primary font-semibold">{index + 1}.</span> {module}</li>)}
+                  </ol>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

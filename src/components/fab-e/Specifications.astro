@@ -17,21 +17,21 @@ const visibleCount = 8;
       <p class="section-kicker mb-2">Technical fit</p>
       <h2 class="section-heading">Technical Specifications</h2>
     </div>
-    <div class="overflow-x-auto table-shadow-mask bg-white border border-gray-100">
+    <div class="table-surface">
       <table class="table-procurement">
-        <thead class="bg-primary-50">
+        <thead class="bg-[var(--table-header-bg)]">
           <tr>
-            <th class="text-left px-6 py-3 text-caption font-semibold text-gray-900">Parameter</th>
-            <th class="text-left px-6 py-3 text-caption font-semibold text-gray-900">Value</th>
-            <th class="text-left px-6 py-3 text-caption font-semibold text-gray-900 hidden md:table-cell">Note</th>
+            <th class="table-header-cell">Parameter</th>
+            <th class="table-header-cell">Value</th>
+            <th class="table-header-cell hidden md:table-cell">Note</th>
           </tr>
         </thead>
         <tbody id="spec-tbody">
           {specs.map((s, i) => (
             <tr class={`border-b border-gray-100 ${i >= visibleCount ? 'spec-hidden hidden' : ''}`}>
-              <td class="px-6 py-3 text-caption font-semibold text-gray-900">{s.parameter}</td>
-              <td class="px-6 py-3 text-caption text-gray-600">{s.value}</td>
-              <td class="px-6 py-3 text-small text-gray-400 hidden md:table-cell">{s.note || '—'}</td>
+              <td class="table-cell font-semibold text-gray-900">{s.parameter}</td>
+              <td class="table-cell">{s.value}</td>
+              <td class="table-cell text-small text-gray-400 hidden md:table-cell">{s.note || '—'}</td>
             </tr>
           ))}
         </tbody>

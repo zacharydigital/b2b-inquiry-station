@@ -1,0 +1,47 @@
+---
+import type { TechnicalDataPoint } from '../../lib/products';
+
+export interface Props {
+  items?: TechnicalDataPoint[];
+  fallbackSpecs?: { parameter: string; value: string; note?: string }[];
+}
+
+const { items = [], fallbackSpecs = [] } = Astro.props;
+const rows = items.length
+  ? items
+  : fallbackSpecs.map((spec) => ({ property: spec.parameter, value: spec.value, method: spec.note || 'Supplier declaration' }));
+---
+
+{rows.length > 0 && (
+  <section class="bg-white border-y border-hairline" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
+    <div class="container mx-auto px-4">
+      <div class="max-w-3xl mb-8">
+        <p class="section-kicker mb-2">Technical data</p>
+        <h2 class="section-heading mb-4">Batch-Ready Technical Properties</h2>
+        <p class="text-body text-gray-600 leading-relaxed">
+          Use these values to confirm whether the material or product can move into sampling, compliance review, or bulk quotation.
+        </p>
+      </div>
+      <div class="overflow-x-auto table-shadow-mask border border-hairline bg-white">
+        <table class="table-procurement min-w-[720px]">
+          <thead class="bg-[var(--table-header-bg)]">
+            <tr>
+              <th class="p-4 text-gray-900">Property</th>
+              <th class="p-4 text-gray-900">Value</th>
+              <th class="p-4 text-gray-900">Method / note</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((item) => (
+              <tr class="border-t border-hairline">
+                <td class="p-4 font-semibold text-gray-900">{item.property}</td>
+                <td class="p-4 text-gray-900">{item.value}</td>
+                <td class="p-4 text-gray-600">{item.method || 'Supplier declaration'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+)}

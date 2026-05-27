@@ -7,8 +7,8 @@ import { listProducts } from '../lib/products';
 import { getSiteUrl, joinSiteUrl } from '../lib/site';
 
 const products = listProducts();
-const title = 'Compare Industrial Machinery Models | IndustryPro';
-const desc = 'Compare industrial gearboxes, motors, and pumps by application fit, specifications, MOQ, lead time, certifications, and quote readiness.';
+const title = 'Compare B2B Export Products by RFQ Fit | IndustryPro';
+const desc = 'Compare machinery, materials, and OEM products by application fit, specifications, MOQ, lead time, certifications, customization, and quote readiness.';
 const siteUrl = getSiteUrl(import.meta.env.PUBLIC_SITE_URL || Astro.site?.href);
 const pageUrl = joinSiteUrl(siteUrl, '/compare/');
 
@@ -19,12 +19,15 @@ const comparisonFaqs = [
 ];
 
 const comparisonRows = [
+  { label: 'Vertical', values: products.map((product) => product.vertical || 'machinery') },
   { label: 'Best-fit applications', values: products.map((product) => product.fit) },
   { label: 'Key specification', values: products.map((product) => product.features.map((feature) => `${feature.label}: ${feature.value}`).join('; ')) },
   { label: 'Standard or interface', values: products.map((product) => product.standard) },
   { label: 'MOQ', values: products.map((product) => product.moq) },
   { label: 'Lead time', values: products.map((product) => product.leadTime) },
   { label: 'Sample', values: products.map((product) => product.sample) },
+  { label: 'Primary RFQ evidence', values: products.map((product) => (product.complianceDocuments?.map((doc) => doc.name).join(', ') || product.certifications.join(', '))) },
+  { label: 'Customization / options', values: products.map((product) => (product.customization?.map((item) => `${item.area}: ${item.options.join('/')}`).join('; ') || product.variants?.map((item) => `${item.label}: ${item.value}`).join('; ') || 'Application-specific configuration')) },
   { label: 'Payment terms', values: products.map((product) => product.payment) },
   { label: 'Certifications', values: products.map((product) => product.certifications.join(', ')) },
   { label: 'Last reviewed', values: products.map((product) => product.updated) },
@@ -63,13 +66,13 @@ const schema = graphSchema([
     <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12 industrial-grid-bg border border-gray-100 p-6 lg:p-8">
       <div class="lg:col-span-8">
         <p class="section-kicker mb-3">Model comparison · Procurement checklist · RFQ-ready shortlist</p>
-        <h1 class="text-display font-semibold text-gray-900 leading-tight mb-5">Compare industrial machinery models before you send an RFQ.</h1>
+        <h1 class="text-display font-semibold text-gray-900 leading-tight mb-5">Compare B2B export products before you send an RFQ.</h1>
         <p class="text-subhead text-gray-600 leading-relaxed max-w-3xl">
-          Use this comparison page to shortlist gearboxes, motors, pumps, and OEM machinery by technical fit, MOQ, lead time, certification evidence, and export-ready documentation. It is designed for buyers who need a practical sourcing decision, not a generic catalog view.
+          Use this comparison page to shortlist machinery, materials, and OEM products by technical fit, MOQ, lead time, certification evidence, customization scope, and export-ready documentation.
         </p>
         <div class="mt-6 flex flex-col sm:flex-row gap-3">
           <a href="#comparison-table" class="btn-primary"><span class="i-carbon-compare" aria-hidden="true"></span>Compare Models</a>
-          <a href="/get-a-quote/" class="btn-outline"><span class="i-carbon-email-new" aria-hidden="true"></span>Send RFQ</a>
+          <a href="/get-a-quote/" class="btn-inquiry"><span class="i-carbon-email-new" aria-hidden="true"></span>Send RFQ</a>
         </div>
       </div>
       <aside class="lg:col-span-4 quote-panel">
@@ -87,14 +90,24 @@ const schema = graphSchema([
         <p class="section-kicker mb-2">Decision table</p>
         <h2 class="section-heading">Side-by-Side Product Comparison</h2>
         <p class="text-caption text-gray-600 mt-2">All models are linked to crawlable PDP pages with specifications, evidence, FAQs, and inquiry modules.</p>
+        <div class="mt-4 flex flex-wrap gap-2" id="vertical-compare-filter">
+          {[
+            { label: 'All', value: 'all' },
+            { label: 'Machinery', value: 'machinery' },
+            { label: 'Materials', value: 'materials' },
+            { label: 'Consumer OEM', value: 'consumer-oem' },
+          ].map((item) => (
+            <button type="button" class="btn-outline !min-h-10 !py-2" data-compare-vertical={item.value}>{item.label}</button>
+          ))}
+        </div>
       </div>
-      <div class="overflow-x-auto table-shadow-mask">
+      <div class="table-surface">
         <table class="table-procurement min-w-[1040px]">
-          <thead class="bg-primary-50">
+          <thead class="bg-[var(--table-header-bg)]">
             <tr>
-              <th class="p-4 w-48 text-gray-900 sticky left-0 z-10 bg-primary-50">Decision Factor</th>
+              <th class="p-4 w-48 text-gray-900 sticky left-0 z-[var(--z-table-sticky)] bg-[var(--table-header-bg)]">Decision Factor</th>
               {products.map((product) => (
-                <th class="p-4 align-top text-gray-900">
+                <th class="p-4 align-top text-gray-900" data-compare-column data-vertical={product.vertical || 'machinery'}>
                   <a href={`/products/${product.slug}/`} class="block group">
                     <span class="media-frame w-28 h-22 flex items-center justify-center mb-3 p-2">
                       <img src={product.image} alt={`${product.title} product image`} class="w-full h-full object-contain" loading="lazy" />
@@ -109,9 +122,9 @@ const schema = graphSchema([
           <tbody>
             {comparisonRows.map((row) => (
               <tr class="border-t border-gray-100">
-                <th class="p-4 font-semibold text-gray-900 bg-panel sticky left-0 z-10">{row.label}</th>
-                {row.values.map((value) => (
-                  <td class="p-4 text-gray-600 leading-relaxed align-top">{value}</td>
+                <th class="p-4 font-semibold text-gray-900 bg-[var(--table-sticky-bg)] sticky left-0 z-[var(--z-table-sticky)]">{row.label}</th>
+                {row.values.map((value, index) => (
+                  <td class="p-4 text-gray-600 leading-relaxed align-top" data-compare-column data-vertical={products[index]?.vertical || 'machinery'}>{value}</td>
                 ))}
               </tr>
             ))}
@@ -132,9 +145,9 @@ const schema = graphSchema([
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         {[
-          { title: '1. Confirm Technical Fit', detail: 'Match torque, power, flow, speed, protection class, mounting interface, and operating environment.' },
+          { title: '1. Confirm Technical Fit', detail: 'Match torque, material grade, capacity, packaging, compliance documents, and operating environment.' },
           { title: '2. Check Commercial Fit', detail: 'Compare MOQ, sample availability, lead time, payment terms, and whether OEM/ODM changes are required.' },
-          { title: '3. Verify Evidence', detail: 'Ask for relevant certificates, drawings, outgoing QC records, packaging photos, and shipment documents.' },
+          { title: '3. Verify Evidence', detail: 'Ask for certificates, COA/SDS, drawings, outgoing QC records, packaging proofs, and shipment documents.' },
         ].map((item) => (
           <article class="proof-card">
             <h3 class="font-semibold text-gray-900 mb-3">{item.title}</h3>
@@ -182,7 +195,7 @@ const schema = graphSchema([
         Send model choices, quantities, destination country, and drawings or standards. We will reply with practical next steps within 12 business hours.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="/get-a-quote/" class="btn inline-flex items-center justify-center bg-accent hover:bg-accent-hover text-white px-8 py-4 rounded-[var(--radius-button)] font-semibold">
+        <a href="/get-a-quote/" class="btn-inquiry px-8 py-4">
           Submit RFQ
         </a>
         <a href="/products/" class="btn inline-flex items-center justify-center border-2 border-white/30 text-white hover:bg-white/10 px-8 py-4 rounded-[var(--radius-button)] font-semibold">
@@ -191,4 +204,19 @@ const schema = graphSchema([
       </div>
     </div>
   </section>
+
+  <script>
+    const compareButtons = Array.from(document.querySelectorAll('[data-compare-vertical]')) as HTMLButtonElement[];
+    const compareColumns = Array.from(document.querySelectorAll('[data-compare-column]')) as HTMLElement[];
+
+    compareButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const selected = button.dataset.compareVertical || 'all';
+        compareButtons.forEach((item) => item.classList.toggle('bg-primary-50', item === button));
+        compareColumns.forEach((column) => {
+          column.classList.toggle('hidden', selected !== 'all' && column.dataset.vertical !== selected);
+        });
+      });
+    });
+  </script>
 </BaseLayout>

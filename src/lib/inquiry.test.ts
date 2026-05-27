@@ -2,6 +2,9 @@ import { describe, expect, it } from 'vitest';
 import {
   buildInquiryEmails,
   buildRfqNotificationEmail,
+  calculateLeadScore,
+  collectInquiryExtraFields,
+  EMAIL_THEME_TOKENS,
   formatQuoteItems,
   getMailConfig,
   validateInquiryEmail,
@@ -41,6 +44,12 @@ describe('getMailConfig', () => {
 });
 
 describe('buildInquiryEmails', () => {
+  it('uses the shared email theme tokens for inline email styles', () => {
+    expect(EMAIL_THEME_TOKENS.bodyText).toBe('#2D2C2B');
+    expect(EMAIL_THEME_TOKENS.ctaBg).toBe('#e85d1c');
+    expect(EMAIL_THEME_TOKENS.preBg).toBe('#f4f4f4');
+  });
+
   it('builds notification and confirmation emails with conversion context', () => {
     const emails = buildInquiryEmails(
       {
@@ -60,6 +69,9 @@ describe('buildInquiryEmails', () => {
         locale: 'en',
         cartItems: '',
         attachmentKey: 'inquiries/machinery/file.pdf',
+        extraFields: {},
+        leadScore: 74,
+        leadGrade: 'hot',
       },
       {
         resendKey: 're_123',
@@ -74,10 +86,91 @@ describe('buildInquiryEmails', () => {
     expect(emails.notification.subject).toContain('Planetary Gearbox HG-220');
     expect(emails.notification.html).toContain('Ana &lt;Buyer&gt;');
     expect(emails.notification.html).toContain('120 pcs');
+    expect(emails.notification.html).toContain('hot');
+    expect(emails.notification.html).toContain('74/100');
     expect(emails.notification.html).toContain('utm_source=google');
     expect(emails.notification.html).toContain('inquiries/machinery/file.pdf');
+    expect(emails.notification.html).toContain(`color:${EMAIL_THEME_TOKENS.bodyText}`);
     expect(emails.confirmation.to).toBe('ana@example.com');
     expect(emails.confirmation.from).toBe('IndustryPro <inquiry@example.com>');
+    expect(emails.confirmation.html).toContain(`color:${EMAIL_THEME_TOKENS.mutedText}`);
+  });
+
+  it('escapes and renders allowed vertical extra fields in notification emails', () => {
+    const emails = buildInquiryEmails(
+      {
+        id: 'inq_2',
+        name: 'Maya',
+        email: 'maya@example.com',
+        company: 'SafeChem',
+        country: 'Malaysia',
+        phone: '',
+        productSlug: '',
+        productName: 'Industrial Solvent',
+        quantity: '2 tons',
+        message: 'Need documents',
+        inquiryType: 'sample',
+        sourcePage: 'https://factory.example.com/products/solvent/',
+        utmSource: '',
+        locale: 'en',
+        cartItems: '',
+        attachmentKey: null,
+        extraFields: {
+          request_type: 'COA <urgent>',
+          regulatory_requirement: 'REACH & RoHS',
+        },
+      },
+      {
+        resendKey: 're_123',
+        notifyEmail: 'sales@example.com',
+        fromEmail: 'inquiry@example.com',
+        siteUrl: 'https://factory.example.com',
+      },
+    );
+
+    expect(emails.notification.html).toContain('Additional Requirements');
+    expect(emails.notification.html).toContain('COA &lt;urgent&gt;');
+    expect(emails.notification.html).toContain('REACH &amp; RoHS');
+  });
+});
+
+describe('calculateLeadScore', () => {
+  it('grades high-intent B2B inquiries as hot', () => {
+    const result = calculateLeadScore({
+      company: 'Acme Importers',
+      country: 'Mexico',
+      phone: '+52 555',
+      quantity: '1200 pcs',
+      message: 'Need OEM quote with logo packaging, target delivery, and certification documents for retail launch.',
+      inquiryType: 'OEM',
+      vertical: 'consumer-oem',
+      attachmentKey: 'inquiries/oem/ref.pdf',
+      extraFields: {
+        logo_or_packaging_needed: 'Logo and packaging',
+        target_market: 'Mexico retail',
+        reference_link: 'https://example.com/ref',
+      },
+    });
+
+    expect(result).toEqual({ score: 100, grade: 'hot' });
+  });
+
+  it('keeps thin inquiries cold', () => {
+    expect(calculateLeadScore({ country: 'US' })).toEqual({ score: 20, grade: 'cold' });
+  });
+});
+
+describe('collectInquiryExtraFields', () => {
+  it('keeps allowed vertical fields and ignores unknown form fields', () => {
+    const form = new FormData();
+    form.set('request_type', 'COA');
+    form.set('regulatory_requirement', 'REACH');
+    form.set('admin_notes', 'should not be accepted');
+
+    expect(collectInquiryExtraFields(form, 'materials')).toEqual({
+      request_type: 'COA',
+      regulatory_requirement: 'REACH',
+    });
   });
 });
 
@@ -119,5 +212,6 @@ describe('buildRfqNotificationEmail', () => {
     expect(email.subject).toContain('1 item');
     expect(email.html).toContain('HG-220');
     expect(email.html).toContain('https://factory.example.com/contact/');
+    expect(email.html).toContain(`background:${EMAIL_THEME_TOKENS.preBg}`);
   });
 });

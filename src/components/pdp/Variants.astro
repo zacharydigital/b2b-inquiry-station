@@ -1,0 +1,32 @@
+---
+import type { ProductVariant } from '../../lib/products';
+
+export interface Props {
+  variants?: ProductVariant[];
+}
+
+const { variants = [] } = Astro.props;
+---
+
+{variants.length > 0 && (
+  <section class="section-band">
+    <div class="container mx-auto px-4">
+      <div class="max-w-3xl mb-8">
+        <p class="section-kicker mb-2">Variant scan</p>
+        <h2 class="section-heading mb-4">Options Buyers Can Compare Quickly</h2>
+        <p class="text-body text-gray-600 leading-relaxed">
+          Shortlist sellable variants before you request samples, packaging proofs, or a private-label quote.
+        </p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        {variants.map((variant) => (
+          <article class="product-card p-5">
+            <p class="text-small text-primary font-semibold mb-2">{variant.label}</p>
+            <h3 class="text-subhead font-semibold text-gray-900 mb-3">{variant.value}</h3>
+            {variant.detail && <p class="text-caption text-gray-600 leading-relaxed">{variant.detail}</p>}
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

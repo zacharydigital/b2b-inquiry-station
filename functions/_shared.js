@@ -1,5 +1,26 @@
 const DISPOSABLE_DOMAINS = new Set(['mailinator.com', 'tempmail.com', '10minutemail.com']);
 
+export const EMAIL_THEME_TOKENS = {
+  fontFamily: 'Arial, sans-serif',
+  bodyText: '#2D2C2B',
+  mutedText: '#666666',
+  canvas: '#ffffff',
+  ctaBg: '#e85d1c',
+  ctaText: '#ffffff',
+  preBg: '#f4f4f4',
+  border: '#e0e0e0',
+  radius: '6px',
+  buttonPadding: '12px 24px',
+  smallTextSize: '12px',
+};
+
+export const EMAIL_STYLES = {
+  root: `font-family:${EMAIL_THEME_TOKENS.fontFamily};color:${EMAIL_THEME_TOKENS.bodyText}`,
+  pre: `white-space:pre-wrap;background:${EMAIL_THEME_TOKENS.preBg};padding:12px;border-radius:${EMAIL_THEME_TOKENS.radius}`,
+  cta: `display:inline-block;background:${EMAIL_THEME_TOKENS.ctaBg};color:${EMAIL_THEME_TOKENS.ctaText};padding:${EMAIL_THEME_TOKENS.buttonPadding};border-radius:${EMAIL_THEME_TOKENS.radius};text-decoration:none`,
+  footer: `color:${EMAIL_THEME_TOKENS.mutedText};font-size:${EMAIL_THEME_TOKENS.smallTextSize}`,
+};
+
 export function escapeHtml(value = '') {
   return String(value)
     .replaceAll('&', '&amp;')

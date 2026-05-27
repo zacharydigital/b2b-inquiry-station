@@ -1,4 +1,5 @@
 import {
+  EMAIL_STYLES,
   escapeHtml,
   generateId,
   getMailConfig,
@@ -39,15 +40,15 @@ export async function onRequestPost({ request, env }) {
       from: `IndustryPro <${mailConfig.fromEmail}>`,
       to: email,
       subject: `Your ${safeFileType} is ready`,
-      html: `<div style="font-family:Arial,sans-serif;color:#2D2C2B">
+      html: `<div style="${EMAIL_STYLES.root}">
         <h2>Your download is ready</h2>
         <p>Click below to download your ${safeFileType}:</p>
         <a href="${mailConfig.siteUrl}/downloads/${safeFileType}-${safeProductSlug}.pdf"
-          style="display:inline-block;background:#E8651A;color:white;padding:12px 24px;border-radius:6px;text-decoration:none">
+          style="${EMAIL_STYLES.cta}">
           Download ${safeFileType}
         </a>
         <hr />
-        <p style="color:#666;font-size:12px">No spam - No reselling - GDPR compliant</p>
+        <p style="${EMAIL_STYLES.footer}">No spam - No reselling - GDPR compliant</p>
       </div>`,
     });
 

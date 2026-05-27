@@ -1,5 +1,12 @@
 ---
-import { addToCart } from '../../lib/store';
+import InquiryFields from './InquiryFields.astro';
+import TrustReassurance from './TrustReassurance.astro';
+import {
+  getInquiryFields,
+  getVerticalConfig,
+  normalizeVertical,
+  type ProductVertical,
+} from '../../lib/verticals';
 
 export interface Props {
   productSlug: string;
@@ -9,7 +16,8 @@ export interface Props {
   leadTime?: string;
   payment?: string;
   sample?: string;
-  industry?: string;
+  industry?: ProductVertical;
+  vertical?: ProductVertical;
   locale?: string;
 }
 
@@ -21,17 +29,65 @@ const {
   leadTime = '15–25 days',
   payment = 'T/T, L/C',
   sample = 'Available',
-  industry = 'machinery',
+  industry,
+  vertical = industry || 'machinery',
   locale = 'en',
 } = Astro.props;
+const normalizedVertical = normalizeVertical(vertical);
+const config = getVerticalConfig(normalizedVertical);
+const fields = getInquiryFields(normalizedVertical, 'sticky');
+const hiddenFields = [
+  productSlug ? 'product_slug' : '',
+  productTitle ? 'product_interest' : '',
+  productTitle ? 'material_grade' : '',
+].filter(Boolean);
+const hasVisibleInquiryType = fields.some((field) => field.name === 'inquiry_type' && !hiddenFields.includes(field.name));
 ---
 
-<div class="sticky-sidebar sticky top-24 space-y-4">
-  <!-- Price Placeholder -->
-  <a href="#inline-inquiry" class="btn-primary w-full text-center !text-lg">
-    <span class="i-carbon-calculator-check" aria-hidden="true"></span>
-    Get Latest Price
-  </a>
+<div class="sticky-sidebar sticky top-[var(--conversion-sticky-top-offset)] space-y-4">
+  <form
+    method="POST"
+    action="/api/inquiry"
+    enctype="multipart/form-data"
+    class="inquiry-form conversion-panel space-y-3"
+  >
+    <input type="hidden" name="website_url" tabindex="-1" autocomplete="off" class="hidden" />
+    <input type="hidden" name="product_slug" value={productSlug} />
+    <input type="hidden" name="product_name" value={productTitle} />
+    <input type="hidden" name="product_interest" value={productTitle} />
+    <input type="hidden" name="material_grade" value={productTitle} />
+    <input type="hidden" name="industry" value={normalizedVertical} />
+    {!hasVisibleInquiryType && <input type="hidden" name="inquiry_type" value="sticky" />}
+    <input type="hidden" name="locale" value={locale} />
+    <input type="hidden" name="source_page" data-sticky-source-page value="" />
+    <input type="hidden" name="utm_source" data-sticky-utm-source value="" />
+
+    <div>
+      <p class="section-kicker mb-1">Sales engineering intake</p>
+      <h2 class="text-subhead font-semibold text-gray-900">{config.cta.primary}</h2>
+      <p class="mt-1 text-small text-gray-600">Reply within 12 hours · NDA available</p>
+    </div>
+    <div
+      class="form-error-summary hidden"
+      data-form-error-summary
+      role="alert"
+      aria-live="assertive"
+      tabindex="-1"
+    >
+      <strong>Check required RFQ fields.</strong>
+      <span data-form-error-message>Please complete the required fields before sending.</span>
+    </div>
+    <div class="space-y-3">
+      <InquiryFields fields={fields} hiddenFields={hiddenFields} compact />
+    </div>
+    <button type="submit" class="btn-inquiry w-full text-center" data-submit-label={config.cta.primary}>
+      <span class="i-carbon-calculator-check" aria-hidden="true"></span>
+      {config.cta.primary}
+    </button>
+    <p class="hidden form-status-submitting text-center" data-form-status aria-live="polite">
+      Submitting your request...
+    </p>
+  </form>
 
   <!-- Key Info Mini Cards -->
   <div class="grid grid-cols-2 gap-2">
@@ -54,16 +110,14 @@ const {
   </div>
 
   <!-- Trust Signals -->
-  <div class="quote-panel space-y-2">
-    <div class="flex items-center gap-2 text-caption text-gray-600">
-      <span class="i-carbon-time text-accent" aria-hidden="true"></span> Reply within 12 hours
-    </div>
-    <div class="flex items-center gap-2 text-caption text-gray-600">
-      <span class="i-carbon-locked text-accent" aria-hidden="true"></span> NDA available
-    </div>
-    <div class="flex items-center gap-2 text-caption text-gray-600">
-      <span class="i-carbon-delivery text-accent" aria-hidden="true"></span> Global shipping
-    </div>
+  <div class="conversion-panel">
+    <TrustReassurance
+      items={[
+        { label: 'Reply within 12 hours', icon: 'i-carbon-time' },
+        { label: 'NDA available', icon: 'i-carbon-locked' },
+        { label: 'Global shipping', icon: 'i-carbon-delivery' },
+      ]}
+    />
   </div>
 
   <!-- Add to Quote Cart -->
@@ -73,8 +127,9 @@ const {
     data-slug={productSlug}
     data-model={productModel}
     data-title={productTitle}
+    data-reset-label={config.cta.secondary}
   >
-    Add to Quote Cart
+    {config.cta.secondary}
   </button>
 
   <!-- WhatsApp -->
@@ -82,13 +137,15 @@ const {
     href="https://wa.me/1234567890"
     target="_blank"
     rel="noopener noreferrer"
-    class="flex items-center justify-center gap-2 w-full py-3 border border-green-600 text-green-700 rounded-[var(--radius-button)] hover:bg-green-50 transition-colors font-semibold text-caption"
+    class="flex items-center justify-center gap-2 w-full py-3 border border-[var(--color-whatsapp)] text-[var(--color-whatsapp)] rounded-[var(--radius-button)] hover:bg-[var(--color-whatsapp-hover-bg)] transition-colors duration-[var(--motion-duration-fast)] font-semibold text-caption"
   >
     <span class="i-carbon-chat" aria-hidden="true"></span> WhatsApp Us
   </a>
 </div>
 
 <script>
+  import { initInquiryFormState } from '../../lib/inquiry-form-state';
+
   document.getElementById('add-to-cart-btn')?.addEventListener('click', function () {
     const btn = this as HTMLElement;
     import('../../lib/store').then(({ addToCart }) => {
@@ -98,11 +155,19 @@ const {
         title: btn.dataset.title!,
       });
       btn.textContent = 'Added ✓';
-      btn.classList.add('bg-green-50', 'text-green-600', 'border-green-500');
+      btn.classList.add('bg-valid', 'text-success', 'border-success');
       setTimeout(() => {
-        btn.textContent = 'Add to Quote Cart';
-        btn.classList.remove('bg-green-50', 'text-green-600', 'border-green-500');
+        btn.textContent = btn.dataset.resetLabel || 'Add to Quote Cart';
+        btn.classList.remove('bg-valid', 'text-success', 'border-success');
       }, 2000);
     });
+  });
+
+  document.querySelectorAll('.sticky-sidebar .inquiry-form').forEach((form) => {
+    const sourceInput = form.querySelector('[data-sticky-source-page]') as HTMLInputElement;
+    if (sourceInput) sourceInput.value = window.location.href;
+    const utmInput = form.querySelector('[data-sticky-utm-source]') as HTMLInputElement;
+    if (utmInput) utmInput.value = new URLSearchParams(window.location.search).get('utm_source') || '';
+    initInquiryFormState(form as HTMLFormElement);
   });
 </script>

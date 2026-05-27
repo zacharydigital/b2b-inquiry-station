@@ -9,22 +9,34 @@ import { breadcrumbSchema, faqSchema, graphSchema, itemListSchema } from '../../
 import { listFilterProducts, listProducts } from '../../lib/products';
 import { getSiteUrl, joinSiteUrl } from '../../lib/site';
 
-const title = 'Industrial Machinery Products Manufacturer | IndustryPro';
-const description = 'Source industrial gearboxes, motors, pumps, and OEM machinery from an ISO 9001 manufacturer. Compare MOQ, lead time, certifications, and request a category quote.';
+const title = 'B2B Export Products for RFQ Sourcing | IndustryPro';
+const description = 'Source machinery, engineering materials, and OEM consumer products from an export-ready B2B supplier. Compare MOQ, lead time, certifications, and request a category quote.';
 
 const products = listProducts();
 const productCards = listFilterProducts();
+const countBy = (field: 'categorySlug' | 'vertical', value: string) =>
+  products.filter((product) => (field === 'vertical' ? (product.vertical || 'machinery') : product.categorySlug) === value).length;
+const certCount = (cert: string) => products.filter((product) => product.certifications.some((item) => item.toLowerCase().includes(cert))).length;
 
 const filterGroups = [
+  { name: 'Vertical', options: [
+    { label: 'Machinery', value: 'machinery', count: countBy('vertical', 'machinery') },
+    { label: 'Materials', value: 'materials', count: countBy('vertical', 'materials') },
+    { label: 'Consumer OEM', value: 'consumer-oem', count: countBy('vertical', 'consumer-oem') },
+  ]},
   { name: 'Category', options: [
-    { label: 'Gearboxes', value: 'gearboxes', count: 2 },
-    { label: 'Electric Motors', value: 'motors', count: 1 },
-    { label: 'Pumps & Valves', value: 'pumps', count: 1 },
+    { label: 'Gearboxes', value: 'gearboxes', count: countBy('categorySlug', 'gearboxes') },
+    { label: 'Electric Motors', value: 'motors', count: countBy('categorySlug', 'motors') },
+    { label: 'Pumps & Valves', value: 'pumps', count: countBy('categorySlug', 'pumps') },
+    { label: 'Engineering Plastics', value: 'engineering-plastics', count: countBy('categorySlug', 'engineering-plastics') },
+    { label: 'Drinkware OEM', value: 'drinkware-oem', count: countBy('categorySlug', 'drinkware-oem') },
   ]},
   { name: 'Certification', options: [
-    { label: 'ISO 9001', value: 'iso9001', count: 4 },
-    { label: 'CE', value: 'ce', count: 4 },
-    { label: 'RoHS', value: 'rohs', count: 3 },
+    { label: 'ISO 9001', value: 'iso9001', count: certCount('iso 9001') },
+    { label: 'CE', value: 'ce', count: certCount('ce') },
+    { label: 'RoHS', value: 'rohs', count: certCount('rohs') },
+    { label: 'REACH', value: 'reach', count: certCount('reach') },
+    { label: 'FDA', value: 'fda', count: certCount('fda') },
   ]},
 ];
 
@@ -55,13 +67,13 @@ const plpSchema = graphSchema([
 
     <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12 industrial-grid-bg border border-gray-100 p-6 lg:p-8">
       <div class="lg:col-span-8">
-        <p class="section-kicker mb-3">ISO 9001 manufacturer · OEM/ODM · Global export</p>
-        <h1 class="text-display font-semibold text-gray-900 leading-tight mb-5">Industrial Machinery Products Manufacturer</h1>
+        <p class="section-kicker mb-3">Export supplier · RFQ-ready PDPs · Multi-industry sourcing</p>
+        <h1 class="text-display font-semibold text-gray-900 leading-tight mb-5">B2B Export Products Ready for Technical RFQ</h1>
         <p class="text-subhead text-gray-600 leading-relaxed max-w-3xl">
-          IndustryPro supplies industrial gearboxes, motors, pumps, and custom OEM machinery for buyers who need verifiable quality, predictable lead times, and export-ready documentation. Use this page to compare product families, shortlist models, and request a category-level quote.
+          IndustryPro supplies industrial machinery, engineering materials, and OEM consumer products for buyers who need verifiable quality, predictable lead times, and export-ready documentation. Use this page to compare product families, shortlist models, and request a category-level quote.
         </p>
         <div class="mt-6 flex flex-col sm:flex-row gap-3">
-          <a href="/get-a-quote/" class="btn-primary"><span class="i-carbon-email-new" aria-hidden="true"></span>Request Category Quote</a>
+          <a href="/get-a-quote/" class="btn-inquiry"><span class="i-carbon-email-new" aria-hidden="true"></span>Request Category Quote</a>
           <a href="#buying-guide" class="btn-outline"><span class="i-carbon-checklist" aria-hidden="true"></span>Read Buying Guide</a>
         </div>
       </div>
@@ -83,7 +95,7 @@ const plpSchema = graphSchema([
       <div class="lg:col-span-3">
         <div class="flex items-center justify-between gap-4 mb-4">
           <div>
-            <p class="text-small text-gray-600">Showing {productCards.length} verified models</p>
+            <p class="text-small text-gray-600" id="product-count">Showing {productCards.length} verified models</p>
             <h2 class="font-semibold text-gray-900">RFQ-ready product cards</h2>
           </div>
           <a href="/compare/" class="hidden sm:inline-flex btn-quiet">Compare <span class="i-carbon-compare" aria-hidden="true"></span></a>
@@ -146,4 +158,36 @@ const plpSchema = graphSchema([
       <FAQAccordion faqs={categoryFaqs} includeSchema={false} />
     </div>
   </section>
+
+  <script>
+    const filterInputs = Array.from(document.querySelectorAll('input[type="checkbox"]')) as HTMLInputElement[];
+    const cards = Array.from(document.querySelectorAll('[data-product-card]')) as HTMLElement[];
+    const countLabel = document.getElementById('product-count');
+
+    function activeValues(name: string) {
+      return filterInputs
+        .filter((input) => input.name === name && input.checked)
+        .map((input) => input.value);
+    }
+
+    function applyProductFilters() {
+      const verticals = activeValues('vertical');
+      const categories = activeValues('category');
+      const certifications = activeValues('certification');
+      let visible = 0;
+
+      cards.forEach((card) => {
+        const matchesVertical = verticals.length === 0 || verticals.includes(card.dataset.vertical || '');
+        const matchesCategory = categories.length === 0 || categories.includes(card.dataset.category || '');
+        const matchesCert = certifications.length === 0 || certifications.some((cert) => (card.dataset.certifications || '').includes(cert));
+        const shouldShow = matchesVertical && matchesCategory && matchesCert;
+        card.classList.toggle('hidden', !shouldShow);
+        if (shouldShow) visible += 1;
+      });
+
+      if (countLabel) countLabel.textContent = `Showing ${visible} verified models`;
+    }
+
+    filterInputs.forEach((input) => input.addEventListener('change', applyProductFilters));
+  </script>
 </BaseLayout>

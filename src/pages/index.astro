@@ -6,6 +6,7 @@ import ClientLogoWall from '../components/trust/ClientLogoWall.astro';
 import TestimonialCards from '../components/trust/TestimonialCards.astro';
 import ProdFlowDiagram from '../components/trust/ProdFlowDiagram.astro';
 import TeamPhotoCards from '../components/trust/TeamPhotoCards.astro';
+import { SOURCING_PAGES } from '../lib/sourcing-pages';
 
 const title = 'IndustryPro — Industrial Machinery Manufacturer';
 const description = 'Professional industrial machinery manufacturer. ISO 9001 certified factory. OEM/ODM supported. Global shipping to 60+ countries.';
@@ -24,7 +25,7 @@ const description = 'Professional industrial machinery manufacturer. ISO 9001 ce
             Compare gearboxes, motors, pumps, and OEM machinery with clear MOQ, lead time, compliance evidence, and RFQ-ready technical context.
           </p>
           <div class="mt-8 flex flex-col sm:flex-row gap-4">
-            <a href="/get-a-quote/" class="btn-primary !text-lg !px-8 !py-4">
+            <a href="/get-a-quote/" class="btn-inquiry !text-lg !px-8 !py-4">
               <span class="i-carbon-email-new" aria-hidden="true"></span>
               Request a Quote
             </a>
@@ -87,6 +88,30 @@ const description = 'Professional industrial machinery manufacturer. ISO 9001 ce
             <h3 class="text-subhead font-normal mb-3 group-hover:text-primary transition-colors">{cat.title}</h3>
             <p class="text-caption text-gray-600 leading-relaxed">{cat.desc}</p>
             <span class="inline-flex items-center gap-2 mt-5 text-small text-primary font-semibold">Open category <span class="i-carbon-arrow-right" aria-hidden="true"></span></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-band">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5 mb-10">
+        <div>
+          <p class="section-kicker mb-2">Sourcing guides</p>
+          <h2 class="section-heading">Long-tail RFQ pages for high-intent buyers</h2>
+        </div>
+        <a href="/products/" class="btn-quiet">Browse all products <span class="i-carbon-arrow-right" aria-hidden="true"></span></a>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        {SOURCING_PAGES.map((page) => (
+          <a href={page.url} class="product-card group">
+            <p class="section-kicker mb-3">{page.vertical}</p>
+            <h3 class="text-subhead font-semibold group-hover:text-primary transition-colors">{page.h1}</h3>
+            <p class="mt-3 text-caption text-gray-600 leading-relaxed">{page.description}</p>
+            <span class="mt-5 inline-flex items-center gap-2 text-small text-primary font-semibold">
+              Open guide <span class="i-carbon-arrow-right" aria-hidden="true"></span>
+            </span>
           </a>
         ))}
       </div>
@@ -167,7 +192,7 @@ const description = 'Professional industrial machinery manufacturer. ISO 9001 ce
       <p class="text-subhead text-primary-100 mb-8">
         Reply within 12 hours. NDA available. No spam, no reselling.
       </p>
-      <a href="/contact/" class="btn inline-flex items-center justify-center bg-accent hover:bg-accent-hover text-white px-8 py-4 rounded-[var(--radius-button)] font-semibold text-lg">
+      <a href="/contact/" class="btn-inquiry px-8 py-4 text-lg">
         Get Your Quote Now
       </a>
     </div>

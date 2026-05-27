@@ -1,0 +1,90 @@
+---
+import type { InquiryField } from '../../lib/verticals';
+
+export interface Props {
+  fields: InquiryField[];
+  hiddenFields?: string[];
+  compact?: boolean;
+}
+
+const { fields, hiddenFields = [], compact = false } = Astro.props;
+const visibleFields = fields.filter((field) => !hiddenFields.includes(field.name));
+---
+
+{visibleFields.map((field) => (
+  <div
+    class:list={[
+      field.type === 'textarea' || field.type === 'file' ? 'sm:col-span-2' : '',
+      field.visibleWhen ? 'hidden' : '',
+      field.visibleWhen ? 'conditional-field' : '',
+    ]}
+    data-conditional-field={field.visibleWhen ? field.name : undefined}
+    data-visible-when-field={field.visibleWhen?.field}
+    data-visible-when-values={field.visibleWhen?.values.join('|')}
+  >
+    <label class="block text-small font-medium text-gray-900 mb-1" for={`field-${field.name}`}>
+      {field.label}{field.required ? <span class="required-marker"> *</span> : ''}
+    </label>
+    {field.type === 'textarea' ? (
+      <textarea
+        id={`field-${field.name}`}
+        name={field.name}
+        required={field.required}
+        rows={compact ? 2 : 4}
+        minlength={field.validation?.minLength}
+        maxlength={field.validation?.maxLength}
+        placeholder={field.placeholder}
+        class="form-control resize-y"
+        data-error-target={field.name}
+        data-error-label={field.label}
+        aria-describedby={`field-${field.name}-error${field.helperText ? ` field-${field.name}-helper` : ''}`}
+      ></textarea>
+    ) : field.type === 'select' ? (
+      <select
+        id={`field-${field.name}`}
+        name={field.name}
+        required={field.required}
+        class="form-control"
+        data-error-target={field.name}
+        data-error-label={field.label}
+        aria-describedby={`field-${field.name}-error${field.helperText ? ` field-${field.name}-helper` : ''}`}
+      >
+        <option value="">Select {field.label.toLowerCase()}</option>
+        {(field.options || []).map((option) => (
+          <option value={option}>{option}</option>
+        ))}
+      </select>
+    ) : field.type === 'file' ? (
+      <input
+        id={`field-${field.name}`}
+        type="file"
+        name={field.name}
+        required={field.required}
+        class="file-control"
+        data-error-target={field.name}
+        data-error-label={field.label}
+        aria-describedby={`field-${field.name}-error${field.helperText ? ` field-${field.name}-helper` : ''}`}
+      />
+    ) : (
+      <input
+        id={`field-${field.name}`}
+        type={field.type}
+        name={field.name}
+        required={field.required}
+        min={field.validation?.min}
+        minlength={field.validation?.minLength}
+        maxlength={field.validation?.maxLength}
+        pattern={field.validation?.pattern}
+        placeholder={field.placeholder}
+        class="form-control"
+        data-error-target={field.name}
+        data-error-label={field.label}
+        aria-describedby={`field-${field.name}-error${field.helperText ? ` field-${field.name}-helper` : ''}`}
+      />
+    )}
+    {field.helperText && <p id={`field-${field.name}-helper`} class="mt-1 text-small text-gray-600">{field.helperText}</p>}
+    <p id={`field-${field.name}-error`} class="hidden mt-1 text-small text-error" data-field-error={field.name}>
+      Please complete {field.label.toLowerCase()}.
+    </p>
+  </div>
+))}

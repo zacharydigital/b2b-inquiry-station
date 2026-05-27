@@ -18,9 +18,16 @@ import InlineInquiryForm from '../../components/inquiry/InlineInquiryForm.astro'
 import QuoteCartPanel from '../../components/inquiry/QuoteCartPanel.astro';
 import QuoteCartButton from '../../components/inquiry/QuoteCartButton.astro';
 import EmailGateModal from '../../components/inquiry/EmailGateModal.astro';
+import TechnicalData from '../../components/pdp/TechnicalData.astro';
+import ComplianceDocuments from '../../components/pdp/ComplianceDocuments.astro';
+import Variants from '../../components/pdp/Variants.astro';
+import ChannelFit from '../../components/pdp/ChannelFit.astro';
+import Customization from '../../components/pdp/Customization.astro';
 import { breadcrumbSchema, faqSchema, graphSchema, productSchema } from '../../lib/seo';
+import { getPdpModules } from '../../lib/pdp';
 import { getProductBySlug, getProductStaticPaths, listProducts } from '../../lib/products';
 import { getSiteUrl, joinSiteUrl } from '../../lib/site';
+import { normalizeVertical } from '../../lib/verticals';
 
 export function getStaticPaths() {
   return getProductStaticPaths();
@@ -28,6 +35,8 @@ export function getStaticPaths() {
 
 const { slug } = Astro.params;
 const product = getProductBySlug(slug || '') || listProducts()[0];
+const vertical = normalizeVertical(product.vertical);
+const pdpModules = getPdpModules(vertical, product.pdpModuleOverrides).filter((module) => module !== 'ProductHero');
 
 const title = `${product.title} — ${product.model} | IndustryPro`;
 const desc = `Industrial ${product.category.toLowerCase()} ${product.model}. MOQ ${product.moq}. ISO 9001 certified manufacturer. OEM/ODM supported. Request a quote today.`;
@@ -54,7 +63,7 @@ const pdpSchema = graphSchema([
 ]);
 ---
 
-<BaseLayout title={title} description={desc} canonical={`/products/${product.slug}/`} schema={pdpSchema}>
+<BaseLayout title={title} description={desc} canonical={`/products/${product.slug}/`} schema={pdpSchema} vertical={vertical} mobileCtaHref="#inline-inquiry">
   <div class="container mx-auto px-4 pb-16">
     <!-- 1. Breadcrumb -->
     <Breadcrumb
@@ -93,6 +102,7 @@ const pdpSchema = graphSchema([
           </div>
         </div>
         <StickyInquirySidebar
+          vertical={vertical}
           productSlug={product.slug}
           productModel={product.model}
           productTitle={product.title}
@@ -104,18 +114,6 @@ const pdpSchema = graphSchema([
       </div>
     </div>
   </div>
-
-  <!-- 3. Key Commercial Terms -->
-  <KeyCommercialTerms
-    items={[
-      { label: 'MOQ', value: product.moq, subtext: 'Flexible for OEM' },
-      { label: 'Lead Time', value: product.leadTime, subtext: 'Rush available' },
-      { label: 'Payment', value: product.payment, subtext: '30/70 terms' },
-      { label: 'Sample', value: product.sample, subtext: 'Cost deductible' },
-      { label: 'Packaging', value: 'Wooden crate', subtext: '+ VCI protection' },
-      { label: 'Export to', value: '60+ countries', subtext: 'FOB/CIF/DDP' },
-    ]}
-  />
 
   <section class="bg-white border-y border-gray-100" style="padding-top: var(--space-section); padding-bottom: var(--space-section)">
     <div class="container mx-auto px-4">
@@ -141,26 +139,60 @@ const pdpSchema = graphSchema([
     </div>
   </section>
 
-  <!-- 4. Features & Advantages (FAB-E: A+B) -->
-  <FABENarrative advantages={product.advantages} />
-
-  <!-- 5. Specifications (FAB-E: F) -->
-  <Specifications specs={product.specifications} />
-
-  <!-- 6. Applications (FAB-E: B scenario) -->
-  <Applications applications={product.applications} />
-
-  <!-- 7. Certifications -->
-  <CertLogoWall compact
-    certs={[
-      { name: 'ISO 9001:2015', number: 'CN-2021-ISO9001-XXXX', issuer: 'SGS', valid_until: '2027-06' },
-      { name: 'CE', number: 'CE-2022-XXXX', issuer: 'TÜV', valid_until: '2027-12' },
-      { name: 'RoHS', number: 'ROHS-2023-XXXX', issuer: 'Intertek', valid_until: '2027-03' },
-    ]}
-  />
-
-  <!-- 8. Manufacturing & QC -->
-  <ManufacturingQC capacity="50,000 units/month" />
+  {pdpModules.map((module) => (
+    module === 'Specifications' ? (
+      <Specifications specs={product.specifications} />
+    ) : module === 'TechnicalData' ? (
+      <TechnicalData items={product.technicalData} fallbackSpecs={product.specifications} />
+    ) : module === 'Applications' ? (
+      <Applications applications={product.applications} />
+    ) : module === 'FABENarrative' ? (
+      <FABENarrative advantages={product.advantages} />
+    ) : module === 'ManufacturingQC' || module === 'QualityConsistency' ? (
+      <ManufacturingQC capacity="50,000 units/month" />
+    ) : module === 'TrustEvidence' ? (
+      <CertLogoWall compact
+        certs={[
+          { name: 'ISO 9001:2015', number: 'CN-2021-ISO9001-XXXX', issuer: 'SGS', valid_until: '2027-06' },
+          { name: 'CE', number: 'CE-2022-XXXX', issuer: 'TÜV', valid_until: '2027-12' },
+          { name: 'RoHS', number: 'ROHS-2023-XXXX', issuer: 'Intertek', valid_until: '2027-03' },
+        ]}
+      />
+    ) : module === 'ComplianceDocuments' ? (
+      <ComplianceDocuments documents={product.complianceDocuments} certifications={product.certifications} />
+    ) : module === 'CommercialTerms' ? (
+      <KeyCommercialTerms
+        items={[
+          { label: 'MOQ', value: product.moq, subtext: vertical === 'consumer-oem' ? 'OEM negotiable' : 'Flexible for OEM' },
+          { label: 'Lead Time', value: product.leadTime, subtext: vertical === 'materials' ? 'Sample timing available' : 'Rush available' },
+          { label: 'Payment', value: product.payment, subtext: '30/70 terms' },
+          { label: 'Sample', value: product.sample, subtext: 'Cost deductible' },
+          { label: 'Packaging', value: vertical === 'materials' ? 'Drum / bag / carton' : 'Wooden crate', subtext: vertical === 'consumer-oem' ? 'Retail pack optional' : '+ VCI protection' },
+          { label: 'Export to', value: '60+ countries', subtext: 'FOB/CIF/DDP' },
+        ]}
+      />
+    ) : module === 'Downloads' ? (
+      <DownloadsSection productSlug={product.slug} />
+    ) : module === 'ConversionPanel' ? (
+      <div class="container mx-auto px-4 max-w-3xl" style="padding-top: var(--space-section)">
+        <InlineInquiryForm
+          vertical={vertical}
+          productSlug={product.slug}
+          productName={product.title}
+        />
+      </div>
+    ) : module === 'FAQ' ? (
+      <FAQAccordion faqs={product.faqs} includeSchema={false} />
+    ) : module === 'RelatedProducts' ? (
+      <RelatedProducts products={product.relatedProducts} />
+    ) : module === 'Variants' ? (
+      <Variants variants={product.variants} />
+    ) : module === 'ChannelFit' ? (
+      <ChannelFit items={product.channelFit} />
+    ) : module === 'Customization' ? (
+      <Customization items={product.customization} />
+    ) : null
+  ))}
 
   <section class="section-band">
     <div class="container mx-auto px-4">
@@ -186,29 +218,12 @@ const pdpSchema = graphSchema([
     </div>
   </section>
 
-  <!-- 9. Case Study -->
   <CaseStudy
     cases={[
       { client: 'PrecisionCNC GmbH', country: 'Germany', project: '5-axis CNC retrofits — 200 units', result: '40% longer uptime vs previous supplier', quote: "The HG-220's low backlash and consistent quality made it our standard gearbox for all new machine builds." },
     ]}
   />
 
-  <!-- 10. Downloads -->
-  <DownloadsSection productSlug={product.slug} />
-
-  <!-- 11. FAQ -->
-  <FAQAccordion faqs={product.faqs} includeSchema={false} />
-
-  <!-- 12. Related Products -->
-  <RelatedProducts products={product.relatedProducts} />
-
-  <!-- Inline Inquiry Form -->
-  <div class="container mx-auto px-4 max-w-3xl" style="padding-top: var(--space-section)">
-    <InlineInquiryForm
-      productSlug={product.slug}
-      productName={product.title}
-    />
-  </div>
 
   <!-- 13. Final CTA -->
   <FinalCTA productName={product.model} />
